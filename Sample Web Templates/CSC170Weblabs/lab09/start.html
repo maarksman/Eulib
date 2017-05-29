@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Lab 9 - HTML forms, Part 1</title>
+	</head>
+	<body>
+		<h1>Lab 9 - HTML forms, Part 1</h1>
+		<form method="post" action="#">
+			<label for="name"> Name: </label>
+			<input name="name" id="name"><br> <br>
+			<label for="email"> E=mail: </label>
+			<input name="email" id="email"><br> <br>
+			<label for="phone"> Telephone: </label>
+			<input name="phone" id="phone"> <br> <br>
+
+			<fieldset>
+				<legend>Browsers</legend>
+				<h2>What web browsers do you use?</h2>
+				<input type="checkbox" name="browser" id="firefox1" value="Firefox"> <label for="firefox1"> Firefox </label> <br> <br>
+				<input type="checkbox" name="browser" id="chrome1" value="Chrome"> <label for="chrome1"> Chrome </label><br><br>
+				<input type="checkbox" name="browser" id="safari1" value="Safari"> <label for="safari1"> Safari </label><br> <br>
+				<input type="checkbox" name="browser" id="ie1" value="Internet Explorer"> <label for="ie1"> Internet Explorer </label><br> <br>
+				<input type="checkbox" name="browser" id="edge1" value="Edge"> <label for="edge1"> Edge </label>
+
+				<h2>What is your favorite web browser?</h2>
+				<input type="radio" name="browser" id="firefox2" value="Firefox"> <label for="firefox2"> Firefox </label> <br> <br>
+				<input type="radio" name="browser" id="chrome2" value="Chrome"> <label for="chrome2"> Chrome </label><br><br>
+				<input type="radio" name="browser" id="safari2" value="Safari"> <label for="safari2"> Safari </label><br> <br>
+				<input type="radio" name="browser" id="ie2" value="Internet Explorer"> <label for="ie2"> Internet Explorer </label><br> <br>
+				<input type="radio" name="browser" id="edge2" value="Edge"> <label for="edge2"> Edge </label> <br>
+			</fieldset>
+			<label for="message"> Message: </label> <br>
+			<textarea rows="1" id="message"> </textarea> <br> <br>
+			<input name="submit" id="submit" type="submit" value="Send">
+		</form>
+	</body>
+</html>

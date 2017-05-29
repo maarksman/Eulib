@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Table fix demo</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+	/*	************************************************************************
+		Responsive Table Solution
+		Based on this from Codepen: http://codepen.io/geoffyuen/pen/FCBEg
+
+		- To make this work, you have to add a data-header="" attribute to each 
+		  table data (TD) cell in the HTML code.
+		************************************************************************ */
+	th, td { padding: 5px; } /* ...tweak to taste*/
+
+	/* Set the media query to whatever width make sense for your content */
+	@media (max-width: 580px) { /* ...tweak to taste*/
+		th { display: none; } /* mandatory */
+		td { display: block; } /* mandatory */
+		td:before {
+			content: attr(data-header) ": "; /* mandatory */
+			font-weight: bold; /* ...tweak to taste*/
+			width: 75px; /* ...tweak to taste*/
+			display: inline-block; /* mandatory */
+		}
+	}
+	</style>
+</head>
+<body>
+
+	<table border>
+		<tr>
+			<th>Pet</th>
+			<th>Cost</th>
+			<th>Danger</th>
+			<th>Insanity</th>
+		</tr>
+		<tr>
+			<td data-header="Pet">Cats</td>
+			<td data-header="Cost"><strong>FlexitariankogiBrooklynBeard</strong>, Etsy mixtape actually Odd Future. Tofu mustache asymmetrical, beard Tumblr Vice letterpress stumptown chia messenger bag Intelligentsia Pinterest plaid.</td>
+			<td data-header="Danger"><strong>BlogSchlitzBicycle</strong> health goth, next level shabby chic American Apparel cold-pressed Etsy fanny pack Marfa Neutra +1 freegan.</td>
+			<td data-header="Insanity"><strong>SquidForage</strong>, tousled DIY Marfa selvage cronut 3 wolf moon kale chips meh salvia readymade.</td>
+
+		</tr>
+		<tr>
+			<td data-header="Pet">Dogs</td>
+			<td data-header="Cost">Tousled Godard lomo hashtag, Helvetica authentic Austin. Fixie flannel bitters, put a bird on it dreamcatcher post-ironic Etsy PBR photo booth plaid.</td>
+			<td data-header="Danger">Irony Truffaut hoodie raw denim Godard High Life kitsch paleo, bespoke authentic health goth McSweeney's quinoa tote bag fingerstache.</td>
+			<td data-header="Insanity">Art party asymmetrical pug drinking vinegar, cronut blog YOLO iPhone.</td>
+		</tr>
+		<tr>
+			<td data-header="Pet">Fish</td>
+			<td data-header="Cost">Blue Bottle slow-carb mustache, +1 migas stumptown tote bag pork belly vinyl you probably haven't heard of them food truck occupy Banksy.</td>
+			<td data-header="Danger">Lomo ugh letterpress, Kickstarter whatever VHS sriracha Vice meggings sustainable umami Shoreditch salvia.</td>
+			<td data-header="Insanity">Helvetica selvage butcher, cronut roof party salvia PBR&amp;B. Cred selvage squid, Godard Helvetica tattooed paleo hoodie. Direct trade 90's banjo Brooklyn blog messenger bag, asymmetrical sriracha selfies. Tousled tilde wayfarers Neutra gastropub.</td>
+		</tr>
+		<tr>
+			<td data-header="Pet">Bears</td>
+			<td data-header="Cost">Blog American Apparel banh mi selvage yr, four dollar toast chia letterpress 8-bit butcher hashtag art party actually. VHS lumbersexual polaroid Shoreditch you probably haven't heard of them mlkshk.</td>
+			<td data-header="Danger">IPhone whatever Blue Bottle jean shorts mlkshk stumptown. Forage yr keffiyeh flexitarian, master cleanse Pinterest food truck +1 Vice selfies Portland Austin Banksy keytar cronut.</td>
+			<td data-header="Insanity">Small batch Odd Future direct trade Vice DIY, ethical Truffaut narwhal actually. Sriracha ennui +1 meh salvia. Readymade gastropub beard freegan selvage, locavore tattooed drinking vinegar 8-bit shabby chic fanny pack Shoreditch.</td>
+		</tr>
+	</table>
+	
+</body>
+</html>
