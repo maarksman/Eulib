@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>JavaScript Demo</title>
+</head>
+
+<body>
+
+<script>
+	//alert("Hello World!");
+</script>
+
+	<h1>JavaScript Demo</h1>
+
+	<div id="hider">
+		Click to hide the paragraph<br>
+		(Reload this page to bring it back)
+	</div>
+	
+	<p id="hidee">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+	<p>Clicking this link is incredibly important!  You must click this link!... 
+		<a href="index.html" onmouseover="alert('Click to go home')">Home</a>
+	</p>
+
+<script>
+	//alert("Hello World, #2!");
+</script>
+
+<script>
+document.getElementById("hider")
+.addEventListener(
+	"click", 
+	function(){
+		document.getElementById("hidee").style.display = 'none'
+	}
+);
+</script>
+</body>
+</html>

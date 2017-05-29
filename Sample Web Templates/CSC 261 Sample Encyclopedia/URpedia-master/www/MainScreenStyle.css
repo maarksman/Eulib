@@ -1,0 +1,158 @@
+html
+{
+	text-align: center;
+	background-color: #003399;
+	height:100%;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+body
+{
+	background-color: #003399;
+	background-image: url("/Resources/Default.gif");
+	height: 100%;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	background-size: cover;
+	background-repeat: no-repeat;
+
+}
+
+#AccountFunctions
+{
+	position: fixed;
+	right: 0px;
+	bottom: 0px;
+	color: white;
+	border-style: solid;
+	border-width: 2px;
+	background-color: black;
+	border-radius: 4%;
+	padding: 3px;
+}
+
+h2[id="cookieuser"]
+{
+	margin: 10px;
+	margin-bottom: 0px;
+}
+
+
+
+/* B U T T O N S*/
+
+
+#deleteAccount
+{
+	font-family: "Times New Roman";
+	font-size: 1rem;
+	background-color: #1a1b9c;
+	width: 5rem;
+	height: 4rem;
+	color: white;
+}
+
+#banner
+{
+background: url('Images/urpediabanner2.jpg');
+position: absolute; 
+top: 0; 
+left: 0; 
+width: 100%;
+height: 10%;
+background-color: #DDEEEE;
+text-align: left;
+}
+
+
+#background_box1
+{
+position:absolute;
+background-color: #fffff0;
+margin-left: 1%;  
+width: 25%;
+margin-top: 6%;
+text-align: 10%;
+border-radius: 5px;
+height: 84%;
+overflow: scroll;
+}
+
+#background_box2
+{
+position:absolute;
+background-color: #fffff0;
+margin-left: 27%;  
+width: 70%;
+margin-top: 6%;
+text-align: left;
+border-radius: 5px;
+height: 82%;
+padding : 5px;
+border: 5px dotted blue;
+overflow: scroll;
+}
+
+#search
+{
+	position:absolute;
+	right: 20%;
+	top: 30%;
+	color: #fffff0;
+	border-style: solid;
+	border-width: 2px;
+	background-color: black;
+	border-radius: 4%;
+	padding: 1px;
+}
+#ud
+{
+	position:absolute;
+	right: 10%;
+	top: 2%;
+	color: #fffff0;
+	border-style: solid;
+	border-width: 2px;
+	background-color: black;
+	border-radius: 4%;
+	padding: 1px;
+}
+
+#search1
+{
+	position:absolute;
+	right: 1%;
+	top: 0%;
+	color: #fffff0;
+	border-style: solid;
+	border-width: 2px;
+	background-color: black;
+	border-radius: 4%;
+	padding: 1px;
+}
+
+#categories
+{
+	position: fixed;
+	top: 50%;
+	left: 8%;	
+}
+
+#logo
+{
+	position: fixed;
+	top: 0%;
+	left: 1%;
+}
+
+
+h3:hover {
+	color: green;
+}
+
+h3 {
+	color: blue;
+	text-decoration: underline;
+}
