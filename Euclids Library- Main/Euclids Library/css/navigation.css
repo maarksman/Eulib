@@ -1,0 +1,25 @@
+nav ul{
+	list-style-type: none;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-left: 0px;
+}
+
+nav li{
+	border: 1px solid #000000;
+}
+
+nav li a{
+	color: #000000;
+	display: block;
+	padding: 5px 20px;
+}
+
+nav a:hover {
+	color: white;
+	background-color: #333333;
+}
+
+.menu li {display: table-cell;} 
+
+.menu ul {border-collapse: collapse;} 
