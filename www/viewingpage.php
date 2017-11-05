@@ -42,7 +42,7 @@
            $first_knowl = $row['content'];
 				 }
 		mysqli_close($conn);
-		?>
+	?>
 
 </div>
 

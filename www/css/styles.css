@@ -35,27 +35,6 @@ a {
 
 a:hover {color: #AD235E;}
 
-/*.floating-box {
-	display: table-cell;
-	float: right;
-	/*width: 50px;
-	height: 75px;
-	margin: 10px;
-
-}  */
-
-.floatright {
-	float: right;
-}
-
-.floatleft {
-	float: left;
-}
-
-article ,aside{
-	display: table-cell;
-}
-
 article {
 	padding-right: 20px;
 }
@@ -85,7 +64,7 @@ article {
 border: 1px solid black;
 }
 
-article p {display: table-cell; float: left; overflow: auto; width: 70%; padding-left: 10px;}
+/* article p {display: table-cell; float: left; overflow: auto; width: 100%; padding-left: 10px;} */
 
 footer {
 	border-top: 1px solid #AD235E;;
