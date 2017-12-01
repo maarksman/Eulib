@@ -1,0 +1,8 @@
+Eulib
+	InfoType1 (Definition)
+		Text files 
+	InfoType2 (Theorem)
+		Text files 
+	Custom 
+		
+		
