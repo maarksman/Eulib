@@ -1,0 +1,7 @@
+app.post('/arrowcontent',urlencodedParser, (req, res)=> {
+  let pathin = req.body['pathin'];
+  let totalpath = "public/textscroller/" + pathin;
+  console.log('total path is: ' + totalpath);
+  let contents = fs.readFileSync(totalpath, 'utf8');
+  res.send(contents);
+});

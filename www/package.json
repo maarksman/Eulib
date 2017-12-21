@@ -1,0 +1,44 @@
+{
+  "name": "Eulib",
+  "version": "0.0.1",
+  "description": "Jargon shouldn't keep you from learning the concepts",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "crypto": "^1.0.1",
+    "express": "^4.13.3",
+    "express-session": "^1.15.6",
+    "ejs": "~1.0.0",
+    "moment": "^2.19.2",
+    "morgan": "^1.9.0",
+    "mysql": "^2.15.0",
+    "node-mysql-importer": "0.0.10",
+    "passport": "^0.4.0",
+    "pug": "^2.0.0-rc.4",
+    "socket.io": "^2.0.4"
+  },
+  "engines": {
+    "node": "4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BobbyUR/term-project-easygoers"
+  },
+  "keywords": [
+    "math",
+    "wiki",
+    "express",
+    "socket"
+  ],
+  "contributors": [
+    "Prikshet Sharma <pshar10@u.rochester.edu>",
+    "Mark Auden",
+    "Ye Tao",
+    "Jose Gonzalez"
+  ],
+  "license": "MIT"
+}

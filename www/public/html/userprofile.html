@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" type="text/css" href="../assets/editabletable/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/editabletable/font-awesome.min.css" />
+  <script type="text/javascript" src="../assets/editabletable/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="../assets/editabletable/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <symbol xmlns="http://www.w3.org/2000/svg" id="sbx-icon-search-8" viewBox="0 0 40 40">
+           <path d="M16 32c8.835 0 16-7.165 16-16 0-8.837-7.165-16-16-16C7.162 0 0 7.163 0 16c0 8.835 7.163 16 16 16zm0-5.76c5.654 0 10.24-4.586 10.24-10.24 0-5.656-4.586-10.24-10.24-10.24-5.656 0-10.24 4.584-10.24 10.24 0 5.654 4.584 10.24 10.24 10.24zM28.156 32.8c-1.282-1.282-1.278-3.363.002-4.643 1.282-1.284 3.365-1.28 4.642-.003l6.238 6.238c1.282 1.282 1.278 3.363-.002 4.643-1.283 1.283-3.366 1.28-4.643.002l-6.238-6.238z"
+    fill-rule="evenodd" />
+        </symbol>
+        <symbol xmlns="http://www.w3.org/2000/svg" id="sbx-icon-clear-3" viewBox="0 0 20 20">
+            <path d="M8.114 10L.944 2.83 0 1.885 1.886 0l.943.943L10 8.113l7.17-7.17.944-.943L20 1.886l-.943.943-7.17 7.17 7.17 7.17.943.944L18.114 20l-.943-.943-7.17-7.17-7.17 7.17-.944.943L0 18.114l.943-.943L8.113 10z" fill-rule="evenodd" />
+        </symbol>
+        </svg>
+
+    <title>Profile</title>
+
+    <!-- Bootstrap core CSS-->
+    <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!--<link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">-->
+
+    <!-- Custom styles for this template -->
+    <link href="../css/small-business.css" rel="stylesheet">
+    <link href="../css/searchbar.css" rel="stylesheet">
+
+    <link href="../css/style2.css" rel="stylesheet">
+
+    <!-- article search -->
+    <script src ="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type = "text/javascript" src = "../js/searcharticle.js"></script>
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gray fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="http://localhost:3000/">Eulib</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+
+            <form novalidate="novalidate" onsubmit="return false;" class="searchbox sbx-twitter">
+                <div role="search" class="sbx-twitter__wrapper">
+                  <datalist id="articles"><option value="Opera"></option>
+  <option value="Safari"></option></datalist>
+                 <input type="search" name="search" placeholder="Search your website" autocomplete="off" required="required" class="sbx-twitter__input" id="search" list="articles">
+                  <button type="submit" title="Submit your search query." class="sbx-twitter__submit" id="search_button">
+                  <svg role="img" aria-label="Search">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-8"></use>
+                 </svg>
+                </button>
+                 <button type="reset" title="Clear the search query." class="sbx-twitter__reset">
+                <svg role="img" aria-label="Reset">
+                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-3"></use>
+                </svg>
+              </button>
+                 </div>
+            </form>
+
+
+            <li class="nav-item">
+              <a class="nav-link" href="articlecreate.html">Create new article</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../new_sign_in_page.html">Sign out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+<br>
+
+    
+ <div class="container-fluid">
+  <div class="row content">
+    <div class="try">
+    <div>
+      <h3>Your saved articles</h3>
+      <hr>
+      <h2>History of algebra</h2>
+      <h5><span class="glyphicon glyphicon-time"></span> Post by Mark, Dec 7, 2017.</h5>
+      <h5><span class="label label-danger">Math</span> <span class="label label-primary">Algebra</span></h5><br>
+      <p>As a branch of mathematics, algebra emerged at the end of the 16th century in Europe, with the work of François Viète. Algebra can essentially be considered as doing computations similar to those of arithmetic but with non-numerical mathematical objects. However, until the 19th century, algebra consisted essentially of the theory of equations. For example, the fundamental theorem of algebra belongs to the theory of equations and is not, nowadays, considered as belonging to algebra...</p>
+      <p>Omar Khayyám (c. 1050 – 1123) wrote a book on Algebra that went beyond Al-Jabr to include equations of the third degree.[68] Omar Khayyám provided both arithmetic and geometric solutions for quadratic equations, but he only gave geometric solutions for general cubic equations since he mistakenly believed that arithmetic solutions were impossible.[68] His method of solving cubic equations by using intersecting conics had been used by Menaechmus, Archimedes, and Ibn al-Haytham (Alhazen), but Omar Khayyám generalized the method to cover all cubic equations with positive roots.[68] He only considered positive roots and he did not go past the third degree.[68] He also saw a strong relationship between Geometry and Algebra.[68]
+
+In the 12th century, Sharaf al-Dīn al-Tūsī (1135–1213) wrote the Al-Mu'adalat (Treatise on Equations), which dealt with eight types of cubic equations with positive solutions and five types of cubic equations which may not have positive solutions. He used what would later be known as the "Ruffini-Horner method" to numerically approximate the root of a cubic equation. He also developed the concepts of the maxima and minima of curves in order to solve cubic equations which may not have positive solutions.[69] He understood the importance of the discriminant of the cubic equation and used an early version of Cardano's formula[70] to find algebraic solutions to certain types of cubic equations. Some scholars, such as Roshdi Rashed, argue that Sharaf al-Din discovered the derivative of cubic polynomials and realized its significance, while other scholars connect his solution to the ideas of Euclid and Archimedes.[71]
+
+Sharaf al-Din also developed the concept of a function. In his analysis of the equation {\displaystyle \ x^{3}+d=bx^{2}} \ x^{3}+d=bx^{2} for example, he begins by changing the equation's form to {\displaystyle \ x^{2}(b-x)=d} \ x^{2}(b-x)=d. He then states that the question of whether the equation has a solution depends on whether or not the “function” on the left side reaches the value {\displaystyle \ d} \ d. To determine this, he finds a maximum value for the function. He proves that the maximum value occurs when {\displaystyle x={\frac {2b}{3}}} x={\frac  {2b}{3}}, which gives the functional value {\displaystyle {\frac {4b^{3}}{27}}} {\frac  {4b^{3}}{27}}. Sharaf al-Din then states that if this value is less than {\displaystyle \ d} \ d, there are no positive solutions; if it is equal to {\displaystyle \ d} \ d, then there is one solution at {\displaystyle x={\frac {2b}{3}}} x={\frac  {2b}{3}}; and if it is greater than {\displaystyle \ d} \ d, then there are two solutions, one between {\displaystyle \ 0} \ 0 and {\displaystyle {\frac {2b}{3}}} {\frac  {2b}{3}} and one between {\displaystyle {\frac {2b}{3}}} {\frac  {2b}{3}} and {\displaystyle \ b} \ b.</p>
+      <hr>
+      <h2>Convex optimization</h2>
+      <h5><span class="glyphicon glyphicon-time"></span> Post by Ye, Nov 24, 2017.</h5>
+      <h5><span class="label label-success">Advanced math</span></h5><br>
+      <p>Convex minimization is a subfield of optimization that studies the problem of minimizing convex functions over convex sets. The convexity makes optimization easier than the general case since local minimum must be a global minimum, and first-order conditions are sufficient conditions for optimality.</p>
+      <p>Convex minimization has applications in a wide range of disciplines, such as automatic control systems, estimation and signal processing, communications and networks, electronic circuit design,[2] data analysis and modeling, finance, statistics (optimal experimental design),[3] and structural optimization.[4] With recent improvements in computing and in optimization theory, convex minimization is nearly as straightforward as linear programming. Many optimization problems can be reformulated as convex minimization problems. For example, the problem of maximizing a concave function f can be re-formulated equivalently as a problem of minimizing the function -f, which is convex.</p>
+      <p>Conventionally, the definition of the convex optimization problem (we recall) requires that the objective function f to be minimized and the feasible set be convex. In the special case of linear programming (LP), the objective function is both concave and convex, and so LP can also consider the problem of maximizing an objective function without confusion. However, for most convex minimization problems, the objective function is not concave, and therefore a problem and then such problems are formulated in the standard form of convex optimization problems, that is, minimizing the convex objective function.
+
+For nonlinear convex minimization, the associated maximization problem obtained by substituting the supremum operator for the infimum operator is not a problem of convex optimization, as conventionally defined. However, it is studied in the larger field of convex optimization as a problem of convex maximization.[13]
+
+The convex maximization problem is especially important for studying the existence of maxima. Consider the restriction of a convex function to a compact convex set: Then, on that set, the function attains its constrained maximum only on the boundary.[14] Such results, called "maximum principles", are useful in the theory of harmonic functions, potential theory, and partial differential equations.
+
+The problem of minimizing a quadratic multivariate polynomial on a cube is NP-hard.[15] In fact, in the quadratic minimization problem, if the matrix has only one negative eigenvalue, is NP-hard.[16]</p>
+      <hr>
+    </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container">
+
+<div class="page-header">
+    <h3>Created articles of yours</h3>
+</div>
+
+<!-- Editable Table - START -->
+
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text-center">Article info<span class="fa fa-edit pull-right bigicon"></span></h4>
+        </div>
+        <div class="panel-body text-center">
+            <div id="grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- you need to include the shieldui css and js assets in order for the grids to work -->
+<link rel="stylesheet" type="text/css" href="http://www.prepbootstrap.com/Content/shieldui-lite/dist/css/light/all.min.css" />
+<script type="text/javascript" src="http://www.prepbootstrap.com/Content/shieldui-lite/dist/js/shieldui-lite-all.min.js"></script>
+
+<script type="text/javascript" src="http://www.prepbootstrap.com/Content/data/shortGridData.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#grid").shieldGrid({
+            dataSource: {
+                data: gridData,
+                schema: {
+                    fields: {
+                        id: { path: "id", type: Number },
+                        Title: { path: "Title", type: String },
+                        Field: { path: "Field", type: String },
+                        Date: { path: "Date", type: Date },
+                    }
+                }
+            },
+            sorting: {
+                multiple: true
+            },
+            rowHover: false,
+            columns: [
+                { field: "Title", title: "Title", width: "120px" },
+                { field: "Field", title: "Field", width: "150px" },
+                { field: "Date", title: "Last Rivised Date", width: "70px"},
+                {
+                    width: 150,
+                    title: "Update/Delete Column",
+                    buttons: [
+                        { commandName: "edit", caption: "Edit" },
+                        { commandName: "delete", caption: "Delete" }
+                    ]
+                }
+            ],
+            editing: {
+                enabled: true,
+                mode: "popup",
+                confirmation: {
+                    "delete": {
+                        enabled: true,
+                        template: function (item) {
+                            return "Delete row with ID = " + item.id
+                        }
+                    }
+                }
+            }
+        });
+        $("#search").on('keyup',function(){
+          search($("#search"),$("#testdest"));
+        })
+
+        function search($inputid, $target){
+            //TODO sql search for articles including text
+            var my_search = ($inputid.val())
+            //console.log("searching for: "+my_search);
+             $.ajax({
+               url: '/search',
+               data: {'search-text': my_search},
+               type: 'POST',
+               success: function(data) {
+                 $target.text(data);
+               },
+               error: function(error) {
+                 console.log(error);
+               }
+             });
+           }
+
+
+    });
+</script>
+
+<style type="text/css">
+    .sui-button-cell
+    {
+        text-align: center;
+    }
+
+    .sui-checkbox
+    {
+        font-size: 17px !important;
+        padding-bottom: 4px !important;
+    }
+
+    .deleteButton img
+    {
+        margin-right: 3px;
+        vertical-align: bottom;
+    }
+
+    .bigicon
+    {
+        color: #5CB85C;
+        font-size: 20px;
+    }
+</style>
+
+<!-- Editable Table - END -->
+
+</div>   
+
+  </body>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Your own personal page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="../assets/editabletable/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/editabletable/font-awesome.min.css" />
+  <script type="text/javascript" src="../assets/editabletable/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript" src="../assets/editabletable/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <link href='../css/styles1user.css', rel='stylesheet'/>
+  <script src ="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="../js/signedin.js"></script>
+
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 500px;}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 120%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+  </style>
+</head>
+<body>
+
+<h1> Eulib, a math dictionary</h1>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <h4>Useful links</h4>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="../index.html">Home</a></li>
+        <li><a href="#section2">All articles</a></li>
+        <li><a href="#section3">Created aritcles</a></li>
+        <li><a href="#section3">Saved articles</a></li>
+        <li><a href="#">Log out</a></li>
+      </ul><br>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search articles.." id="search">
+        <div id="testdest"></div>
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+      <h4><small>Saved articles</small></h4>
+      <hr>
+      <h2>I Love Math</h2>
+      <h5><span class="glyphicon glyphicon-time"></span> Post by Jane Dane, Sep 27, 2015.</h5>
+      <h5><span class="label label-danger">Food</span> <span class="label label-primary">Ipsum</span></h5><br>
+      <p>Food is my passion. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <br><br>
+
+
+      <hr>
+      <h2>Officially Blogging</h2>
+      <h5><span class="glyphicon glyphicon-time"></span> Post by John Doe, Sep 24, 2015.</h5>
+      <h5><span class="label label-success">Lorem</span></h5><br>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <hr>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container">
+
+<div class="page-header">
+    <h1>Created ariticles of yours</h1>
+</div>
+
+<!-- Editable Table - START -->
+
+<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="text-center">Article info<span class="fa fa-edit pull-right bigicon"></span></h4>
+        </div>
+        <div class="panel-body text-center">
+            <div id="grid"></div>
+        </div>
+    </div>
+</div>
+
+<!-- you need to include the shieldui css and js assets in order for the grids to work -->
+<link rel="stylesheet" type="text/css" href="http://www.prepbootstrap.com/Content/shieldui-lite/dist/css/light/all.min.css" />
+<script type="text/javascript" src="http://www.prepbootstrap.com/Content/shieldui-lite/dist/js/shieldui-lite-all.min.js"></script>
+
+<script type="text/javascript" src="http://www.prepbootstrap.com/Content/data/shortGridData.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#grid").shieldGrid({
+            dataSource: {
+                data: gridData,
+                schema: {
+                    fields: {
+                        id: { path: "id", type: Number },
+                        Title: { path: "Title", type: String },
+                        Field: { path: "Field", type: String },
+                        Date: { path: "Date", type: Date },
+                    }
+                }
+            },
+            sorting: {
+                multiple: true
+            },
+            rowHover: false,
+            columns: [
+                { field: "Title", title: "Title", width: "120px" },
+                { field: "Field", title: "Field", width: "150px" },
+                { field: "Date", title: "Last Rivised Date", width: "70px"},
+                {
+                    width: 150,
+                    title: "Update/Delete Column",
+                    buttons: [
+                        { commandName: "edit", caption: "Edit" },
+                        { commandName: "delete", caption: "Delete" }
+                    ]
+                }
+            ],
+            editing: {
+                enabled: true,
+                mode: "popup",
+                confirmation: {
+                    "delete": {
+                        enabled: true,
+                        template: function (item) {
+                            return "Delete row with ID = " + item.id
+                        }
+                    }
+                }
+            }
+        });
+        $("#search").on('keyup',function(){
+          search($("#search"),$("#testdest"));
+        })
+
+        function search($inputid, $target){
+            //TODO sql search for articles including text
+            var my_search = ($inputid.val())
+            //console.log("searching for: "+my_search);
+             $.ajax({
+               url: '/search',
+               data: {'search-text': my_search},
+               type: 'POST',
+               success: function(data) {
+                 $target.text(data);
+               },
+               error: function(error) {
+                 console.log(error);
+               }
+             });
+           }
+
+
+    });
+</script>
+
+<style type="text/css">
+    .sui-button-cell
+    {
+        text-align: center;
+    }
+
+    .sui-checkbox
+    {
+        font-size: 17px !important;
+        padding-bottom: 4px !important;
+    }
+
+    .deleteButton img
+    {
+        margin-right: 3px;
+        vertical-align: bottom;
+    }
+
+    .bigicon
+    {
+        color: #5CB85C;
+        font-size: 20px;
+    }
+</style>
+
+<!-- Editable Table - END -->
+
+</div>
+
+
+
+<footer class="container-fluid">
+  <p align="center">Copyright &copy; Eulib 2017</p>
+</footer>
+
+</body>
+</html>

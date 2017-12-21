@@ -1,0 +1,127 @@
+doctype html
+html(lang='en')
+  head
+    title Eulib
+    meta(charset='utf-8')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    link(rel='stylesheet', type='text/css', href='css/articlecreate.css')
+    link(rel='stylesheet', type='text/css', href='css/contactform.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    script(type='text/javascript', src='../js/articlecreate.js')
+    script(type='text/javascript', src='../js/amihere.js')
+    
+  body
+    h1 Eulib
+    p welcome username #{name}
+    
+    div#username #{name}
+          
+        
+    nav.navbar
+      .navbar-header
+        a.navbar-brand(href='#') Eulib
+      .collapse.navbar-collapse(id='#')
+        ul.nav.navbar-nav
+          //
+            <li><a href="#">Home page</a></li>
+            <li class="#"><a href="http://localhost:3000/">Sign Out</a></li>
+        form.navbar-form.navbar-right(role='search')
+          .form-group.input-group
+            input.form-control(type='text', placeholder='Search...')
+            span.input-group-btn
+              button.btn.btn-default(type='button')
+                span.glyphicon.glyphicon-search
+        ul.nav.navbar-nav.navbar-right
+          li
+            a(href='#')
+              span.glyphicon.glyphicon-user
+              | Home page
+          li(class='#')
+            a(href='http://localhost:3000/') Sign Out
+    //
+      <div class="container-fluid text-center">
+      <div class="row content">
+      <div class="col-sm-4 sidenav"></div>
+      <div class="col-sm-8">
+      <form action="/html/newarticle-processor.php" method="post" name="articlecreate" id="form" class="form">
+      <div class="firstline">
+      <table>
+      <tr class="firstline_position">
+      <td><label class="#">title:</label></td>
+      <td><input type="text" id="title"  name="title" class="#"></td>
+      <td><label class="#">type:</label></td>
+      <td><input type="text" id="type" name="type" class="#"></td>
+      <td><label class="#">field:</label></td>
+      <td><input type="text" id="field" name="field" class="#"></td>
+      </tr>
+      <tr>
+      <td colspan="6" class="content_position"><label>content:</label></td>
+      </tr>
+      <tr>
+      <td colspan="6" class="textarea_position"><textarea id="content" name="content" class="#"></textarea></td>
+      </tr>
+      <tr>
+      <td colspan="6" class="submit_position"><input type="submit" value="submit" id="submit" name="submit" class="submit btn btn-success"><d/t>
+      </tr>
+      </table>
+      </div>
+      </form>
+      </div>
+      </div>
+      </div>
+    #contact-form
+      div
+        h1 Create your own article
+        h4 Submit your own article with the title, type and field
+      p#failure Oopsie...message not sent.
+      p#success Your message was sent successfully. Thank you!
+      // <form name="articlecreate" id="form" class="form">
+      div
+        label(for='name')
+          span.required Title: *
+          input#title(type='text', name='title', class='#')
+          // <input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />
+      div
+        label(for='type')
+          span.required Type: *
+          //
+            <input type="text" id="type" name="type" class="#">
+            <input type="email" id="email" name="email" value="" placeholder="Your Email" tabindex="2" required="required" />
+          select#type(name='type', tabindex='4')
+            option(value='')
+            option(value='Article') Article
+            option(value='Paper') Paper
+            option(value='Poster') Poster
+      div
+        label(for='field')
+          span.required Field: *
+          // <input type="text" id="field" name="field" class="#">
+          select#field(name='field', tabindex='4')
+            option(value='')
+            option(value='Math') Math
+            option(value='Algebra') Algebra
+            option(value='Geometry') Geometry
+      div
+        label(for='level')
+          span.required Level: *
+          // <input type="text" id="field" name="level" class="#">
+          input#level(list='level', name='level')
+          datalist#browsers
+            option(value='Entry_Level')
+            option(value='Medium')
+            option(value='Expert')
+          //
+            <select id="subject" name="subject" tabindex="4">
+            <option value="hello">Product Price Question</option>
+            <option value="quote">Where are my dragons?!</option>
+            <option value="general">- Valar Morghulis - </option>
+            </select>
+      div
+        label(for='message')
+          span.required Content: *
+          br
+          textarea#content(name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
+      div
+        button#submit(name='submit') Submit
+        // <input type="submit" value="submit" id="submit" name="submit" class="submit btn btn-success">
+      // </form>
