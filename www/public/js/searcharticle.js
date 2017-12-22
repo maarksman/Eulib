@@ -10,11 +10,68 @@ head.prepend(script);
 var textarea = $('#mEdit');
 var text;
 var title;
-var path
-var knowl = $('.knowl-content loading')
+var path;
+var knowl = $('.knowl-content loading');
 $(document).ready(function() {
   //load_js();
   console.log('searcharticlelive');
+
+  //function for article left-right
+  $(".button").on('click', function(e){
+    //add changing id to remove later
+    console.log('Registered click');
+    $(this).closest(".boxedin").attr("id", 'changing');
+    let newpath = $(this).attr('data-path');
+    let prevpath = $('#changing').attr('data-path');
+    let level = $('#changing').attr('data-level');
+    console.log('prev knowl data-path is: '+ prevpath);
+    console.log('new knowl data-path is: '+ newpath);
+    let isleftbutton = $(this).hasClass('leftbutton') ? true : false;
+    let isrightbutton = $(this).hasClass('rightbutton') ? true : false;
+    //get content, remove content div then add new content
+
+    $.ajax({
+      url: '/arrowcontent',
+      data: {'pathin': newpath, 'curlevel':level},
+      type: 'POST',
+      datatype: 'json',
+      success: function(data) {
+        //console.log('data came back as: ' + data);
+        consol
+        $("#changing").children().remove('.knowlcontent1');
+        let newdiv = $("<div class='knowlcontent1'>" + data.content + "</div>");
+        $('#changing').append(newdiv);
+        //console.log('checking button changeup');
+        //console.log($(this).hasClass('leftbutton'));
+        if (isleftbutton) {
+          $('#changing').children('.rightbutton').attr('data-path', prevpath);
+          $('#changing').attr('data-path', newpath);
+          $('#changing').attr('data-path', toString(parseInt(level)-1) );
+          $('#changing').children('.rightbutton').show();
+          if (data.lastleft) {
+            $('#changing').children('.leftbutton').hide();
+          }
+        }
+        if (isrightbutton) {
+          $('#changing').children('.leftbutton').attr('data-path', prevpath);
+          $('#changing').attr('data-path', newpath);
+          $('#changing').attr('data-path', toString(parseInt(level)+ 1) );
+          $('#changing').children('.leftbutton').show();
+          if (data.lastright) {
+            $('#changing').children('.rightbutton').hide();
+          }
+        }
+
+        $(this).parent().removeAttr('id');
+
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+
+  });
+
   //if user clicks the the button with id change_theme, run change_theme function
 
   $('#search').on('keyup', function(e){
@@ -158,16 +215,26 @@ function redir($inputid){
           }
           else {
           var div = $(
-          "<div data-title=" + my_search +
-          " data-path=" + myObj.path +  "> \
+          "<div id='adding' data-title=" + my_search +
+          " data-path=" + myObj.path + " data-level='3'" + "> \
           <button class=\"editerB "+myObj.id+  "\"type=\"button\">Edit</button>\
           <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
           <div id="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-          +myObj.content+
+          + `<button class="leftbutton button" data-path=""> < </button>
+          <button class="rightbutton button" data-path=""> > </button>`
+          + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
           "</div>");
+
           //$('#articles-searched').prepend(div.addClass("boxed"));
           $('#entry-content').prepend(div.addClass("boxedin"));
-          //textarea=$('#mEdit');
+          if (!myObj.cangoleft) {
+            $('#adding').children('.leftbutton').hide();
+          } else {$('#adding').children('.leftbutton').attr('data-path', myObj.leftpath);}
+          if (!myObj.cangoright) {
+            $('#adding').children('.rightbutton').hide();
+          } else {$('#adding').children('.rightbutton').attr('data-path', myObj.rightpath);}
+          //remove the marker of nowl we just added
+          $('#adding').removeAttr('id');
           }
           // $('#date').html(output);
           // $('#my_title').html(my_search);

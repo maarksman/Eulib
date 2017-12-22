@@ -59,11 +59,13 @@ $(document).ready(function(){
           $('#changing').children('.rightbutton').attr('data-path', prevpath);
           $('#changing').attr('data-path', newpath);
           $('#changing').children('.leftbutton').hide();
+          $('#changing').children('.rightbutton').show();
         }
         if (isrightbutton) {
           $('#changing').children('.leftbutton').attr('data-path', prevpath);
           $('#changing').attr('data-path', newpath);
           $('#changing').children('.rightbutton').hide();
+          $('#changing').children('.leftbutton').show();
         }
 
         $(this).parent().removeAttr('id');

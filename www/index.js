@@ -98,6 +98,7 @@ app.get('/createdb2', (req, res)=>{
   	id INT PRIMARY KEY AUTO_INCREMENT,
   	title VARCHAR(30) NOT NULL,
   	type VARCHAR(30) NOT NULL,
+    level INT,
     belongs_to VARCHAR(30),
   	FOREIGN KEY (belongs_to) REFERENCES field(field),
   	path VARCHAR(150) NOT NULL,
@@ -105,9 +106,7 @@ app.get('/createdb2', (req, res)=>{
     creator VARCHAR(50),
     FOREIGN KEY (creator) REFERENCES users(username),
   	last_edited DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    last_editor VARCHAR(50),
-    tech_level INT,
-    UNIQUE (title)
+    last_editor VARCHAR(50)
   );
 
   create table bookmarks(
@@ -126,11 +125,11 @@ app.get('/createdb2', (req, res)=>{
   ('Analysis', 'Mathematics'),
   ('Field Theory', 'Algebra');
 
-  INSERT INTO article ( title, type, belongs_to, path, creator)
-  VALUES ( 'Automorphism', 'Definition', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony'),
-   ( 'Field', 'Definition', 'Mathematics', 'knowlcontent/field.html', 'testuserpony'),
-   ( 'Field Extension', 'Definition', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony'),
-   ( 'Galois Group', 'Definition', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony')
+  INSERT INTO article ( title, type, belongs_to, path, creator, level)
+  VALUES ( 'Automorphism', 'Definition', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony', 3),
+   ( 'Field', 'Definition', 'Mathematics', 'knowlcontent/field.html', 'testuserpony', 3),
+   ( 'Field Extension', 'Definition', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony', 3),
+   ( 'Galois Group', 'Definition', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony', 3)
    `;
 
     db.query(createtablesquery, (err, result) => {
@@ -310,18 +309,18 @@ app.post('/articlecreate', urlencodedParser, (req, res) =>{
   let level = req.body['level'];
   let creator = req.session.username;
   let content = "<div>"+ req.body['content']+ "</div>";
-  let path = "knowlcontent/" + title + ".html";
-  let filename = title + ".html"
+  let path = "knowlcontent/" + title + "_" + level + ".html";
+  let filename = title + "_" + level + ".html"
   let contentpath = 'public/knowlcontent/' + filename;
-  let checksql = 'SELECT title FROM article where title = ?';
-  let title_exists = false;
-  db.query(checksql, title,(err,result) =>{
+  let checksql = "SELECT title FROM article where title ='" + title + "' AND level=" + level;
+  let titlelevel_exists = false;
+  db.query(checksql, (err,result) =>{
     if(err) throw err;
     else{
         if(result.length == 0){
-          createsql = "INSERT INTO article (title, type, belongs_to, path, creator) VALUES ('"
+          createsql = "INSERT INTO article (title, type, belongs_to, path, creator, level) VALUES ('"
                       + title + "','" + type + "','" + belongs_to + "','"
-                      + path + "','" + creator + "')";
+                      + path + "','" + creator + "','" + level + "')";
           console.log("Query is: " + createsql);
           db.query(createsql, (err, result) => {
             if(err){
@@ -336,10 +335,10 @@ app.post('/articlecreate', urlencodedParser, (req, res) =>{
           });
         }
         else {
-          title_exists = true;
-          console.log('title already exists');
-          if (title_exists) {
-            res.send("Title exists");
+          titlelevel_exists = true;
+          console.log('title with level already exists');
+          if (titlelevel_exists) {
+            res.send("Title with level exists");
           }
         }
     }
@@ -383,7 +382,7 @@ app.post('/updatearticle', urlencodedParser, (req,res)=>{
 app.post('/searcharticle', urlencodedParser, (req, res) => {
   var search = req.body['search-text'];
   let tosend = "";
-  let sql = "SELECT * FROM article WHERE title LIKE '%" + search + "%'";
+  let sql = "SELECT * FROM article WHERE title LIKE '%" + search + "%' AND level=3";
   // console.log('sent in /searcharticle: '+ search);
   //console.log('querying: ' + sql);
   let query = db.query(sql, (err, result)=>{
@@ -397,6 +396,7 @@ app.post('/searcharticle', urlencodedParser, (req, res) => {
           var title = row.title;
           var type = row.type;
           var path = row.path;
+          let level = row.level;
           let display = title;
           // + "-" + type;
           let dlistelement = "<option data-path='" + path +  "' value='" + display + "'>"
@@ -416,19 +416,41 @@ app.post('/searcharticleredir', urlencodedParser, (req, res) => {
   let content;
   let sql = "SELECT * FROM article WHERE title =?";
   let isindatabase = false;
+  let cangoright = false;
+  let cangoleft = false;
+  let rightpath = "";
+  let leftpath = "";
   let query = db.query(sql, search,(err, result)=>{
     if(err)
       throw err;
     else
+      //console.log(result.length);
       for (var i = 0; i < result.length; i++) {
           var row = result[i];
+          console.log(row);
+          if (row.level == '3') {
           var path = row.path;
           isindatabase = true;
+          }
+          if (row.level == '2') {
+            cangoleft = true;
+            leftpath = row.path;
+          }
+          if (row.level == '4') {
+            cangoright = true;
+            rightpath = row.path
         }
+      }
       if (isindatabase) {
       content = fs.readFileSync('public/' + path, 'utf8');
-      var jsonobj = {"content": content, "path":path, "id":row.id, "articlefound":isindatabase};
+      var jsonobj = {"content": content, "path":path, "id":row.id, "articlefound":isindatabase,
+                      "cangoleft": cangoleft, "cangoright": cangoright,
+                    "rightpath":rightpath, "leftpath":leftpath};
+      // query to check for left/right
       //console.log(jsonobj);
+      console.log('cangoleft then cangoright');
+      console.log(jsonobj.cangoleft);
+      console.log(jsonobj.cangoright);
       var sendjson = JSON.stringify(jsonobj);
       }
       else {
@@ -550,6 +572,43 @@ app.post('/deletearticle',urlencodedParser,(req,res)=>{
       res.send("removed "+path+"from db");
     }
   });
+});
+
+app.post('/arrowcontent',urlencodedParser, (req, res)=> {
+  let pathin = req.body['pathin'];
+  let level = req.body['curlevel'];
+  let rightlevel = toString(parseInt(level) + 2);
+  let leftlevel = toString(parseInt(level) - 2);
+  let totalpath = pathin;
+  console.log('total path is: ' + totalpath);
+  let contents = fs.readFileSync(totalpath, 'utf8');
+  //check lastleft and lastright
+  let lastleft = true;
+  let lastright = true;
+  let findleft = db.query("SELECT * FROM article WHERE level=" + leftlevel
+                , (err, result) =>{
+    if (err)
+      throw err;
+    else {
+        if (result.length>0) {
+          lastleft = false;
+        }
+    }
+  });
+  let findright = db.query("SELECT * FROM article WHERE level=" + rightlevel
+                , (err, result) =>{
+    if (err)
+      throw err;
+    else {
+        if (result.length>0) {
+          lastright = false;
+        }
+    }
+  });
+
+  let myobj = {'content':contents, 'lastleft':lastleft, 'lastright':lastright};
+  let tosend = JSON.stringify(myobj);
+  res.send(tosend);
 });
 
 http.listen(3000, function(){
