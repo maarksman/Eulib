@@ -1,0 +1,184 @@
+.sbx-twitter {
+  display: inline-block;
+  position: absolute;
+  left: 30%;
+  top: 23%;
+  width: 35%;
+  height: 33px;
+  white-space: nowrap;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+.sbx-twitterr {
+  display: inline-block;
+  position: absolute;
+  left: 32%;
+  top: 23%;
+  width: 30%;
+  height: 33px;
+  white-space: nowrap;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+.sbx-twitter__wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.sbx-twitter__input {
+  display: inline-block;
+  -webkit-transition: box-shadow .4s ease, background .4s ease;
+  transition: box-shadow .4s ease, background .4s ease;
+  border: 0;
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1px #E1E8ED;
+  background: #F5F8FA;
+  padding: 0;
+  padding-right: 52px;
+  padding-left: 16px;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  white-space: normal;
+  font-size: inherit;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+.sbx-twitter__input::-webkit-search-decoration, .sbx-twitter__input::-webkit-search-cancel-button, .sbx-twitter__input::-webkit-search-results-button, .sbx-twitter__input::-webkit-search-results-decoration {
+  display: none;
+}
+
+.sbx-twitter__input:hover {
+  box-shadow: inset 0 0 0 1px #c1d0da;
+}
+
+.sbx-twitter__input:focus, .sbx-twitter__input:active {
+  outline: 0;
+  box-shadow: inset 0 0 0 1px #D6DEE3;
+  background: #FFFFFF;
+}
+
+.sbx-twitter__input::-webkit-input-placeholder {
+  color: #9AAEB5;
+}
+
+.sbx-twitter__input::-moz-placeholder {
+  color: #9AAEB5;
+}
+
+.sbx-twitter__input:-ms-input-placeholder {
+  color: #9AAEB5;
+}
+
+.sbx-twitter__input::placeholder {
+  color: #9AAEB5;
+}
+
+.sbx-twitter__submit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: inherit;
+  margin: 0;
+  border: 0;
+  border-radius: 0 16px 16px 0;
+  background-color: rgba(62, 130, 247, 0);
+  padding: 0;
+  width: 33px;
+  height: 100%;
+  vertical-align: middle;
+  text-align: center;
+  font-size: inherit;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.sbx-twitter__submit::before {
+  display: inline-block;
+  margin-right: -4px;
+  height: 100%;
+  vertical-align: middle;
+  content: '';
+}
+
+.sbx-twitter__submit:hover, .sbx-twitter__submit:active {
+  cursor: pointer;
+}
+
+.sbx-twitter__submit:focus {
+  outline: 0;
+}
+
+.sbx-twitter__submit svg {
+  width: 13px;
+  height: 13px;
+  vertical-align: middle;
+  fill: #657580;
+}
+
+.sbx-twitter__reset {
+  display: none;
+  position: absolute;
+  top: 7px;
+  right: 33px;
+  margin: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  fill: rgba(0, 0, 0, 0.5);
+}
+
+.sbx-twitter__reset:focus {
+  outline: 0;
+}
+
+.sbx-twitter__reset svg {
+  display: block;
+  margin: 4px;
+  width: 11px;
+  height: 11px;
+}
+
+.sbx-twitter__input:valid ~ .sbx-twitter__reset {
+  display: block;
+  -webkit-animation-name: sbx-reset-in;
+          animation-name: sbx-reset-in;
+  -webkit-animation-duration: .15s;
+          animation-duration: .15s;
+}
+
+@-webkit-keyframes sbx-reset-in {
+  0% {
+    -webkit-transform: translate3d(-20%, 0, 0);
+            transform: translate3d(-20%, 0, 0);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: none;
+            transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes sbx-reset-in {
+  0% {
+    -webkit-transform: translate3d(-20%, 0, 0);
+            transform: translate3d(-20%, 0, 0);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: none;
+            transform: none;
+    opacity: 1;
+  }
+}

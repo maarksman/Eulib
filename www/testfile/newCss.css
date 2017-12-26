@@ -1,0 +1,23 @@
+.container-fluid{
+  margin-top: 5px;
+  background-color: #eeaa7b;
+}
+div[class^="col"]{
+  border: 1px solid black;
+  margin: none;
+}
+.row{
+
+}
+.col-4{
+  text-align: center;
+}
+.input_fields_sign_in{
+
+}
+input{
+  width: inherit;
+}
+#username{
+  
+}

@@ -1,0 +1,46 @@
+
+<!Doctype html>
+
+
+<html>
+  <head>
+    <title>Sign up for Eulib</title>
+      <script src ="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+      <script type = "text/javascript" src = "../js/scriptmysql.js"></script>
+    <link rel="stylesheet" type = "text/css" href = "../css/styles1.css">
+  </head>
+
+  <body>
+
+    <h1 class = "main_headers" id = "main_title"><a href="/">Eulib</a></h1>
+    <h2 class = "main_headers">The Math Library</h2>
+
+    <div id = "input_fields_sign_up">
+
+      <!-- <h3 class = "main_headers" id = "sign_up_label">Sign Up</h3></br>
+      <input type = "text" placeholder="Username" id = "username" class = "main_headers_input"><br/>
+      <input type = "text" placeholder="Email" id = "email" class = "main_headers_input"><br/>
+      <input type = "password" placeholder="Password" id = "password" class = "main_headers_input"><br/>
+      <input type = "password" placeholder= "Confirm Password" id = "conf_password" class = "main_headers_input"> <br/>
+      <input type = "button" class = "main_headers_input" id = "signup_button" value="Sign Up"><br/> -->
+
+      <h3 class = "main_headers" id = "sign_up_label">Sign Up</h3>
+      <form>
+        <input type ="text" placeholder="Username" id = "username" class = "main_headers_input"><br/>
+        <input type ="text" placeholder="Email" id = "email" class = "main_headers_input"><br/>
+        <input type ="password" placeholder="Password" id = "password" class = "main_headers_input"><br/>
+        <input type ="password" placeholder= "Confirm Password" id = "conf_password" class = "main_headers_input"> <br/>
+        <input type ="button" class = "main_headers_input" id = "signup_button" value="Sign Up" onclick="window.location.href='/'"><br/>
+      </form>
+
+      <div id = "error_message"></div>
+      <input type ="button" id = "show_db_button" value = "Show Database">
+    </div>
+
+    <div id ="database_show"></div>
+
+
+
+  </body>
+
+</html>

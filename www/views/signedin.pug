@@ -1,0 +1,218 @@
+html
+  head
+    link(href='/css/styles1user.css', rel='stylesheet')
+    script(src ="http://code.jquery.com/jquery-1.11.3.min.js")
+    script(src="/js/signedin.js")
+  head
+    
+  body
+      
+    a(href = '/createknowl') create knowl
+    a(href = '/')
+      title Your own personal page
+      meta(charset='utf-8')
+      meta(name='viewport', content='width=device-width, initial-scale=1')
+      link(rel='stylesheet', type='text/css', href='../assets/editabletable/bootstrap.min.css')
+      link(rel='stylesheet', type='text/css', href='../assets/editabletable/font-awesome.min.css')
+      script(type='text/javascript', src='../assets/editabletable/jquery-1.10.2.min.js')
+      script(type='text/javascript', src='../assets/editabletable/bootstrap.min.js')
+      link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+      script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+      link(href='../css/styles1user.css', ,='', rel='stylesheet')
+      script(src='http://code.jquery.com/jquery-1.11.3.min.js')
+      script(src='../js/signedin.js')
+      //script(type='text/javascript', src='http://code.jquery.com/jquery-latest.min.js')
+      //link(href='http://aimath.org/knowlstyle.css', rel='stylesheet', type='text/css')
+      //script(type='text/javascript', src='http://aimath.org/knowl.js')
+
+      style.
+        /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+        .row.content {height: 500px;}
+        /* Set gray background color and 100% height */
+        .sidenav {
+        background-color: #f1f1f1;
+        height: 120%;
+        }
+        /* Set black background color, white text and some padding */
+        footer {
+        background-color: #555;
+        color: white;
+        padding: 15px;
+        }
+        /* On small screens, set height to 'auto' for sidenav and grid */
+        @media screen and (max-width: 767px) {
+        .sidenav {
+        height: auto;
+        padding: 15px;
+        }
+        .row.content {height: auto;}
+        }
+    body
+      h1  Eulib, a math dictionary
+      p Welcome #{name}
+      //- p 
+      //- | Change theme
+      //- button#change_theme(type = "button") #{theme}
+      p
+      | Sign out 
+      button#signout(type = 'button') Sign out
+      p
+      //input#search(type='text')
+      //div#search-return
+      
+      .container-fluid
+        .row.content
+          .col-sm-3.sidenav
+            h4 Useful links
+            ul.nav.nav-pills.nav-stacked
+              li.active
+                a(href='../index.html') Home
+              li
+                a(href='#section2') All articles
+              li
+                a(href='#section3') Created aritcles
+              li
+                a(href='#section3') Saved articles
+              li
+                a(href='#') Log out
+            br
+            .input-group
+              input#search.form-control(type='text', placeholder='Search articles..')
+              #testdest
+              span.input-group-btn
+                button.btn.btn-default(type='button')
+                  span.glyphicon.glyphicon-search
+          .col-sm-9
+            h4
+              small Saved articles
+            hr
+            h2 I Love Math
+            h5
+              span.glyphicon.glyphicon-time
+              |  Post by Jane Dane, Sep 27, 2015.
+            h5
+              span.label.label-danger Food
+              span.label.label-primary Ipsum
+            br
+            p
+              | Food is my passion. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            br
+            br
+            hr
+            h2 Officially Blogging
+            h5
+              span.glyphicon.glyphicon-time
+              |  Post by John Doe, Sep 24, 2015.
+            h5
+              span.label.label-success Lorem
+            br
+            p
+              | Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            hr
+      .container
+        .page-header
+          h1 Created ariticles of yours
+        // Editable Table - START
+        .col-md-12
+          .panel.panel-default
+            .panel-heading
+              h4.text-center
+                | Article info
+                span.fa.fa-edit.pull-right.bigicon
+            .panel-body.text-center
+              #grid
+        // you need to include the shieldui css and js assets in order for the grids to work
+        link(rel='stylesheet', type='text/css', href='http://www.prepbootstrap.com/Content/shieldui-lite/dist/css/light/all.min.css')
+        script(type='text/javascript', src='http://www.prepbootstrap.com/Content/shieldui-lite/dist/js/shieldui-lite-all.min.js')
+        script(type='text/javascript', src='http://www.prepbootstrap.com/Content/data/shortGridData.js')
+        script(type='text/javascript').
+          $(document).ready(function () {
+          $("#grid").shieldGrid({
+          dataSource: {
+          data: gridData,
+          schema: {
+          fields: {
+          id: { path: "id", type: Number },
+          Title: { path: "Title", type: String },
+          Field: { path: "Field", type: String },
+          Date: { path: "Date", type: Date },
+          }
+          }
+          },
+          sorting: {
+          multiple: true
+          },
+          rowHover: false,
+          columns: [
+          { field: "Title", title: "Title", width: "120px" },
+          { field: "Field", title: "Field", width: "150px" },
+          { field: "Date", title: "Last Rivised Date", width: "70px"},
+          {
+          width: 150,
+          title: "Update/Delete Column",
+          buttons: [
+          { commandName: "edit", caption: "Edit" },
+          { commandName: "delete", caption: "Delete" }
+          ]
+          }
+          ],
+          editing: {
+          enabled: true,
+          mode: "popup",
+          confirmation: {
+          "delete": {
+          enabled: true,
+          template: function (item) {
+          return "Delete row with ID = " + item.id
+          }
+          }
+          }
+          }
+          });
+          $("#search").on('keyup',function(){
+          search($("#search"),$("#testdest"));
+          })
+          function search($inputid, $target){
+          //TODO sql search for articles including text
+          var my_search = ($inputid.val())
+          //console.log("searching for: "+my_search);
+          $.ajax({
+          url: '/search',
+          data: {'search-text': my_search},
+          type: 'POST',
+          success: function(data) {
+          $target.text(data);
+          },
+          error: function(error) {
+          console.log(error);
+          }
+          });
+          }
+          });
+        style(type='text/css').
+          .sui-button-cell
+          {
+          text-align: center;
+          }
+          .sui-checkbox
+          {
+          font-size: 17px !important;
+          padding-bottom: 4px !important;
+          }
+          .deleteButton img
+          {
+          margin-right: 3px;
+          vertical-align: bottom;
+          }
+          .bigicon
+          {
+          color: #5CB85C;
+          font-size: 20px;
+          }
+        // Editable Table - END
+      footer.container-fluid
+        p(align='center') Copyright © Eulib 2017
+
+    
+      
