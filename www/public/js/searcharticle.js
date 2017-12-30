@@ -46,7 +46,7 @@ $(document).ready(function() {
         if (isleftbutton) {
           $('#changing').children('.rightbutton').attr('data-path', prevpath);
           $('#changing').attr('data-path', newpath);
-          $('#changing').attr('data-path', toString(parseInt(level)-1) );
+          $('#changing').attr('data-level', toString(parseInt(level)-1) );
           $('#changing').children('.rightbutton').show();
           if (data.lastleft) {
             $('#changing').children('.leftbutton').hide();
@@ -55,7 +55,7 @@ $(document).ready(function() {
         if (isrightbutton) {
           $('#changing').children('.leftbutton').attr('data-path', prevpath);
           $('#changing').attr('data-path', newpath);
-          $('#changing').attr('data-path', toString(parseInt(level)+ 1) );
+          $('#changing').attr('data-level', toString(parseInt(level)+ 1) );
           $('#changing').children('.leftbutton').show();
           if (data.lastright) {
             $('#changing').children('.rightbutton').hide();

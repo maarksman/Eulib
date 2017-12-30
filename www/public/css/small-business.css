@@ -134,3 +134,39 @@ td:last-child {
   margin-top: 10%;
   margin-right: 35%;
 }
+
+.newarticle {
+  bottom: 0;
+  right: 10px;
+  position: fixed;
+  width: 40%;
+  height: 70%;
+  border-style: solid;
+  border-width: thin;
+  border-color: gray;
+  background-color: white;
+  padding: 20px;
+}
+
+.minimizebar{
+  width: auto;
+  margin-bottom: 10px;
+  padding-top: 0px;
+  margin-top: 0px;
+  border-width: thin;
+  position: absolute;
+  right : 10px;
+  top: 5px;
+}
+
+.maximizebar {
+  position: fixed;
+  bottom: 0px;
+  right: 10px;
+  width: 100px;
+  height: 25px;
+  background-color: black;
+  color: white;
+  padding-bottom: 10px;
+  font-size: 0.75em;
+}
