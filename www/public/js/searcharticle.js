@@ -1,12 +1,3 @@
-/*function load_js()
-{
-var head= document.getElementsByTagName('head')[0];
-var script= document.createElement('script');
-script.type= 'text/javascript';
-script.src= 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML';
-head.prepend(script);
-}*/
-
 var textarea = $('#mEdit');
 var text;
 var title;
@@ -17,7 +8,7 @@ $(document).ready(function() {
   console.log('searcharticlelive');
 
   //function for article left-right
-  $(".button").on('click', function(e){
+  $(document).on('click', '.button', function(e){
     //add changing id to remove later
     console.log('Registered click');
     $(this).closest(".boxedin").attr("id", 'changing');
@@ -26,39 +17,51 @@ $(document).ready(function() {
     let level = $('#changing').attr('data-level');
     console.log('prev knowl data-path is: '+ prevpath);
     console.log('new knowl data-path is: '+ newpath);
-    let isleftbutton = $(this).hasClass('leftbutton') ? true : false;
-    let isrightbutton = $(this).hasClass('rightbutton') ? true : false;
+    let leftorright = $(this).hasClass('leftbutton') ? 'left' : 'right';
     //get content, remove content div then add new content
 
     $.ajax({
       url: '/arrowcontent',
-      data: {'pathin': newpath, 'curlevel':level},
+      data: {'pathin': newpath, 'curlevel':level, 'leftorright':leftorright},
       type: 'POST',
       datatype: 'json',
       success: function(data) {
         //console.log('data came back as: ' + data);
-        consol
+        console.log("Fired arrowcontentchange request");
+        let myobj = JSON.parse(data);
         $("#changing").children().remove('.knowlcontent1');
-        let newdiv = $("<div class='knowlcontent1'>" + data.content + "</div>");
+        let newdiv = $("<div class='knowlcontent1'>" + myobj.content + "</div>");
+        /*console.log('returned content is:');
+        console.log(myobj.content); */
+        console.log('showing returned json');
+        console.log(myobj);
         $('#changing').append(newdiv);
         //console.log('checking button changeup');
         //console.log($(this).hasClass('leftbutton'));
-        if (isleftbutton) {
+        if (leftorright == 'left') {
           $('#changing').children('.rightbutton').attr('data-path', prevpath);
           $('#changing').attr('data-path', newpath);
-          $('#changing').attr('data-level', toString(parseInt(level)-1) );
+          $('#changing').attr('data-level', (parseInt(level)-1).toString());
           $('#changing').children('.rightbutton').show();
-          if (data.lastleft) {
+          if (myobj.lastleft || (level == '2') ) {
             $('#changing').children('.leftbutton').hide();
           }
+          else {
+            $('#changing').children('.leftbutton').attr('data-path', myobj.newpath);
+            $('#changing').children('.leftbutton').show();
+          }
         }
-        if (isrightbutton) {
+        if (leftorright == 'right') {
           $('#changing').children('.leftbutton').attr('data-path', prevpath);
           $('#changing').attr('data-path', newpath);
-          $('#changing').attr('data-level', toString(parseInt(level)+ 1) );
+          $('#changing').attr('data-level', (parseInt(level)+ 1).toString());
           $('#changing').children('.leftbutton').show();
-          if (data.lastright) {
+          if (myobj.lastright || (level == '4')) {
             $('#changing').children('.rightbutton').hide();
+          }
+          else {
+            $('#changing').children('.rightbutton').attr('data-path', myobj.newpath);
+            $('#changing').children('.rightbutton').show();
           }
         }
 
@@ -72,7 +75,6 @@ $(document).ready(function() {
 
   });
 
-  //if user clicks the the button with id change_theme, run change_theme function
 
   $('#search').on('keyup', function(e){
     //clear original datalist
@@ -81,8 +83,6 @@ $(document).ready(function() {
   });
 
   $('#search_button').on("click",function(e){
-    //load_js();
-    //console.log("clicked");
     redir($('#search'));
   });
   $('.close').on('click',function(){
@@ -108,12 +108,6 @@ $(document).ready(function() {
 
     title = $(this).closest("div").attr("data-title");
     path = $(this).closest("div").attr("data-path");
-    // console.log("title: "+title);
-    // console.log("textarea: " + textarea.html());
-    // console.log("text: "+text.html());
-    //knowl = $(".knowl-output");
-    //console.log(knowl.html());
-    //toggle save/edit button show/hide textarea/text
     if($(textarea).css("display")=="none"){
       //console.log("show");
       $(textarea).css("display","block");
@@ -128,18 +122,6 @@ $(document).ready(function() {
       $(this).text("Edit");
     }
   });
-     //alert("test"); });
-  //on click, get path and append to element
-  /*
-  $('#addknowlbutton').on('click', function(e){
-    console.log('copypastelinkclicked');
-    $('#copypastelink').html("");
-    let linktitle = $('#addlink').val();
-    let tofind = "[value=" + linktitle + "]";
-    let knowl_path = $(tofind).attr('data-path');
-    console.log('knowl path is ' + knowl_path);
-
-  });*/
 });
 function saveArticle($inputtitle,$inputcontent, $inputpath){
   var my_search = ($inputtitle);
@@ -188,17 +170,7 @@ function search($inputid, $datalist){
 
 function redir($inputid){
     var my_search = ($inputid.val());
-    // var d = new Date();
-    // var month = d.getMonth()+1;
-    // var day = d.getDate();
-    // var output = d.getFullYear() + '/' +
-    // (month<10 ? '0' : '') + month + '/' +
-    // (day<10 ? '0' : '') + day;
-    //console.log("search for: "+my_search);
-    //search for existing option in articles datalist
     let alistoption = $("#articles option[value='"+ my_search + "']");
-    //console.log('alistopiton');
-    //console.log(alistoption);
 
         $.ajax({
         url: '/searcharticleredir',
@@ -236,12 +208,6 @@ function redir($inputid){
           //remove the marker of nowl we just added
           $('#adding').removeAttr('id');
           }
-          // $('#date').html(output);
-          // $('#my_title').html(my_search);
-          //window.location = data;
-
-          //console.log('div:' + div);
-          //onclick=\"editDiv(this)\"
       },
       error: function(error) {
         console.log(error);
@@ -254,21 +220,3 @@ function redir($inputid){
 function removeDiv(element){
   $(element).closest("div").remove();
 }
-// function editDiv(element){
-//   $(element).text("Save");
-//   var divhtml = $(element).closest("div").children("div").html();
-//   var div = $(element).closest("div").children("div");
-//   var outerdiv = $(element).closest("div");
-//   div.hide();
-//   $(".mEdit").css("display:block")
-//   //console.log(divtext);
-// }
-
-//remove all
-//$('div').remove(".boxedin")
-
-// get datalist element
-// onkeyup, update datalist function
-// function - do db query, append all ound to listen
-// if found, add option + value to dropdowns
-// end function
