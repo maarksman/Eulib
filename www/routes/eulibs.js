@@ -113,7 +113,7 @@ module.exports = (app, urlencodedParser, db, fs) => {
     db.query(query, title, (err, result) => {
       if (err) throw err;
       else {
-        res.send('removed ' + path + 'from db');
+        res.send('removed ' + title + 'from db');
       }
     });
   });
