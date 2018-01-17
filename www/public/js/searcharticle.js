@@ -2,7 +2,6 @@ var textarea = $('#mEdit');
 var text;
 var title;
 var path;
-var knowl = $('.knowl-content loading');
 $(document).ready(function() {
   //load_js();
   console.log('searcharticlelive');
@@ -10,24 +9,27 @@ $(document).ready(function() {
   //function for article left-right
   $(document).on('click', '.button', function(e){
     //add changing id to remove later
-    console.log('Registered click');
+
     $(this).closest(".boxedin").attr("id", 'changing');
-    let newpath = $(this).attr('data-path');
-    let prevpath = $('#changing').attr('data-path');
+    let newid = $(this).attr('data-id');
+    let previd = $('#changing').attr('data-id');
     let level = $('#changing').attr('data-level');
-    console.log('prev knowl data-path is: '+ prevpath);
-    console.log('new knowl data-path is: '+ newpath);
     let leftorright = $(this).hasClass('leftbutton') ? 'left' : 'right';
+    console.log('Registered '+ leftorright + ' click');
     //get content, remove content div then add new content
+    let clickedbutton = $(this);
+    let changeknowl = $(this).parent();
+    let behindbutton = $(this).parent().children("." + leftorright + 'button');
+    //double check parent is Jquery sintax;
 
     $.ajax({
       url: '/arrowcontent',
-      data: {'pathin': newpath, 'curlevel':level, 'leftorright':leftorright},
+      data: {'clickedid': newid, 'curlevel':level, 'leftorright':leftorright},
       type: 'POST',
       datatype: 'json',
       success: function(data) {
         //console.log('data came back as: ' + data);
-        console.log("Fired arrowcontentchange request");
+        console.log("Fired arrowcontent change request");
         let myobj = JSON.parse(data);
         $("#changing").children().remove('.knowlcontent1');
         let newdiv = $("<div class='knowlcontent1'>" + myobj.content + "</div>");
@@ -36,15 +38,14 @@ $(document).ready(function() {
         console.log('showing returned json');
         console.log(myobj);
         $('#changing').append(newdiv);
-        //console.log('checking button changeup');
-        //console.log($(this).hasClass('leftbutton'));
         if (leftorright == 'left') {
-          $('#changing').children('.rightbutton').attr('data-path', prevpath);
-          $('#changing').attr('data-path', newpath);
+          $('#changing').children('.rightbutton').attr('data-id', previd);
+          $('#changing').attr('data-id', newid);
           $('#changing').attr('data-level', (parseInt(level)-1).toString());
           $('#changing').children('.rightbutton').show();
-          if (myobj.lastleft || (level == '2') ) {
-            $('#changing').children('.leftbutton').hide();
+          if (myobj.lastleft) {
+            $('#changing').children('.leftbutton').hide()
+            $('#changing').children('.leftbutton').attr();
           }
           else {
             $('#changing').children('.leftbutton').attr('data-path', myobj.newpath);
@@ -56,7 +57,7 @@ $(document).ready(function() {
           $('#changing').attr('data-path', newpath);
           $('#changing').attr('data-level', (parseInt(level)+ 1).toString());
           $('#changing').children('.leftbutton').show();
-          if (myobj.lastright || (level == '4')) {
+          if (myobj.lastright) {
             $('#changing').children('.rightbutton').hide();
           }
           else {
@@ -65,7 +66,7 @@ $(document).ready(function() {
           }
         }
 
-        $(this).parent().removeAttr('id');
+        $(this).parent().attr('id', 'changed');
 
       },
       error: function(error) {
@@ -188,12 +189,12 @@ function redir($inputid){
           else {
           var div = $(
           "<div id='adding' data-title=" + my_search +
-          " data-path=" + myObj.path + " data-level='3'" + "> \
+          " data-id=" + myObj.id + " data-level='3'" + "> \
           <button class=\"editerB "+myObj.id+  "\"type=\"button\">Edit</button>\
           <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-          <div id="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-          + `<button class="leftbutton button" data-path=""> < </button>
-          <button class="rightbutton button" data-path=""> > </button>`
+          <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
+          + `<button class="leftbutton button" data-id=""> < </button>
+          <button class="rightbutton button" data-id=""> > </button>`
           + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
           "</div>");
 
@@ -201,10 +202,10 @@ function redir($inputid){
           $('#entry-content').prepend(div.addClass("boxedin"));
           if (!myObj.cangoleft) {
             $('#adding').children('.leftbutton').hide();
-          } else {$('#adding').children('.leftbutton').attr('data-path', myObj.leftpath);}
+          } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
           if (!myObj.cangoright) {
             $('#adding').children('.rightbutton').hide();
-          } else {$('#adding').children('.rightbutton').attr('data-path', myObj.rightpath);}
+          } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
           //remove the marker of nowl we just added
           $('#adding').removeAttr('id');
           }
