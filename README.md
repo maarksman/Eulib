@@ -1,4 +1,4 @@
-# term-project-easygoers
+# Eulib
 term-project-easygoers created by GitHub Classroom
 https://dev.mysql.com/downloads/file/?id=473605 -msql download --this was recently changed. make sure to include mysql server!
 <ol>
