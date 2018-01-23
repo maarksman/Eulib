@@ -1,77 +1,76 @@
 module.exports = (app, urlencodedParser, db, fs) => {
+  function nextlevel(level, pressdir) {
+    //return string of next level to search
+    let toadd;
+    if (pressdir == 'left') {toadd = -1;}
+    if (pressdir == 'right') {toadd = 1;}
+    let next = (parseInt(level) + toadd).toString();
+    return next;
+  }
+
   app.post('/arrowcontent', urlencodedParser, (req, res) => {
-    let pathin = req.body['pathin'];
-    let level = req.body['curlevel'];
+    const id_in = req.body['clickedid'];
     const leftorright = req.body['leftorright'];
-    console.log('curlevel is: ' + level);
-    let rightlevel = (parseInt(level) + 2).toString();
-    let leftlevel = (parseInt(level) - 2).toString();
+    console.log('id_in is: ' + id_in);
     //knowls store path starting from 'knowlcontant' folder
-    let totalpath = 'public/' + pathin;
-    console.log('total path is: ' + totalpath);
-    let contents = fs.readFileSync(totalpath, 'utf8');
     //check lastleft and lastright\
-    let lastleft = true;
-    let lastright = true;
+    let islast = true;
     let tosend;
-    if (leftorright == 'left') {
-      let findleft = db.query(
-        'SELECT * FROM article WHERE level=' + leftlevel,
+    let myobj = {found:false};
+    let idquery = db.query(
+        'SELECT * FROM article WHERE id=' + id_in,
         (err, result) => {
           if (err) throw err;
           else {
             if (result.length > 0) {
-              lastleft = false;
-              let myobj = {
-                content: contents,
-                lastleft: lastleft,
-                lastright: lastright,
-                newpath: result.path
-              };
-              tosend = JSON.stringify(myobj);
-              res.send(tosend);
-            } else {
-              let myobj = {
-                content: contents,
-                lastleft: lastleft,
-                lastright: lastright
-              };
+              row = result[0];
+              let newcurlevel = row.level;
+              let title = row.title;
+              let pathtofile =  'public/' + row.path;
+              console.log("path from table is:" + row.path);
+              //do query checking for next button id as callback
+              let contents = fs.readFile(pathtofile, 'utf8', (err, data) => {
+                if (err) {console.log("error reading");throw err;}
+                else {
+                  let contents = data;
+                  let ahead = db.query(
+                      "SELECT * FROM article WHERE title='" + title +  "' AND level="
+                      + nextlevel(newcurlevel, leftorright), (err, result) => {
+                        // if found new arrow afte r press, send it
+                        if (result.length > 0) {
+                          islast = false;
+                          let nextid = result[0].id;
+                          console.log('contents are: ');
+                          console.log(contents);
+                          myobj = {
+                            found: true,
+                            content: contents,
+                            islast : islast,
+                            nextid : nextid
+                          };
+                          tosend = JSON.stringify(myobj);
+                          res.send(tosend);
+                        }
+                        // if no content for new arrow, send json to indicate
+                        else {
+                          myobj = {
+                            found: true,
+                            content: contents,
+                            islast : islast
+                          };
+                          tosend = JSON.stringify(myobj);
+                          res.send(tosend);
+                        }
+                  });
+                }
+              });
+            }
+            // if we don't find sql entry for id, found = false
+            else {
               tosend = JSON.stringify(myobj);
               res.send(tosend);
             }
           }
-        }
-      );
-    } else if (leftorright == 'right') {
-      let findright = db.query(
-        'SELECT * FROM article WHERE level=' + rightlevel,
-        (err, result) => {
-          if (err) throw err;
-          else {
-            console.log('did we search for next level? resultlength is:');
-            console.log(result.length);
-            if (result.length > 0) {
-              lastright = false;
-              let myobj = {
-                content: contents,
-                lastleft: lastleft,
-                lastright: lastright,
-                newpath: result.path
-              };
-              tosend = JSON.stringify(myobj);
-              res.send(tosend);
-            } else {
-              let myobj = {
-                content: contents,
-                lastleft: lastleft,
-                lastright: lastright
-              };
-              tosend = JSON.stringify(myobj);
-              res.send(tosend);
-            }
-          }
-        }
-      );
-    }
+        });
   });
 };

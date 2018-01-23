@@ -55,18 +55,17 @@ module.exports = (app, urlencodedParser, db, fs) => {
         //console.log(result.length);
         for (var i = 0; i < result.length; i++) {
           var row = result[i];
-          console.log(row);
           if (row.level == '3') {
             var path = row.path;
             isindatabase = true;
           }
           if (row.level == '2') {
             cangoleft = true;
-            leftpath = row.path;
+            leftid = row.id;
           }
           if (row.level == '4') {
             cangoright = true;
-            rightpath = row.path;
+            rightid = row.id;
           }
         }
       if (isindatabase) {
@@ -78,8 +77,8 @@ module.exports = (app, urlencodedParser, db, fs) => {
           articlefound: isindatabase,
           cangoleft: cangoleft,
           cangoright: cangoright,
-          rightpath: rightpath,
-          leftpath: leftpath
+          rightid: rightid,
+          leftid: leftid
         };
         // query to check for left/right
         //console.log(jsonobj);

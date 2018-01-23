@@ -13,60 +13,63 @@ $(document).ready(function() {
     $(this).closest(".boxedin").attr("id", 'changing');
     let newid = $(this).attr('data-id');
     let previd = $('#changing').attr('data-id');
-    let level = $('#changing').attr('data-level');
     let leftorright = $(this).hasClass('leftbutton') ? 'left' : 'right';
     console.log('Registered '+ leftorright + ' click');
     //get content, remove content div then add new content
     let clickedbutton = $(this);
     let changeknowl = $(this).parent();
-    let behindbutton = $(this).parent().children("." + leftorright + 'button');
     //double check parent is Jquery sintax;
 
     $.ajax({
       url: '/arrowcontent',
-      data: {'clickedid': newid, 'curlevel':level, 'leftorright':leftorright},
+      data: {'clickedid': newid, 'leftorright':leftorright},
       type: 'POST',
       datatype: 'json',
       success: function(data) {
         //console.log('data came back as: ' + data);
         console.log("Fired arrowcontent change request");
         let myobj = JSON.parse(data);
-        $("#changing").children().remove('.knowlcontent1');
-        let newdiv = $("<div class='knowlcontent1'>" + myobj.content + "</div>");
         /*console.log('returned content is:');
         console.log(myobj.content); */
         console.log('showing returned json');
         console.log(myobj);
-        $('#changing').append(newdiv);
-        if (leftorright == 'left') {
-          $('#changing').children('.rightbutton').attr('data-id', previd);
-          $('#changing').attr('data-id', newid);
-          $('#changing').attr('data-level', (parseInt(level)-1).toString());
-          $('#changing').children('.rightbutton').show();
-          if (myobj.lastleft) {
-            $('#changing').children('.leftbutton').hide()
-            $('#changing').children('.leftbutton').attr();
-          }
-          else {
-            $('#changing').children('.leftbutton').attr('data-path', myobj.newpath);
-            $('#changing').children('.leftbutton').show();
-          }
-        }
-        if (leftorright == 'right') {
-          $('#changing').children('.leftbutton').attr('data-path', prevpath);
-          $('#changing').attr('data-path', newpath);
-          $('#changing').attr('data-level', (parseInt(level)+ 1).toString());
-          $('#changing').children('.leftbutton').show();
-          if (myobj.lastright) {
-            $('#changing').children('.rightbutton').hide();
-          }
-          else {
-            $('#changing').children('.rightbutton').attr('data-path', myobj.newpath);
-            $('#changing').children('.rightbutton').show();
-          }
-        }
 
-        $(this).parent().attr('id', 'changed');
+        if (myobj.found) {
+          $("#changing").children().remove('.knowlcontent1');
+          let newdiv = $("<div class='knowlcontent1'>" + myobj.content + "</div>");
+          $('#changing').append(newdiv);
+          //do required changes, then use left/right for next button left/right
+          $('#changing').attr('data-id', newid);
+          if (leftorright == 'left') {
+            $('#changing').children('.rightbutton').attr('data-id', previd)
+            $('#changing').children('.rightbutton').show();
+            if (myobj.islast) {
+              $('#changing').children('.leftbutton').hide()
+              $('#changing').children('.leftbutton').attr('data-id', "");
+            }
+            else {
+              $('#changing').children('.leftbutton').attr('data-id', myobj.nextid);
+              $('#changing').children('.leftbutton').show();
+            }
+          }
+          if (leftorright == 'right') {
+            $('#changing').children('.leftbutton').attr('data-id', previd);
+            $('#changing').children('.leftbutton').show();
+            if (myobj.islast) {
+              $('#changing').children('.rightbutton').hide();
+              $('#changing').children('.rightbutton').attr('data-id', "");
+            }
+            else {
+              $('#changing').children('.rightbutton').attr('data-id', myobj.nextid);
+              $('#changing').children('.rightbutton').show();
+            }
+          }
+          $(this).parent().attr('id', 'changed');
+        }
+        //if  not found, send alert and do nothing
+        else {
+          alert("No record of id on arrow button");
+        }
 
       },
       error: function(error) {
