@@ -64,19 +64,18 @@ $(document).ready(function() {
               $('#changing').children('.rightbutton').show();
             }
           }
-          $(this).parent().attr('id', 'changed');
         }
         //if  not found, send alert and do nothing
         else {
           alert("No record of id on arrow button");
         }
-
+        $('div#changing').removeAttr('id');
       },
       error: function(error) {
         console.log(error);
+        $('div#changing').removeAttr('id');
       }
     });
-
   });
 
 
