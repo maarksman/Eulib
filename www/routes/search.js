@@ -47,8 +47,8 @@ module.exports = (app, urlencodedParser, db, fs) => {
     let isindatabase = false;
     let cangoright = false;
     let cangoleft = false;
-    let rightpath = '';
-    let leftpath = '';
+    let rightid = '';
+    let leftid = '';
     let query = db.query(sql, search, (err, result) => {
       if (err) throw err;
       else
@@ -57,6 +57,7 @@ module.exports = (app, urlencodedParser, db, fs) => {
           var row = result[i];
           if (row.level == '3') {
             var path = row.path;
+            var knowlid = row.id;
             isindatabase = true;
           }
           if (row.level == '2') {
@@ -73,7 +74,7 @@ module.exports = (app, urlencodedParser, db, fs) => {
         var jsonobj = {
           content: content,
           path: path,
-          id: row.id,
+          id: knowlid,
           articlefound: isindatabase,
           cangoleft: cangoleft,
           cangoright: cangoright,
