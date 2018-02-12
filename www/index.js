@@ -12,7 +12,7 @@ var usertheme;
 //create connection
 var db = mysql.createConnection({
   host: 'localhost',
-  user: 'prikshet',
+  user: 'eulibdbuser',
   password: 'mysql',
   database: 'EulibDB',
   multipleStatements: true

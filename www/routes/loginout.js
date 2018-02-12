@@ -4,6 +4,8 @@ module.exports = app => {
     //console.log('trying to print username' + req.session.username);
     var username = req.session.username;
     console.log('username: ' + username);
+    console.log('session object is');
+    console.log(req.session);
     if (req.session.username == null) {
       res.redirect('/');
     } else {

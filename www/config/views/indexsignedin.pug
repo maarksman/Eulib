@@ -52,8 +52,6 @@ html(lang='en')
               .sbx-twitter__wrapper(role='search')
                 
                 datalist#articles
-                  option(value='Opera')
-                  option(value='Safari')
                 input#search.sbx-twitter__input(type='search', name='search', placeholder='Search your website', autocomplete='off', required='required', list='articles')
                 button#search_button.sbx-twitter__submit(type='submit', title='Submit your search query.')
                   svg(role='img', aria-label='Search')
@@ -61,6 +59,7 @@ html(lang='en')
                 button.sbx-twitter__reset(type='reset', title='Clear the search query.')
                   svg(role='img', aria-label='Reset')
                     use(xmlns:xlink='http://www.w3.org/1999/xlink', xlink:href='#sbx-icon-clear-3')
+                button#search_all(type='submit', title='Search all suggestions.') Submit All
             li.nav-item
               a.nav-link(href='#' id = "addknowl") Add knowl
             //- li.nav-item

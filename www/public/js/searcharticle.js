@@ -88,6 +88,12 @@ $(document).ready(function() {
   $('#search_button').on("click",function(e){
     redir($('#search'));
   });
+
+  $('#search_all').on("click",function(e){
+    //get num suggestions
+    redirall($('#articles'));
+  });
+
   $('.close').on('click',function(){
     console.log("close clicked")
   });
@@ -171,10 +177,11 @@ function search($inputid, $datalist){
      });
 }
 
+//renders article from searchbox to page
 function redir($inputid){
     var my_search = ($inputid.val());
-    let alistoption = $("#articles option[value='"+ my_search + "']");
-
+    //option[value='"+ my_search + "']"
+    let alistoption = $("#articles option[value='" + my_search + "']");
         $.ajax({
         url: '/searcharticleredir',
         data: {'search-text': my_search},
@@ -186,11 +193,11 @@ function redir($inputid){
           //console.log(data);
           //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
           if (!myObj.articlefound) {
-            alert("Article not in database, please try again");
+            alert('"'+ my_search + '" not in database, please try again');
           }
           else {
           var div = $(
-          "<div id='adding' data-title=" + my_search +
+          "<div id='adding'" +
           " data-id=" + myObj.id + " data-level='3'" + "> \
           <button class=\"editerB "+myObj.id+  "\"type=\"button\">Edit</button>\
           <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
@@ -216,8 +223,63 @@ function redir($inputid){
         console.log(error);
       }
     });
+}
 
+//return all search suggestions
+function redirall($datalist){
+    /*var my_search = ($inputid.val());
+    let alistoption = $("#articles option[value='"+ my_search + "']");
+    */
+    //get list of ids to send
+    let idlist = [];
+    $datalist.children().each(function(index) {idlist.push($(this).attr('data-id'))});
+    console.log('idlist is: ');
+    console.log(idlist);
 
+        $.ajax({
+        url: '/multiarticleredir',
+        data: {'idlist': idlist},
+        type: 'POST',
+        datatype: 'json',
+        success: function(data) {
+          //console.log('received json of: ' + data);
+          myObj = JSON.parse(data);
+          console.log("data from server is: ");
+          console.log(data);
+          //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
+          if (myObj.numtorender == 0) {
+            alert("Article not in database, please try again");
+          }
+          else {
+            for (i=0;i<myObj.numtorender;i++) {
+              var div = $(
+              "<div id='adding'" +
+              " data-id=" + myObj.id + " data-level='3'" + "> \
+              <button class=\"editerB "+myObj.id+  "\"type=\"button\">Edit</button>\
+              <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
+              <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
+              + `<button class="leftbutton button" data-id=""> < </button>
+              <button class="rightbutton button" data-id=""> > </button>`
+              + "<div class='knowlcontent1'>" + myObj.knowlinfo[i].content + "</div>" +
+              "</div>");
+
+              //$('#articles-searched').prepend(div.addClass("boxed"));
+              $('#entry-content').prepend(div.addClass("boxedin"));
+              if (!myObj.cangoleft) {
+                $('#adding').children('.leftbutton').hide();
+              } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
+              if (!myObj.cangoright) {
+                $('#adding').children('.rightbutton').hide();
+              } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
+              //remove the marker of nowl we just added
+              $('#adding').removeAttr('id');
+            }
+          }
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
 }
 
 function removeDiv(element){
