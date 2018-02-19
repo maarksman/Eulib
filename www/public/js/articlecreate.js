@@ -106,33 +106,48 @@ $.ajax({
     var selEnd = $('#content').prop('selectionEnd');
     var text = $('#content').val();
     var title = $('#addlink').val();
-    let path = $("option[value='" + title + "']").attr('data-path');
-    //CHECK FOR INVALID LINK IN input
-    if (path == undefined) {
-      $('#linkmessage').text("Link invalid");
-    }
-    else if (selStart === selEnd) {
-      //if no highlight add to end
-      let snippet =
-        '<a knowl= "' + path + '">Text to link here</a>';
-      text = text + snippet;
-      $('#linkmessage').text('Link added successfully');
-      $('#content').val(text);
-    }
-    else {
-      //if highlighted
-      var selText = $('#content')
-        .val()
-        .substring(selStart, selEnd);
-      let snippet =
-        '<a knowl= "' + path + '">' + selText + '</a>';
-      var start = text.substring(0, selStart);
-      var end = text.substring(selEnd, text.length);
-      text = start + snippet + end;
-      $('#linkmessage').text('Link added successfully');
-      $('#content').val(text);
-    }
+    let id = $("option[value='" + title + "']").attr('data-id');
+    //ajax request for my_path
+    $.ajax({
+    url: '/getpathfromid',
+    data: {'id': id},
+    type: 'POST',
+    datatype: 'text',
+    success: function(data) {
+      //console.log('received json of: ' + data);
+      let path = data;
+      //CHECK FOR INVALID LINK IN input
+      if (path == undefined) {
+        $('#linkmessage').text("Link invalid/path data not gotten");
+      }
+      else if (selStart === selEnd) {
+        //if no highlight add to end
+        let snippet =
+          '<a knowl= "' + path + '">Text to link here</a>';
+        text = text + snippet;
+        $('#linkmessage').text('Link added successfully');
+        $('#content').val(text);
+      }
+      else {
+        //if highlighted
+        var selText = $('#content')
+          .val()
+          .substring(selStart, selEnd);
+        let snippet =
+          '<a knowl= "' + path + '">' + selText + '</a>';
+        var start = text.substring(0, selStart);
+        var end = text.substring(selEnd, text.length);
+        text = start + snippet + end;
+        $('#linkmessage').text('Link added successfully');
+        $('#content').val(text);
+      }
 
+
+  },
+  error: function(error) {
+    console.log(error);
+  }
+        });
   });
 
   $('.maximizebar').hide();

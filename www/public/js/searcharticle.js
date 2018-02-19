@@ -248,31 +248,34 @@ function redirall($datalist){
           console.log(data);
           //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
           if (myObj.numtorender == 0) {
-            alert("Article not in database, please try again");
+            alert("Articles not in database, please try again");
           }
           else {
             for (i=0;i<myObj.numtorender;i++) {
-              var div = $(
-              "<div id='adding'" +
-              " data-id=" + myObj.id + " data-level='3'" + "> \
-              <button class=\"editerB "+myObj.id+  "\"type=\"button\">Edit</button>\
-              <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-              <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-              + `<button class="leftbutton button" data-id=""> < </button>
-              <button class="rightbutton button" data-id=""> > </button>`
-              + "<div class='knowlcontent1'>" + myObj.knowlinfo[i].content + "</div>" +
-              "</div>");
+              let curknowl = myObj.knowlinfo[i];
+              if (curknowl.articlefound) {
+                var div = $(
+                "<div id='adding'" +
+                " data-id=" + curknowl.id + " data-level='3'" + "> \
+                <button class=\"editerB "+curknowl.id+  "\"type=\"button\">Edit</button>\
+                <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
+                <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
+                + `<button class="leftbutton button" data-id=""> < </button>
+                <button class="rightbutton button" data-id=""> > </button>`
+                + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
+                "</div>");
 
-              //$('#articles-searched').prepend(div.addClass("boxed"));
-              $('#entry-content').prepend(div.addClass("boxedin"));
-              if (!myObj.cangoleft) {
-                $('#adding').children('.leftbutton').hide();
-              } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
-              if (!myObj.cangoright) {
-                $('#adding').children('.rightbutton').hide();
-              } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
-              //remove the marker of nowl we just added
-              $('#adding').removeAttr('id');
+                //$('#articles-searched').prepend(div.addClass("boxed"));
+                $('#entry-content').prepend(div.addClass("boxedin"));
+                if (!curknowl.cangoleft) {
+                  $('#adding').children('.leftbutton').hide();
+                } else {$('#adding').children('.leftbutton').attr('data-id', curknowl.leftid);}
+                if (!curknowl.cangoright) {
+                  $('#adding').children('.rightbutton').hide();
+                } else {$('#adding').children('.rightbutton').attr('data-id', curknowl.rightid);}
+                //remove the marker of nowl we just added
+                $('#adding').removeAttr('id');
+              }
             }
           }
       },

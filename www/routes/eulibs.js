@@ -117,4 +117,18 @@ module.exports = (app, urlencodedParser, db, fs) => {
       }
     });
   });
+
+
+  app.post('/getpathfromid', urlencodedParser, (req, res) => {
+    let id = req.body['id'];
+    db.query("SELECT path FROM article WHERE id=" + id , (err, result) => {
+      if (err) throw err;
+      else {
+        let row = result[0];
+
+        res.send(row.path);
+      }
+    });
+  });
+
 };

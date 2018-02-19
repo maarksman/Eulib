@@ -1,4 +1,4 @@
-module.exports = (app, urlencodedParser, db, fs) => {
+module.exports = (app, urlencodedParser, db, fs, asynceach) => {
   app.get('/eulibadded', (req, res) => {
     //i'm calling it eulib from now on instead of a knowl.
     //Knowls will reign!! also naming things is for people who write them :P
@@ -114,22 +114,28 @@ module.exports = (app, urlencodedParser, db, fs) => {
         res.send(tosend);
       }
     }
-    console.log(req.body);
+
+
+
+    /*function id2object(id) {
+
+    }*/
+
     const idlist = req.body['idlist[]'];
-    console.log(idlist);
     const lastidindex = idlist.length;
-    let jsonlist = [];
-    let sql = 'SELECT * FROM article WHERE id =?';
-    /*let cangoright = false;
-    let cangoleft = false;
-    let rightid = '';
-    let leftid = '';*/
-    for (k=0;k<idlist.length;k++) {
+    let tosend = {knowlinfo:[], numtorender:0};
+    asynceach.forEach(idlist, function(item, index, arr) {
+      let id = item;
+      let done = this.async();
       let isindatabase = false;
-      let curid = idlist[k];
       let path;
       let knowlid;
-      let query = db.query(sql, curid, (err, result) => {
+      let title;
+      let cangoleft = false;
+      let cangoright = false;
+      let leftid = "";
+      let rightid = "";
+      let query = db.query("SELECT * FROM article WHERE id=?", id, (err, result) => {
         if (err) throw err;
         else
           //console.log(result.length);
@@ -137,41 +143,48 @@ module.exports = (app, urlencodedParser, db, fs) => {
             var row = result[i];
             if (row.level == '3') {
               path = row.path;
+              title = row.title;
               knowlid = row.id;
               isindatabase = true;
             }
-            /*
-            if (row.level == '2') {
-              cangoleft = true;
-              leftid = row.id;
-            }
-            if (row.level == '4') {
-              cangoright = true;
-              rightid = row.id;
-            }
-            */
           }
         if (isindatabase) {
           content = fs.readFile('public/' + path, 'utf8', (err, data) => {
             if (err) {throw err;}
             else {
-              var jsonobj = {
-                content: data,
-                path: path,
-                id: knowlid,
-                articlefound: isindatabase,
-                /*cangoleft: cangoleft,
-                cangoright: cangoright,
-                rightid: rightid,
-                leftid: leftid */
-              };
-              jsonlist.push(jsonobj);
-              jsonobj = {};
-              /*console.log('id index, then last index then jsonlist');
-              console.log(k);
-              console.log(lastidindex);
-              console.log(jsonlist);*/
-              sendifdone(lastidindex, jsonlist);
+              // 2nd Query for the arrows
+              db.query("SELECT * FROM article WHERE title='" + title + "'", (err,wegot) => {
+                if (err) throw err;
+                else {
+                  console.log('2nd query fired!');
+                  console.log(wegot);
+                  for (j=0; j<wegot.length; j++) {
+                    console.log('looping over 2nd query results!');
+                    if (wegot[j].level == '2') {
+                      console.log("Did we get here? finding level 2");
+                      cangoleft = true;
+                      leftid = wegot[j].id;
+                    }
+                    if (wegot[j].level == '4') {
+                      cangoright = true;
+                      rightid = wegot[j].id;
+                    }
+                  }
+                  var jsonobj = {
+                    content: data,
+                    'path': path,
+                    'id': knowlid,
+                    articlefound: isindatabase,
+                    'cangoleft': cangoleft,
+                    'cangoright': cangoright,
+                    rightid: rightid,
+                    leftid: leftid
+                  };
+                  tosend.knowlinfo.push(jsonobj);
+                  tosend.numtorender = tosend.numtorender + 1;
+                  done();
+                }
+              });
             }
           });
           // query to check for left/right
@@ -181,14 +194,14 @@ module.exports = (app, urlencodedParser, db, fs) => {
           //console.log(jsonobj.cangoright);
         } else {
           var jsonobj = { articlefound: isindatabase };
-          jsonlist.push(jsonobj);
-          jsonobj = {};
-          sendifdone(lastidindex, jsonlist);
+          tosend.knowlinfo.push(jsonobj);
+          done();
         }
-
-        //console.log(sendjson);
-
       });
-    }
+    }, function AllDone(notAborted, arr) {
+        res.send(JSON.stringify(tosend))
+       }
+   );
+
   });
 };
