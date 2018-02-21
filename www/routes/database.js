@@ -9,8 +9,8 @@ module.exports = (app, db) => {
   //create db
   app.get('/createdb2', (req, res) => {
     let createtablesquery = ` drop table if exists article;
-    drop table if exists users;
     drop table if exists user;
+    drop table if exists users;
     drop table if exists field;
     drop table if exists user;
     drop table if exists type;
@@ -31,7 +31,7 @@ module.exports = (app, db) => {
       PRIMARY KEY (info_type)
     );
 
-    create table user(
+    create table users(
     	username VARCHAR(50) PRIMARY KEY,
     	password VARCHAR(100) NOT NULL,
     	first_name VARCHAR(50) ,
@@ -56,7 +56,7 @@ module.exports = (app, db) => {
     	path VARCHAR(150) NOT NULL,
     	date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
       creator VARCHAR(50),
-      FOREIGN KEY (creator) REFERENCES user(username),
+      FOREIGN KEY (creator) REFERENCES users(username),
     	last_edited DATETIME ON UPDATE CURRENT_TIMESTAMP,
       last_editor VARCHAR(50)
     );
@@ -69,7 +69,7 @@ module.exports = (app, db) => {
       last_edited DATETIME
     );
 
-    INSERT INTO user (username, password, email) VALUES ('testuserpony', 'password', 'testuser1@eu.lib'),
+    INSERT INTO users (username, password, email) VALUES ('testuserpony', 'password', 'testuser1@eu.lib'),
     ('testuser2', 'password', 'Algebra@malgebra.com');
 
     INSERT INTO field VALUES ('Mathematics', NULL),
