@@ -42,17 +42,21 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
   //sends html of article along with path id and a boolean to determine if it exists
   //so that nonexistant articles wont break
   app.post('/searcharticleredir', urlencodedParser, (req, res) => {
-    var search = req.body['search-text'];
+    var id = req.body['id'];
+    console.log('id is: ', id);
     let content;
-    let sql = 'SELECT * FROM article WHERE title =?';
+    let sql = 'SELECT * FROM article WHERE id =?';
     let isindatabase = false;
     let cangoright = false;
     let cangoleft = false;
     let rightid = '';
     let leftid = '';
-    let query = db.query(sql, search, (err, result) => {
+    let title ='';
+    let fields = [];
+    let curfield;
+    let query = db.query(sql, id, (err, result) => {
       if (err) throw err;
-      else
+      else {
         //console.log(result.length);
         for (var i = 0; i < result.length; i++) {
           var row = result[i];
@@ -60,43 +64,59 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
             var path = row.path;
             var knowlid = row.id;
             isindatabase = true;
-          }
-          if (row.level == '2') {
-            cangoleft = true;
-            leftid = row.id;
-          }
-          if (row.level == '4') {
-            cangoright = true;
-            rightid = row.id;
+            title = row.title;
+            curfield = row.field;
           }
         }
-      if (isindatabase) {
-        content = fs.readFileSync('public/' + path, 'utf8');
-        var jsonobj = {
-          content: content,
-          path: path,
-          id: knowlid,
-          articlefound: isindatabase,
-          cangoleft: cangoleft,
-          cangoright: cangoright,
-          rightid: rightid,
-          leftid: leftid
-        };
-        // query to check for left/right
-        //console.log(jsonobj);
-        console.log('cangoleft then cangoright');
-        console.log(jsonobj.cangoleft);
-        console.log(jsonobj.cangoright);
-        var sendjson = JSON.stringify(jsonobj);
+        //after loop, next data processing
+        if (isindatabase) {
+          content = fs.readFile('public/' + path, 'utf8', (err, data)=> {
+            if (err) throw err;
+            else {
+              //after reading file, searchf or levels and fields
+              let gettitle = db.query("SELECT * FROM article WHERE title=?", title, (err, wegot) => {
+                if (err) throw err;
+                else {
+                  for (j=0;j<wegot.length;j++) {
+                    if (wegot[j].level == '2') {
+                      cangoleft = true;
+                      leftid = wegot[j].id;
+                    }
+                    if (wegot[j].level == '4') {
+                      cangoright = true;
+                      rightid = wegot[j].id;
+                    }
+                    if (wegot[j].field != curfield) {
+                      fields.push(egot[j].field);
+                    }
+                 }
+                //after loop, finsih nextdata processing
+                var jsonobj = {
+                  content: data,
+                  path: path,
+                  id: knowlid,
+                  articlefound: isindatabase,
+                  cangoleft: cangoleft,
+                  cangoright: cangoright,
+                  rightid: rightid,
+                  leftid: leftid,
+                  'fields': fields
+                };
+                console.log("json to send: ", jsonobj);
+                var sendjson = JSON.stringify(jsonobj);
+                res.send(sendjson);
+              }
+            });
+          }
+        });
       } else {
         var jsonobj = { articlefound: isindatabase };
         //console.log(jsonobj);
         var sendjson = JSON.stringify(jsonobj);
+        res.send(sendjson);
       }
-
-      //console.log(sendjson);
-      res.send(sendjson);
-    });
+     }
+  });
   });
 
   app.post('/multiarticleredir', urlencodedParser, (req, res) => {
@@ -114,13 +134,6 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
         res.send(tosend);
       }
     }
-
-
-
-    /*function id2object(id) {
-
-    }*/
-
     const idlist = req.body['idlist[]'];
     const lastidindex = idlist.length;
     let tosend = {knowlinfo:[], numtorender:0};

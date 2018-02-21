@@ -179,18 +179,19 @@ function search($inputid, $datalist){
 
 //renders article from searchbox to page
 function redir($inputid){
+    //get id from jquery search selesctor
     var my_search = ($inputid.val());
     //option[value='"+ my_search + "']"
-    let alistoption = $("#articles option[value='" + my_search + "']");
+    let id = $("#articles option[value='" + my_search + "']").attr('data-id');
         $.ajax({
         url: '/searcharticleredir',
-        data: {'search-text': my_search},
+        data: {'id': id},
         type: 'POST',
         datatype: 'json',
         success: function(data) {
           //console.log('received json of: ' + data);
           myObj = JSON.parse(data);
-          //console.log(data);
+          console.log(data);
           //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
           if (!myObj.articlefound) {
             alert('"'+ my_search + '" not in database, please try again');
@@ -198,9 +199,10 @@ function redir($inputid){
           else {
           var div = $(
           "<div id='adding'" +
-          " data-id=" + myObj.id + " data-level='3'" + "> \
-          <button class=\"editerB "+myObj.id+  "\"type=\"button\">Edit</button>\
-          <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
+          " data-id=" + myObj.id + "> \
+          <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
+          <button class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\">Edit</button>\
+          <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
           <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
           + `<button class="leftbutton button" data-id=""> < </button>
           <button class="rightbutton button" data-id=""> > </button>`
@@ -208,6 +210,10 @@ function redir($inputid){
           "</div>");
 
           //$('#articles-searched').prepend(div.addClass("boxed"));
+          for (i=0;i<myObj.fields.length;i++) {
+            let fieldoption = $("<option value=\"" +myObj.fields[i] + "\">val1</option>")
+            $('#addingfields').prepend(fieldoption)
+          }
           $('#entry-content').prepend(div.addClass("boxedin"));
           if (!myObj.cangoleft) {
             $('#adding').children('.leftbutton').hide();

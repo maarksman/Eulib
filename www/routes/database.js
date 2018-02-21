@@ -114,20 +114,20 @@ module.exports = (app, db) => {
       // });
     });
   });
-  /*
+
   app.get('/getfields', (req, res) => {
     var sentJSON = { fields: [] };
-    let sql = 'SELECT DISTINCT belongs_to FROM article';
+    let sql = 'SELECT field from field';
     let query = db.query(sql, (err, result) => {
       if (err) throw err;
       else {
         for (var i = 0; i < result.length; i++) {
-          sentJSON.fields[i] = result[i].belongs_to;
+          sentJSON.fields.push(result[i].field);
         }
         let formattedsentJSON = JSON.stringify(sentJSON);
         res.send(formattedsentJSON);
       }
     });
   });
-  */
+
 };
