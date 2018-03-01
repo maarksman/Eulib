@@ -6,50 +6,43 @@ module.exports = (app, urlencodedParser, db, fs) => {
     let level = req.body['level'];
     let creator = req.session.username;
     let content = '<div>' + req.body['content'] + '</div>';
-    let path = 'knowlcontent/' + title + '_' + level + '.html';
-    let filename = title + '_' + level + '.html';
-    let contentpath = 'public/knowlcontent/' + filename;
+    let search_name = `${title}(${belongs_to}) - ${type}`;
     let checksql =
-      "SELECT title FROM article where title ='" +
-      title +
-      "' AND level=" +
-      level;
-    let titlelevel_exists = false;
+      `SELECT title FROM article where title ='${title}' AND
+      level=${level} AND type='${type}' AND belongs_to='${belongs_to}' `
+    let knowl_exists = false;
     db.query(checksql, (err, result) => {
       if (err) throw err;
       else {
         if (result.length == 0) {
           createsql =
-            "INSERT INTO article (title, type, belongs_to, path, creator, level) VALUES ('" +
-            title +
-            "','" +
-            type +
-            "','" +
-            belongs_to +
-            "','" +
-            path +
-            "','" +
-            creator +
-            "','" +
-            level +
-            "')";
+            `INSERT INTO article (search_name, title, type, belongs_to, path, creator, level)
+             VALUES ('${search_name}', '${title}', '${type}', '${belongs_to}', 'undefined',  '${creator}', ${level} )`;
           console.log('Query is: ' + createsql);
           db.query(createsql, (err, result) => {
             if (err) {
               throw err;
             }
-            res.end();
+            // after doing query, write file with Id as Name and insert path into row
+            let id = result.insertId;
+            let filename = title + "_" + result.insertId + '.html';
+            let contentpath = 'public/knowlcontent/' + filename;
+            let knowlpath = 'knowlcontent/' + filename;
+            fs.writeFile(contentpath, content, function(err) {
+              if (err) throw err;
+              putpathquery = `UPDATE article SET path=? WHERE id=?;`;
+              console.log('put content:' + content + 'in ' + contentpath);
+              db.query(putpathquery, [knowlpath, id], (err, result) => {
+                console.log('update path of: ' + id  + " of " + filename + 'with path: ' + knowlpath);
+                res.end();
+              });
+            });
           });
           // use fs module to write new file to "knowlcontent"
-          fs.writeFile(contentpath, content, function(err) {
-            if (err) throw err;
-            console.log('put content:' + content + 'in ' + contentpath);
-          });
         } else {
-          titlelevel_exists = true;
-          console.log('title with level already exists');
-          if (titlelevel_exists) {
-            res.send('Title with level exists');
+          knowl_exists = true;
+          if (knowl_exists) {
+            res.send('Knowl exists');
           }
         }
       }
@@ -92,11 +85,11 @@ module.exports = (app, urlencodedParser, db, fs) => {
 
   //deletes article from db and deletes html file
   app.post('/deletearticle', urlencodedParser, (req, res) => {
-    let title = req.body['title'];
-    console.log('deleting: ' + title);
+    let id = req.body['id'];
+    console.log('deleting: article of id: ' + id);
     db.query(
-      'select path from article where title =?',
-      title,
+      'select path from article where id =?',
+      id,
       (err, result) => {
         if (err) throw err;
         var row = result[0];
@@ -109,11 +102,11 @@ module.exports = (app, urlencodedParser, db, fs) => {
         });
       }
     );
-    let query = 'DELETE FROM article WHERE title = ?';
-    db.query(query, title, (err, result) => {
+    let query = 'DELETE FROM article WHERE id = ?';
+    db.query(query, id, (err, result) => {
       if (err) throw err;
       else {
-        res.send('removed ' + title + 'from db');
+        res.send('removed article of id: ' + id + 'from db');
       }
     });
   });

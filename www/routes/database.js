@@ -9,7 +9,6 @@ module.exports = (app, db) => {
   //create db
   app.get('/createdb2', (req, res) => {
     let createtablesquery = ` drop table if exists article;
-    drop table if exists user;
     drop table if exists users;
     drop table if exists field;
     drop table if exists user;
@@ -46,6 +45,7 @@ module.exports = (app, db) => {
 
     create table article(
     	id INT PRIMARY KEY AUTO_INCREMENT,
+      search_name VARCHAR (50) NOT NULL,
     	title VARCHAR(30) NOT NULL,
     	type VARCHAR(30) NOT NULL,
       subtype VARCHAR(30),
@@ -70,7 +70,7 @@ module.exports = (app, db) => {
     );
 
     INSERT INTO users (username, password, email) VALUES ('testuserpony', 'password', 'testuser1@eu.lib'),
-    ('testuser2', 'password', 'Algebra@malgebra.com');
+    ('testuserpony2', 'password', 'Algebra@malgebra.com');
 
     INSERT INTO field VALUES ('Mathematics', NULL),
     ('Algebra', 'Mathematics'),
@@ -84,11 +84,11 @@ module.exports = (app, db) => {
     ('Unspecified', NULL),
     ('Custom', NULL);
 
-    INSERT INTO article ( title, type, belongs_to, path, creator, level)
-    VALUES ( 'Automorphism', 'Definition', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony', 3),
-     ( 'Field', 'Definition', 'Mathematics', 'knowlcontent/field.html', 'testuserpony', 3),
-     ( 'Field Extension', 'Definition', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony', 3),
-     ( 'Galois Group', 'Definition', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony', 3)
+    INSERT INTO article (search_name, title, type, belongs_to, path, creator, level)
+    VALUES ('Automorphism(Analysis) - Definition ', 'Automorphism', 'Definition', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony', 3),
+     ('Field(Mathematics) - Definition', 'Field', 'Definition', 'Mathematics', 'knowlcontent/field.html', 'testuserpony', 3),
+     ('Field Extension(Field Theory) - Definition', 'Field Extension', 'Definition', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony', 3),
+     ('Galois Group(Algebra) - Definition', 'Galois Group', 'Definition', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony', 3)
      `;
 
     db.query(createtablesquery, (err, result) => {

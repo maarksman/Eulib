@@ -11,7 +11,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
     var search = req.body['search-text'];
     let tosend = '';
     let sql =
-      "SELECT * FROM article WHERE title LIKE '%" + search + "%' AND level=3";
+      "SELECT * FROM article WHERE search_name LIKE '%" + search + "%' AND level=3";
     // console.log('sent in /searcharticle: '+ search);
     //console.log('querying: ' + sql);
     let query = db.query(sql, (err, result) => {
@@ -25,7 +25,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
           let field = row.field;
           var title = row.title;
           var type = row.type;
-          let display = title;
+          let display = row.search_name;
           // + "-" + type;
           let dlistelement =
             "<option data-id='" + id + "' value='" + display + "'>";
@@ -86,8 +86,9 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
                       cangoright = true;
                       rightid = wegot[j].id;
                     }
-                    if (wegot[j].field != curfield) {
-                      fields.push(egot[j].field);
+                    if (wegot[j].belongs_to != curfield && wegot[j].level=="3") {
+                      let fielddata = {'id': wegot[j].id, 'field':wegot[j].belongs_to};
+                      fields.push(fielddata);
                     }
                  }
                 //after loop, finsih nextdata processing
@@ -122,18 +123,6 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
   app.post('/multiarticleredir', urlencodedParser, (req, res) => {
     // same as search article redir -> just loop over enough times
 
-    function sendifdone(sendindex, thejson) {
-      if (thejson.length == sendindex){
-        let knowlobjects = {'knowlinfo': thejson,
-                            'numtorender': thejson.length
-                            };
-
-        console.log('WE ARE SENDING this back to the client:');
-        console.log(knowlobjects);
-        let tosend = JSON.stringify(knowlobjects);
-        res.send(tosend);
-      }
-    }
     const idlist = req.body['idlist[]'];
     const lastidindex = idlist.length;
     let tosend = {knowlinfo:[], numtorender:0};
@@ -143,6 +132,8 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
       let isindatabase = false;
       let path;
       let knowlid;
+      let field;
+      let fieldlist = [];
       let title;
       let cangoleft = false;
       let cangoright = false;
@@ -158,6 +149,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
               path = row.path;
               title = row.title;
               knowlid = row.id;
+              field = row.belongs_to;
               isindatabase = true;
             }
           }
@@ -182,6 +174,10 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
                       cangoright = true;
                       rightid = wegot[j].id;
                     }
+                    if (wegot[j].belongs_to != field) {
+                      let fielddata = {'id': wegot[j].id, 'field':wegot[j].belongs_to}
+                      fieldlist.push(fielddata);
+                    }
                   }
                   var jsonobj = {
                     content: data,
@@ -191,7 +187,8 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
                     'cangoleft': cangoleft,
                     'cangoright': cangoright,
                     rightid: rightid,
-                    leftid: leftid
+                    leftid: leftid,
+                    'fields':fieldlist
                   };
                   tosend.knowlinfo.push(jsonobj);
                   tosend.numtorender = tosend.numtorender + 1;

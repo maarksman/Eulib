@@ -210,11 +210,13 @@ function redir($inputid){
           "</div>");
 
           //$('#articles-searched').prepend(div.addClass("boxed"));
-          for (i=0;i<myObj.fields.length;i++) {
-            let fieldoption = $("<option value=\"" +myObj.fields[i] + "\">val1</option>")
-            $('#addingfields').prepend(fieldoption)
-          }
           $('#entry-content').prepend(div.addClass("boxedin"));
+          for (i=0;i<myObj.fields.length;i++) {
+            let fieldoption = $("<option value=\"" + myObj.fields[i].field + "\">" + myObj.fields[i].field  + "</option>");
+            console.log('added options: ', fieldoption);
+            $('select#addingfields').prepend(fieldoption);
+          }
+          $('#addingfields').removeAttr('id');
           if (!myObj.cangoleft) {
             $('#adding').children('.leftbutton').hide();
           } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
@@ -263,6 +265,7 @@ function redirall($datalist){
                 var div = $(
                 "<div id='adding'" +
                 " data-id=" + curknowl.id + " data-level='3'" + "> \
+                <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
                 <button class=\"editerB "+curknowl.id+  "\"type=\"button\">Edit</button>\
                 <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
                 <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
@@ -271,6 +274,11 @@ function redirall($datalist){
                 + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
                 "</div>");
 
+                for (j=0;j<curknowl.fields.length;j++) {
+                  let fieldoption = $("<option value=\"" +curknowl.fields[j].field + "\">val1</option>")
+                  $('#addingfields').prepend(fieldoption)
+                }
+                $('#addingfields').removeAttr('id');
                 //$('#articles-searched').prepend(div.addClass("boxed"));
                 $('#entry-content').prepend(div.addClass("boxedin"));
                 if (!curknowl.cangoleft) {

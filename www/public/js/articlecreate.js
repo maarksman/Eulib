@@ -86,8 +86,8 @@ $.ajax({
         success: function(data) {
 
           console.log('returned' + data);
-          if (data == "Title with level exists") {
-            $('#returnmessage').text('Title with level already exists');
+          if (data == "Knowl exists") {
+            $('#returnmessage').text('Title with level, type and field already exists');
           } else {
             $('#returnmessage').text('Creation Successful!');
           }

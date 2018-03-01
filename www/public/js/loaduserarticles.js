@@ -21,10 +21,12 @@ function loaduserarticles(){
         for (var i in lines) {
           console.log(i)
           var obj = JSON.parse(lines[i]);
+          var id = obj.id;
+          var title = obj.title
           var title = obj.title;
           var field = obj.belongs_to;
           var last_rev = obj.last_edited;
-          var markup = "<tr><td>"
+          var markup = "<tr><td>" + id + "</td><td>"
           +title+"</td><td>"
           + field
           + "</td><td>"
