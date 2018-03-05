@@ -110,7 +110,6 @@ html(lang='en')
             br
             span Highlight the text you want to link: 
             br
-            br
             span#linkmessage(style="padding-left:15px;color:red;")
             br
             br
@@ -118,10 +117,13 @@ html(lang='en')
             span.required Content: *
             br
             textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
+            br
+            span LateX is accepted. Enclose equations with "$$" 
+            br
+            span and inline math with "\)" and "\(" [reverse order]
         div
           button#submit(name='submit') Submit
           span#returnmessage(style="padding-left:15px;color:red;") 
-          // <input type="submit" value="submit" id="submit" name="submit" class="submit btn btn-success">
       .maximizebar
         span.maxicon
           | 

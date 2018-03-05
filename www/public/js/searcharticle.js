@@ -223,6 +223,10 @@ function redir($inputid){
           if (!myObj.cangoright) {
             $('#adding').children('.rightbutton').hide();
           } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
+
+          //on clientside, process teX equations after submit
+          MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
+
           //remove the marker of nowl we just added
           $('#adding').removeAttr('id');
           }
@@ -287,6 +291,9 @@ function redirall($datalist){
                 if (!curknowl.cangoright) {
                   $('#adding').children('.rightbutton').hide();
                 } else {$('#adding').children('.rightbutton').attr('data-id', curknowl.rightid);}
+                //on clientside, process teX equations after submit
+                MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
+
                 //remove the marker of nowl we just added
                 $('#adding').removeAttr('id');
               }

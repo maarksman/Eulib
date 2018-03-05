@@ -1,4 +1,4 @@
-module.exports = (app, urlencodedParser, db, fs, asynceach) => {
+module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
   app.get('/eulibadded', (req, res) => {
     //i'm calling it eulib from now on instead of a knowl.
     //Knowls will reign!! also naming things is for people who write them :P
@@ -91,7 +91,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
                       fields.push(fielddata);
                     }
                  }
-                //after loop, finsih nextdata processing
+                //after loop, finsih nextdata processing, convert content equations
                 var jsonobj = {
                   content: data,
                   path: path,
@@ -106,7 +106,47 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
                 console.log("json to send: ", jsonobj);
                 var sendjson = JSON.stringify(jsonobj);
                 res.send(sendjson);
-              }
+
+                /*mathjax.typeset({
+                  math: data,
+                  format: "TeX",
+                  html: true
+                }, (postprocess) => {
+                    if (!postprocess.errors) {
+                      var jsonobj = {
+                        content: postprocess.html,
+                        path: path,
+                        id: knowlid,
+                        articlefound: isindatabase,
+                        cangoleft: cangoleft,
+                        cangoright: cangoright,
+                        rightid: rightid,
+                        leftid: leftid,
+                        'fields': fields
+                      };
+                      console.log("json to send: ", jsonobj);
+                      var sendjson = JSON.stringify(jsonobj);
+                      res.send(sendjson);
+                    }
+                    else { //if process failed
+                      console.log('latex processing failed', postprocess.errors );
+                      var jsonobj = {
+                        content: data,
+                        path: path,
+                        id: knowlid,
+                        articlefound: isindatabase,
+                        cangoleft: cangoleft,
+                        cangoright: cangoright,
+                        rightid: rightid,
+                        leftid: leftid,
+                        'fields': fields
+                      };
+                      console.log("json to send: ", jsonobj);
+                      var sendjson = JSON.stringify(jsonobj);
+                      res.send(sendjson);
+                    }
+                }); */
+              } //end else of sql query
             });
           }
         });

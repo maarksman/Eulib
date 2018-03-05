@@ -10,6 +10,7 @@ const mysql = require('mysql');
 var username;
 var usertheme;
 const asynceach = require('async-foreach');
+const mathjax = require('mathjax-node');
 
 
 //create connection
@@ -20,9 +21,23 @@ var db = mysql.createConnection({
   database: 'EulibDB',
   multipleStatements: true
 });
+
+//set mathjax global options for eqn processing
+mathjax.config({
+  MathJax: {
+    tex2jax: {
+      inlineMath: [['$', '$'], ["\\\\(", "\\\\)"]],
+      displayMath: [['$$', '$$']],
+      processEscapes: true
+    }
+  }
+});
+
+mathjax.start();
+
 require('./config/setuse')(app, bodyParser);
 require('./routes/database')(app, db);
-require('./routes/search')(app, urlencodedParser, db, fs, asynceach); // <-- do this to add a file. In the parenthes put all the requires that you'll be using in that collection of routes. Look at ./routes/search.js to know more.
+require('./routes/search')(app, urlencodedParser, db, fs, asynceach, mathjax); // <-- do this to add a file. In the parenthes put all the requires that you'll be using in that collection of routes. Look at ./routes/search.js to know more.
 require('./routes/user')(app, urlencodedParser, db);
 require('./routes/navigation')(app, urlencodedParser, db, fs);
 require('./routes/eulibs')(app, urlencodedParser, db, fs);
