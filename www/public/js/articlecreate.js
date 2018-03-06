@@ -8,7 +8,7 @@ function validchar(validstr, tocheck) {
 }
 
 const lowerchar = "abcdefghijklmnopqrstuvwxyz";
-const allowedchar = lowerchar + "- " + lowerchar.toUpperCase() + "0123456789";
+const allowedchar = lowerchar + "-() " + lowerchar.toUpperCase() + "0123456789";
 
 function badtitle(titletext) {
   if (validchar(allowedchar, titletext)) {

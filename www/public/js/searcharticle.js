@@ -82,7 +82,17 @@ $(document).ready(function() {
   $('#search').on('keyup', function(e){
     //clear original datalist
     $('#articles').html("");
-    search($('#search'), $('#articles')) ;
+    //get current search value
+    let cursearch = $('#search').val()
+    //use "badtitle' function from articlecreate file to check chars"
+    if (badtitle(cursearch) || cursearch.length > 50) {
+      $('#search').css("border", "solid 2px");
+      $('#search').css('border-color', 'red');
+    } else {
+      $('#search').css("border", "none");
+      $('#search').css('border-color', 'white');
+      search($('#search'), $('#articles')) ;
+    }
   });
 
   $('#search_button').on("click",function(e){
@@ -154,11 +164,13 @@ function saveArticle($inputtitle,$inputcontent, $inputpath){
 function search($inputid, $datalist){
   //clear original datalist
 
-    //TODO sql search for articles including text
-    var my_search = ($inputid.val());
+  var my_search = ($inputid.val());
 
-    //console.log('starting ajax now');
-    //console.log("searching for: "+my_search);
+  //check input and submit only on valid search
+
+
+    //TODO sql search for articles including text
+
      $.ajax({
        url: '/searcharticle',
        data: {'search-text': my_search},
@@ -182,59 +194,70 @@ function redir($inputid){
     //get id from jquery search selesctor
     var my_search = ($inputid.val());
     //option[value='"+ my_search + "']"
+
+
+
     let id = $("#articles option[value='" + my_search + "']").attr('data-id');
-        $.ajax({
-        url: '/searcharticleredir',
-        data: {'id': id},
-        type: 'POST',
-        datatype: 'json',
-        success: function(data) {
-          //console.log('received json of: ' + data);
-          myObj = JSON.parse(data);
-          console.log(data);
-          //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
-          if (!myObj.articlefound) {
-            alert('"'+ my_search + '" not in database, please try again');
-          }
-          else {
-          var div = $(
-          "<div id='adding'" +
-          " data-id=" + myObj.id + "> \
-          <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-          <button class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\">Edit</button>\
-          <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-          <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-          + `<button class="leftbutton button" data-id=""> < </button>
-          <button class="rightbutton button" data-id=""> > </button>`
-          + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
-          "</div>");
+    // check for valid title, if not don't Submit
+    if (badtitle(my_search) || my_search.length <1
+        || my_search.length > 50 || id == undefined
+      )
+    {
+      alert("Invalid search!!");
+    } else {
+          $.ajax({
+          url: '/searcharticleredir',
+          data: {'id': id},
+          type: 'POST',
+          datatype: 'json',
+          success: function(data) {
+            //console.log('received json of: ' + data);
+            myObj = JSON.parse(data);
+            console.log(data);
+            //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
+            if (!myObj.articlefound) {
+              alert('"'+ my_search + '" not in database, please try again');
+            }
+            else {
+            var div = $(
+            "<div id='adding'" +
+            " data-id=" + myObj.id + "> \
+            <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
+            <button class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\">Edit</button>\
+            <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
+            <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
+            + `<button class="leftbutton button" data-id=""> < </button>
+            <button class="rightbutton button" data-id=""> > </button>`
+            + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
+            "</div>");
 
-          //$('#articles-searched').prepend(div.addClass("boxed"));
-          $('#entry-content').prepend(div.addClass("boxedin"));
-          for (i=0;i<myObj.fields.length;i++) {
-            let fieldoption = $("<option value=\"" + myObj.fields[i].field + "\">" + myObj.fields[i].field  + "</option>");
-            console.log('added options: ', fieldoption);
-            $('select#addingfields').prepend(fieldoption);
-          }
-          $('#addingfields').removeAttr('id');
-          if (!myObj.cangoleft) {
-            $('#adding').children('.leftbutton').hide();
-          } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
-          if (!myObj.cangoright) {
-            $('#adding').children('.rightbutton').hide();
-          } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
+            //$('#articles-searched').prepend(div.addClass("boxed"));
+            $('#entry-content').prepend(div.addClass("boxedin"));
+            for (i=0;i<myObj.fields.length;i++) {
+              let fieldoption = $("<option value=\"" + myObj.fields[i].field + "\">" + myObj.fields[i].field  + "</option>");
+              console.log('added options: ', fieldoption);
+              $('select#addingfields').prepend(fieldoption);
+            }
+            $('#addingfields').removeAttr('id');
+            if (!myObj.cangoleft) {
+              $('#adding').children('.leftbutton').hide();
+            } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
+            if (!myObj.cangoright) {
+              $('#adding').children('.rightbutton').hide();
+            } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
 
-          //on clientside, process teX equations after submit
-          MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
+            //on clientside, process teX equations after submit
+            MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
 
-          //remove the marker of nowl we just added
-          $('#adding').removeAttr('id');
-          }
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    });
+            //remove the marker of nowl we just added
+            $('#adding').removeAttr('id');
+            }
+        },
+        error: function(error) {
+          console.log(error);
+        }
+      });
+    }
 }
 
 //return all search suggestions
@@ -247,7 +270,10 @@ function redirall($datalist){
     $datalist.children().each(function(index) {idlist.push($(this).attr('data-id'))});
     console.log('idlist is: ');
     console.log(idlist);
-
+    //no search for no suggestions
+    if ($datalist.children().length == 0) {
+      alert("No suggestions to search");
+    } else {
         $.ajax({
         url: '/multiarticleredir',
         data: {'idlist': idlist},
@@ -299,11 +325,13 @@ function redirall($datalist){
               }
             }
           }
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    });
+        },
+        error: function(error) {
+          console.log(error);
+        }
+      });
+    }
+
 }
 
 function removeDiv(element){
