@@ -118,15 +118,16 @@ $(document).ready(function() {
     //console.log("edit");
     //id is put into div covering entire article and into another div which holds the text area
     //grab the id from outer div
-    textid= $(this).attr("class").split(" ")[1];
+    textid= $(this).closest("[data-id]").attr('data-id');
     //grab the div containing the textarea based on the id
     //<div><textarea></ta></div>
-    textarea=$(this).closest("div").children("#"+textid);
+    textarea=$(this).closest("[data-id='" + textid + "']").children(".editbox");
     //grabs the parent of editerB and finds the last div which is the text of the article
-    text=$(this).closest("div").children("div:last");
-
+    text=$(this).closest("div").children(".knowlcontent1");
+    /*
     title = $(this).closest("div").attr("data-title");
     path = $(this).closest("div").attr("data-path");
+    */
     if($(textarea).css("display")=="none"){
       //console.log("show");
       $(textarea).css("display","block");
@@ -137,20 +138,20 @@ $(document).ready(function() {
       //console.log("hide+save");
       $(textarea).css("display","none");
       $(text).css("display","block");
-      saveArticle(title,textarea.children("textarea").val(),path);
+      saveArticle(textid,textarea.children("textarea").val());
       $(this).text("Edit");
     }
   });
 });
-function saveArticle($inputtitle,$inputcontent, $inputpath){
-  var my_search = ($inputtitle);
+function saveArticle($inputid, $inputcontent){
+  var id = ($inputid);
   var my_content = ($inputcontent);
-  var my_path = ($inputpath);
+  console.log("got id and content as:", id, my_content);
   //console.log(my_search);
   //console.log(my_content);
   $.ajax({
     url: '/updatearticle',
-    data: {'search-text': my_search, "content":my_content, "path":my_path},
+    data: {'id': id, 'content': my_content},
     type: 'POST',
     datatype: 'html',
     success: function(data) {
@@ -193,10 +194,6 @@ function search($inputid, $datalist){
 function redir($inputid){
     //get id from jquery search selesctor
     var my_search = ($inputid.val());
-    //option[value='"+ my_search + "']"
-
-
-
     let id = $("#articles option[value='" + my_search + "']").attr('data-id');
     // check for valid title, if not don't Submit
     if (badtitle(my_search) || my_search.length <1
@@ -225,7 +222,7 @@ function redir($inputid){
             <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
             <button class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\">Edit</button>\
             <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-            <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
+            <div class =\"editbox\" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
             + `<button class="leftbutton button" data-id=""> < </button>
             <button class="rightbutton button" data-id=""> > </button>`
             + "<div class='knowlcontent1'>" + myObj.content + "</div>" +

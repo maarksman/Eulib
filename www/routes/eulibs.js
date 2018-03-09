@@ -52,31 +52,35 @@ module.exports = (app, urlencodedParser, db, fs) => {
   //edit an article... knowl plugin box stays in edit page.. can still be removed
   //afterward so not a big issue
   app.post('/updatearticle', urlencodedParser, (req, res) => {
+    console.log("fired /updatearticle");
     if (req.session.username != null) {
-      var title = req.body['search-text'];
-      var path = req.body['path'];
       var content = req.body['content'];
-      //console.log("title: "+title);
-      //console.log("path: "+path);
-      //console.log("content: "+content);
-      //UPDATE [table] SET [column] = '[updated-value]' WHERE [column] = [value];
-      let query = 'UPDATE article SET last_editor = ? WHERE title = ?';
-      db.query(query, [req.session.username, title], (err, result) => {
+      let edit_id = req.body['id'];
+      let query = 'UPDATE article SET last_editor = ? WHERE id = ?';
+      db.query(query, [req.session.username, edit_id], (err, result) => {
         if (err) throw err;
         else {
-          console.log('success');
+          console.log('updated record of article of id:', edit_id);
+          //if successful, sarch database for path and
+          db.query("SELECT * FROM  article WHERE id=?", edit_id, (err, wegot) => {
+            if (err) throw err;
+            else {
+              //get path and other entries for console logging
+              let path = wegot[0].path;
+              let search_name = wegot[0].search_name;
+              fs.writeFile('public\\' + path, content, function(
+                err
+              ) {
+                if (err) throw err;
+                else {
+                  console.log('updated: ' + path);
+                  res.send('updated content of: ' + edit_id + ' of: '+  search_name);
+                } //else of w
+              });
+            }
+          });
         }
-      });
-      //console.log(typeof path);
-      fs.writeFile('public\\' + path, '<div>' + content + '</div>', function(
-        err
-      ) {
-        if (err) throw err;
-        else {
-          console.log('updated: ' + path);
-        }
-      });
-      res.send('updated');
+      })
     } else {
       //alternative to removing edit button on index.html but keeping in pug page.
       res.send('user not logged in, cannot edit');
