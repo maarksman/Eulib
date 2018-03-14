@@ -6,7 +6,7 @@ https://dev.mysql.com/downloads/file/?id=473605 -msql download --this was recent
     Need MySQL server
   </li>
   <li>
-    Create user named prikshet or myeulibdbuser with password mysql based off index.js or change file to your username/password
+    Create user named eulibdbuser with relevant credentials based off index.js or change file to your username/password
   </li>
   <li>
     run node index.js from www directory
