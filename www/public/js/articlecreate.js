@@ -107,6 +107,8 @@ $.ajax({
     var text = $('#content').val();
     var title = $('#addlink').val();
     let id = $("option[value='" + title + "']").attr('data-id');
+    console.log('id--: ' + id);
+    console.log("title: " + title);
     //ajax request for my_path
     $.ajax({
     url: '/getpathfromid',
@@ -119,16 +121,14 @@ $.ajax({
       //CHECK FOR INVALID LINK IN input
       if (path == undefined) {
         $('#linkmessage').text("Link invalid/path data not gotten");
-      }
-      else if (selStart === selEnd) {
+      } else if (selStart === selEnd) {
         //if no highlight add to end
         let snippet =
           '<a knowl= "' + path + '">Text to link here</a>';
         text = text + snippet;
         $('#linkmessage').text('Link added successfully');
         $('#content').val(text);
-      }
-      else {
+      } else {
         //if highlighted
         var selText = $('#content')
           .val()
