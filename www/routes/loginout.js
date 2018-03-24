@@ -14,6 +14,17 @@ module.exports = app => {
       });
     }
   });
+
+  //Display edit section
+  app.post('/indexshoweditsection', (req, res) => {
+    var username = req.session.username;
+    if (req.session.username == null) {
+      res.send("out");
+    } else {
+      res.send('in');
+    }
+  });
+
   //old signedin page?...delete?
   app.get('/dashboard', (req, res) => {
     console.log('entered /dashboard');

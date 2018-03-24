@@ -102,6 +102,7 @@ $(document).ready(function() {
   $('#search_all').on("click",function(e){
     //get num suggestions
     redirall($('#articles'));
+    showedit();
   });
 
   $('.close').on('click',function(){
@@ -270,6 +271,24 @@ function redir($inputid){
     {
       alert("Invalid search!!");
     } else {
+      var style;
+      $.ajax({
+        url: '/indexshoweditsection',
+        data: {},
+        type: 'POST',
+        datatype: 'json',
+        success: function(data) {
+          console.log(data.type);
+          console.log("none" == data);
+            if ("in" == data) {
+              style = "";
+            } else if ("out" == data) {
+              style = "none";
+            }
+        }, error: function(error) {
+          console.log(error);
+        }
+      });
       $.ajax({
         url: '/searcharticleredir',
         data: {'id': id},
@@ -287,7 +306,7 @@ function redir($inputid){
               var div = $(
                 "<div id='adding'" + " data-id=" + myObj.id + "> \
                 <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-                <button class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\">Edit</button>\
+                <button id='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
                 <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
                 <div id='addLinkOptions' style='display: none'>\
                 <span>Add Knowl Link</span>\
@@ -365,11 +384,15 @@ function redirall($datalist){
             for (i=0;i<myObj.numtorender;i++) {
               let curknowl = myObj.knowlinfo[i];
               if (curknowl.articlefound) {
+                var username = req.session.username;
+                console.log('username: ' + username);
+                console.log('session object is');
+                console.log(req.session);
                 var div = $(
                   "<div id='adding'" +
                   " data-id=" + curknowl.id + " data-level='3'" + "> \
                   <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-                  <button class=\"editerB "+curknowl.id+  "\"type=\"button\">Edit</button>\
+                  <button id='editButton' class=\"editerB "+curknowl.id+  "\"type=\"button\"style='display: none;'>Edit</button>\
                   <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
                   <div id='addLinkOptions' style='display: none'>\
                   <span>Add Knowl Link</span>\
@@ -423,3 +446,24 @@ function redirall($datalist){
   function clearAllKnowls() {
     $('#articles-searched div').empty();
   }
+
+  /*function showedit() {
+    console.log("function called");
+      $.ajax({
+        url: '/indexshoweditsection',
+        data: {},
+        type: 'POST',
+        datatype: 'json',
+        success: function(data) {
+          console.log(data.type);
+          console.log("none" == data);
+            if ("in" == data) {
+              document.getElementById("editButton").style.display = "none";
+            } else if ("out" == data) {
+              document.getElementById("editButton").style.display = "";
+            }
+        }, error: function(error) {
+          console.log(error);
+        }
+      });
+    }*/
