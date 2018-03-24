@@ -114,10 +114,9 @@ $(document).ready(function() {
     search($('#addlink'), $('#linkstoadd'));
   });
 
-  $('#editAddLink').on('keyup', function(e){
-    //clear original datalist
-    $('#linkstoadd').html("");
-    search($('#addlink'), $('#linkstoadd'));
+  $('#editAddLink').on("select", function() {
+        console.log("edit add link pressed");
+
   });
 
   $(document).on('click','.editerB', function() {
@@ -150,20 +149,28 @@ $(document).ready(function() {
       $(this).text("Edit");
       addLinkOptions.style.display = 'none';
     }
+    $('#editAddLink').on('keyup', function(){
+      //console.log("edit add link key up");
+      //clear original datalist
+      $('#editlinkstoadd').html("");
+      search($('#editAddLink'), $('#editlinkstoadd'));
+    });
 
   });
+
+
 
   $(document).on('click','#addLinkButton', function() {
     console.log("TESTING");
     var selStart = $('#editContent').prop('selectionStart');
     var selEnd = $('#editContent').prop('selectionEnd');
     var text = $('#editContent').val();
-    var title = $('#editAddlink').val();
+    var title = $('#editAddLink').val();
     let id = $("option[value='" + title + "']").attr('data-id');
-    console.log("id: " + id);
-    console.log("title: " + title);
+    //console.log("id: " + id);
+    //console.log("title: " + title);
     //ajax request for my_path
-    /*$.ajax({
+    $.ajax({
       url: '/getpathfromid',
       data: {'id': id},
       type: 'POST',
@@ -199,9 +206,10 @@ $(document).ready(function() {
     error: function(error) {
       console.log(error);
     }
-  }); */
+  });
   }); 
 });
+
 function saveArticle($inputid, $inputcontent){
   var id = ($inputid);
   var my_content = ($inputcontent);
@@ -222,6 +230,7 @@ function saveArticle($inputid, $inputcontent){
   });
 }
 function search($inputid, $datalist){
+  console.log("searching");
   //clear original datalist
 
   var my_search = ($inputid.val());
@@ -282,8 +291,8 @@ function redir($inputid){
                 <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
                 <div id='addLinkOptions' style='display: none'>\
                 <span>Add Knowl Link</span>\
-                <input class=\" editAddLink \"  id='editAddLink' list='linkstoadd' name='titlelist'>\
-                <datalist id='linkstoadd'></datalist>\
+                <input id='editAddLink' list='editlinkstoadd' name='titlelist'>\
+                <br><datalist id='editlinkstoadd'></datalist>\
                 <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                 </div>\
                 <div class =\"editbox\" style=\"display:none;\">  <textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
@@ -364,8 +373,8 @@ function redirall($datalist){
                   <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
                   <div id='addLinkOptions' style='display: none'>\
                   <span>Add Knowl Link</span>\
-                  <input class=\" editAddLink \"  id='editAddLink' list=linkstoadd name='titlelist'>\
-                  <datalist id='linkstoadd'></datalist>\
+                  <input id='editAddLink' list=editlinkstoadd name='titlelist'>\
+                  <br><datalist id='editlinkstoadd'></datalist>\
                   <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                   </div>\
                   <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
