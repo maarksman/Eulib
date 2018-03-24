@@ -90,6 +90,12 @@ $.ajax({
             $('#returnmessage').text('Title with level, type and field already exists');
           } else {
             $('#returnmessage').text('Creation Successful!');
+            $('.newarticle').find('input:text').val('');
+            $('.newarticle').find('textarea').val('');
+            $('#linkmessage').empty();
+            $('.newarticle').hide();
+            $('.maximizebar').show();
+
           }
           //$('.newarticle').append(data).css('color', 'red');
         },
