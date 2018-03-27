@@ -54,6 +54,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
     let title ='';
     let fields = [];
     let curfield;
+    let search_name;
     let query = db.query(sql, id, (err, result) => {
       if (err) throw err;
       else {
@@ -66,16 +67,29 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
             isindatabase = true;
             title = row.title;
             curfield = row.field;
+            searcn_name = row.search_name;
           }
         }
         //after loop, next data processing
         if (isindatabase) {
           content = fs.readFile('public/' + path, 'utf8', (err, data)=> {
-            if (err) throw err;
+            if (err) {
+              if (err.code === 'ENOENT') {
+                //if no file found, alert client and delete sql record
+                console.log('article file not found, deleteing entry from db');
+                db.query("DELETE FROM article WHERE id = ?", id,  (err, deleting) => {
+                  if (err) throw err;
+                  console.log('Num of records deleted: ' + deleting.affectedRows);
+                });
+              }              
+              throw err;
+            }
             else {
               //after reading file, searchf or levels and fields
               let gettitle = db.query("SELECT * FROM article WHERE title=?", title, (err, wegot) => {
-                if (err) throw err;
+                if (err) {
+                  throw err;
+                }
                 else {
                   for (j=0;j<wegot.length;j++) {
                     if (wegot[j].level == '2') {

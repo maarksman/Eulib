@@ -113,7 +113,7 @@ $(document).ready(function() {
     $('#linkstoadd').html("");
     search($('#addlink'), $('#linkstoadd'));
   });
-
+  //edit function
   $(document).on('click','.editerB', function() {
     //console.log("edit");
     //id is put into div covering entire article and into another div which holds the text area
@@ -136,7 +136,9 @@ $(document).ready(function() {
       $(this).text("Save");
     }else{
       //console.log("hide+save");
+      let postcontent = $(textarea).children("textarea").val();
       $(textarea).css("display","none");
+      $(text).html(postcontent);
       $(text).css("display","block");
       saveArticle(textid,textarea.children("textarea").val());
       $(this).text("Edit");

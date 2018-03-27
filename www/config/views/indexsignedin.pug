@@ -77,10 +77,9 @@ html(lang='en')
           p
       .newarticle
         .minimizebar 
-        label(for='name')
+        lebel(for='name')
           span.required Title: *
           input#title(type='text', name='title', class='#')
-          // <input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />
         label(for='type')
           span.required Type: *
           select#type(name='type', tabindex='4')
@@ -90,8 +89,8 @@ html(lang='en')
         div
           label(for='field')
             span.required Field: *
-            // <input type="text" id="field" name="field" class="#">
-            select#field(name='field')
+            input#field(name='field', list="fieldlist")
+            datalist#fieldlist
         label(for='level')
           span.required Level: *
           select#level(name="level")
@@ -100,30 +99,27 @@ html(lang='en')
             option(value='3') 3
             option(value='4') 4
             option(value='5') 5
-          div
-            span Add knowl link: 
-            input#addlink(list='linkstoadd', name='titlelist')
-            br
-            datalist#linkstoadd
-            button#addknowlbutton Generate link  
-            br
-            br
-            span Highlight the text you want to link: 
-            br
-            span#linkmessage(style="padding-left:15px;color:red;")
-            br
-            br
-          label(for='content')
-            span.required Content: *
-            br
-            textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
-            br
-            span LateX is accepted. Enclose equations with "$$" 
-            br
-            span and inline math with "\)" and "\(" [reverse order]
+        br
+        input#file-select(type="file", name="image")
         div
-          button#submit(name='submit') Submit
-          span#returnmessage(style="padding-left:15px;color:red;") 
+          span Add knowl link: 
+          input#addlink(list='linkstoadd', name='titlelist')
+          br
+          datalist#linkstoadd
+          button#addknowlbutton Generate link  
+          br
+          br
+          span Highlight the text you want to link: 
+          br
+          span#linkmessage(style="padding-left:15px;color:red;")
+          br
+          br
+        label(for='content')
+          span.required Content: *
+          br
+          textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
+        button#submit(name='submit', value="Submit") Submit
+        span#returnmessage(style="padding-left:15px;color:red;") 
       .maximizebar
         span.maxicon
           | 
