@@ -5,6 +5,12 @@ var path;
 $(document).ready(function() {
   //load_js();
   console.log('searcharticlelive');
+  /*$("#dialogbox").dialog({
+    autoOpen:false,
+    modal:true,
+    title: "Use of Open event",
+    width:300,
+});*/
 
   //function for article left-right
   $(document).on('click', '.button', function(e){
@@ -447,6 +453,11 @@ function redirall($datalist){
 
   function clearAllKnowls() {
     $('#articles-searched div').empty();
+  }
+
+  function popupAlert() {
+    $('#dialogbox').html('<h2>Watch this</h2>An alert box should have opened');
+    $('#dialogbox').dialog('open');
   }
 
   /*function showedit() {

@@ -72,12 +72,14 @@ html(lang='en')
             li.nav-item
               button#signout(type='button') Sign-out
     .container
+      #dialogbox
       #articles-searched
         #entry-content.boxed(,='', align='center')
           | What would you like to know?
           p
       .newarticle
         .minimizebar 
+        .closebar X
         lebel(for='name')
           span.required Title: *
           input#title(type='text', name='title', class='#')

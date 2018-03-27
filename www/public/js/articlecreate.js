@@ -142,9 +142,9 @@ $.ajax({
             $('.newarticle').find('input:text').val('');
             $('.newarticle').find('textarea').val('');
             $('#linkmessage').empty();
+            $('#returnmessage').empty();
             $('.newarticle').hide();
-            $('.maximizebar').show();
-
+            //popupAlert();
           }
         },
 
@@ -217,6 +217,14 @@ $.ajax({
   $('.minimizebar').click(function(){
     $('.newarticle').hide();
     $('.maximizebar').show();
+  });
+
+  $('.closebar').click(function() {
+     $('.newarticle').find('input:text').val('');
+     $('.newarticle').find('textarea').val('');
+     $('#linkmessage').empty();
+     $('#returnmessage').empty();
+     $('.newarticle').hide();
   });
 
   $('.maximizebar').click(function(){
