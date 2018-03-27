@@ -33,7 +33,7 @@ html(lang='en')
     link(href='css/leftright.css', rel='stylesheet')
   body
     // Navigation
-    nav.navbar.navbar-expand-lg.navbar-dark.bg-gray.static-top
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-gray.fixed-top
       .container
         a.navbar-brand(href='/indexsignedin') Eulib
         
@@ -60,6 +60,7 @@ html(lang='en')
                   svg(role='img', aria-label='Reset')
                     use(xmlns:xlink='http://www.w3.org/1999/xlink', xlink:href='#sbx-icon-clear-3')
                 button#search_all(type='submit', title='Search all suggestions.') Submit All
+                button#clearAllButton(onClick='clearAllKnowls()') Clear All
             li.nav-item
               a.nav-link(href='#' id = "addknowl") Add knowl
             //- li.nav-item

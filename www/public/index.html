@@ -43,37 +43,40 @@
   <body>
 
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-gray static-top">
+    <nav class="fixed-top navbar navbar-expand-lg navbar-dark bg-gray">
       <div class="container">
         <a class="navbar-brand" href="http://localhost:3000/">Eulib</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+          <span class="navbar-toggler-icon"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
 
             <form novalidate="novalidate" onsubmit="return false;" class="searchbox sbx-twitter">
-                <div role="search" class="sbx-twitter__wrapper">
-                  <datalist id="articles"><option value="Opera"></option>
-  <option value="Safari"></option></datalist>
-                 <input type="search" name="search" placeholder="Search your website" autocomplete="off" required="required" class="sbx-twitter__input" id="search" list="articles">
+              <div role="search" class="sbx-twitter__wrapper">
+                <datalist id="articles"><option value="Opera"></option>
+                  <option value="Safari"></option></datalist>
+                  <input type="search" name="search" placeholder="Search your website" autocomplete="off" required="required" class="sbx-twitter__input" id="search" list="articles">
                   <button type="submit" title="Submit your search query." class="sbx-twitter__submit" id="search_button">
-                  <svg role="img" aria-label="Search">
-                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-8"></use>
-                 </svg>
+                    <svg role="img" aria-label="Search">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-search-8"></use>
+                    </svg>
+                  </button>
+                  <button type="reset" title="Clear the search query." class="sbx-twitter__reset">
+                    <svg role="img" aria-label="Reset">
+                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-3"></use>
+                   </svg>
+                 </button>
+                 <button type="submit" title="Search all suggestions." id="search_all">
+                  Search All
                 </button>
-                 <button type="reset" title="Clear the search query." class="sbx-twitter__reset">
-                  <svg role="img" aria-label="Reset">
-                       <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#sbx-icon-clear-3"></use>
-                  </svg>
-                  </button>
-                  <button type="submit" title="Search all suggestions." id="search_all">
-                    Search All
-                  </button>
-                 </div>
+                <button id="clearAllButton" onClick='clearAllKnowls()'>
+                  Clear All
+                </button>
+              </div>
             </form>
 
 

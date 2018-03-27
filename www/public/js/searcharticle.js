@@ -102,6 +102,7 @@ $(document).ready(function() {
   $('#search_all').on("click",function(e){
     //get num suggestions
     redirall($('#articles'));
+    showedit();
   });
 
   $('.close').on('click',function(){
@@ -113,7 +114,12 @@ $(document).ready(function() {
     $('#linkstoadd').html("");
     search($('#addlink'), $('#linkstoadd'));
   });
-  //edit function
+
+  $('#editAddLink').on("select", function() {
+        console.log("edit add link pressed");
+
+  });
+
   $(document).on('click','.editerB', function() {
     //console.log("edit");
     //id is put into div covering entire article and into another div which holds the text area
@@ -128,6 +134,8 @@ $(document).ready(function() {
     title = $(this).closest("div").attr("data-title");
     path = $(this).closest("div").attr("data-path");
     */
+    var addLinkOptions = document.getElementById('addLinkOptions');
+    addLinkOptions.style.display = '';
     if($(textarea).css("display")=="none"){
       //console.log("show");
       $(textarea).css("display","block");
@@ -142,9 +150,69 @@ $(document).ready(function() {
       $(text).css("display","block");
       saveArticle(textid,textarea.children("textarea").val());
       $(this).text("Edit");
+      addLinkOptions.style.display = 'none';
+    }
+    $('#editAddLink').on('keyup', function(){
+      //console.log("edit add link key up");
+      //clear original datalist
+      $('#editlinkstoadd').html("");
+      search($('#editAddLink'), $('#editlinkstoadd'));
+    });
+
+  });
+
+
+
+  $(document).on('click','#addLinkButton', function() {
+    console.log("TESTING");
+    var selStart = $('#editContent').prop('selectionStart');
+    var selEnd = $('#editContent').prop('selectionEnd');
+    var text = $('#editContent').val();
+    var title = $('#editAddLink').val();
+    let id = $("option[value='" + title + "']").attr('data-id');
+    //console.log("id: " + id);
+    //console.log("title: " + title);
+    //ajax request for my_path
+    $.ajax({
+      url: '/getpathfromid',
+      data: {'id': id},
+      type: 'POST',
+      datatype: 'text',
+      success: function(data) {
+      //console.log('received json of: ' + data);
+      let path = data;
+      //CHECK FOR INVALID LINK IN input
+      if (path == undefined) {
+        $('#editLinkMessage').text("Link invalid/path data not gotten");
+      } else if (selStart === selEnd) {
+        //if no highlight add to end
+        let snippet = '<a knowl= "' + path + '">Text to link here</a>';
+        text = text + snippet;
+        $('#editLinkMessage').text('Link added successfully');
+        $('#editContent').val(text);
+      } else {
+        //if highlighted
+        var selText = $('#editContent')
+        .val()
+        .substring(selStart, selEnd);
+        let snippet =
+        '<a knowl= "' + path + '">' + selText + '</a>';
+        var start = text.substring(0, selStart);
+        var end = text.substring(selEnd, text.length);
+        text = start + snippet + end;
+        $('#editLinkMessage').text('Link added successfully');
+        $('#editContent').val(text);
+      }
+
+
+    },
+    error: function(error) {
+      console.log(error);
     }
   });
+  });
 });
+
 function saveArticle($inputid, $inputcontent){
   var id = ($inputid);
   var my_content = ($inputcontent);
@@ -165,6 +233,7 @@ function saveArticle($inputid, $inputcontent){
   });
 }
 function search($inputid, $datalist){
+  console.log("searching");
   //clear original datalist
 
   var my_search = ($inputid.val());
@@ -174,13 +243,13 @@ function search($inputid, $datalist){
 
     //TODO sql search for articles including text
 
-     $.ajax({
-       url: '/searcharticle',
-       data: {'search-text': my_search},
-       type: 'POST',
-       datatype: 'html',
-       success: function(data) {
-         $datalist.html(data);
+    $.ajax({
+     url: '/searcharticle',
+     data: {'search-text': my_search},
+     type: 'POST',
+     datatype: 'html',
+     success: function(data) {
+       $datalist.html(data);
 
          //clear original datalist of children
          //parse data of title and infotyp
@@ -190,7 +259,7 @@ function search($inputid, $datalist){
          console.log(error);
        }
      });
-}
+  }
 
 //renders article from searchbox to page
 function redir($inputid){
@@ -199,17 +268,35 @@ function redir($inputid){
     let id = $("#articles option[value='" + my_search + "']").attr('data-id');
     // check for valid title, if not don't Submit
     if (badtitle(my_search) || my_search.length <1
-        || my_search.length > 50 || id == undefined
+      || my_search.length > 50 || id == undefined
       )
     {
       alert("Invalid search!!");
     } else {
-          $.ajax({
-          url: '/searcharticleredir',
-          data: {'id': id},
-          type: 'POST',
-          datatype: 'json',
-          success: function(data) {
+      var style;
+      $.ajax({
+        url: '/indexshoweditsection',
+        data: {},
+        type: 'POST',
+        datatype: 'json',
+        success: function(data) {
+          console.log(data.type);
+          console.log("none" == data);
+            if ("in" == data) {
+              style = "";
+            } else if ("out" == data) {
+              style = "none";
+            }
+        }, error: function(error) {
+          console.log(error);
+        }
+      });
+      $.ajax({
+        url: '/searcharticleredir',
+        data: {'id': id},
+        type: 'POST',
+        datatype: 'json',
+        success: function(data) {
             //console.log('received json of: ' + data);
             myObj = JSON.parse(data);
             console.log(data);
@@ -218,17 +305,25 @@ function redir($inputid){
               alert('"'+ my_search + '" not in database, please try again');
             }
             else {
-            var div = $(
-            "<div id='adding'" +
-            " data-id=" + myObj.id + "> \
-            <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-            <button class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\">Edit</button>\
-            <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-            <div class =\"editbox\" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-            + `<button class="leftbutton button" data-id=""> < </button>
-            <button class="rightbutton button" data-id=""> > </button>`
-            + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
-            "</div>");
+              var div = $(
+                "<div id='adding'" + " data-id=" + myObj.id + "> \
+                <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
+                <button id='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
+                <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
+                <div id='addLinkOptions' style='display: none'>\
+                <span>Add Knowl Link</span>\
+                <input id='editAddLink' list='editlinkstoadd' name='titlelist'>\
+                <br><datalist id='editlinkstoadd'></datalist>\
+                <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
+                </div>\
+                <div class =\"editbox\" style=\"display:none;\">  <textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
+                + `<button class="leftbutton button" data-id=""> < </button>
+                <button class="rightbutton button" data-id=""> > </button>`
+                + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
+                "<div class='knowlfooter'>" +
+                "<span>footer will go here</span>" +
+                "</div>"+
+                "</div>");
 
             //$('#articles-searched').prepend(div.addClass("boxed"));
             $('#entry-content').prepend(div.addClass("boxedin"));
@@ -250,14 +345,14 @@ function redir($inputid){
 
             //remove the marker of nowl we just added
             $('#adding').removeAttr('id');
-            }
+          }
         },
         error: function(error) {
           console.log(error);
         }
       });
     }
-}
+  }
 
 //return all search suggestions
 function redirall($datalist){
@@ -273,7 +368,7 @@ function redirall($datalist){
     if ($datalist.children().length == 0) {
       alert("No suggestions to search");
     } else {
-        $.ajax({
+      $.ajax({
         url: '/multiarticleredir',
         data: {'idlist': idlist},
         type: 'POST',
@@ -291,17 +386,30 @@ function redirall($datalist){
             for (i=0;i<myObj.numtorender;i++) {
               let curknowl = myObj.knowlinfo[i];
               if (curknowl.articlefound) {
+                var username = req.session.username;
+                console.log('username: ' + username);
+                console.log('session object is');
+                console.log(req.session);
                 var div = $(
-                "<div id='adding'" +
-                " data-id=" + curknowl.id + " data-level='3'" + "> \
-                <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-                <button class=\"editerB "+curknowl.id+  "\"type=\"button\">Edit</button>\
-                <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-                <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-                + `<button class="leftbutton button" data-id=""> < </button>
-                <button class="rightbutton button" data-id=""> > </button>`
-                + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
-                "</div>");
+                  "<div id='adding'" +
+                  " data-id=" + curknowl.id + " data-level='3'" + "> \
+                  <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
+                  <button id='editButton' class=\"editerB "+curknowl.id+  "\"type=\"button\"style='display: none;'>Edit</button>\
+                  <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
+                  <div id='addLinkOptions' style='display: none'>\
+                  <span>Add Knowl Link</span>\
+                  <input id='editAddLink' list=editlinkstoadd name='titlelist'>\
+                  <br><datalist id='editlinkstoadd'></datalist>\
+                  <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
+                  </div>\
+                  <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
+                  + `<button class="leftbutton button" data-id=""> < </button>
+                  <button class="rightbutton button" data-id=""> > </button>`
+                  + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
+                  "<div class='knowlfooter'>" +
+                  "<span>footer will go here</span>" +
+                  "</div>"+
+                  "</div>");
 
                 for (j=0;j<curknowl.fields.length;j++) {
                   let fieldoption = $("<option value=\"" +curknowl.fields[j].field + "\">val1</option>")
@@ -331,8 +439,33 @@ function redirall($datalist){
       });
     }
 
-}
+  }
 
-function removeDiv(element){
-  $(element).closest("div").remove();
-}
+  function removeDiv(element){
+    $(element).closest("div").remove();
+  }
+
+  function clearAllKnowls() {
+    $('#articles-searched div').empty();
+  }
+
+  /*function showedit() {
+    console.log("function called");
+      $.ajax({
+        url: '/indexshoweditsection',
+        data: {},
+        type: 'POST',
+        datatype: 'json',
+        success: function(data) {
+          console.log(data.type);
+          console.log("none" == data);
+            if ("in" == data) {
+              document.getElementById("editButton").style.display = "none";
+            } else if ("out" == data) {
+              document.getElementById("editButton").style.display = "";
+            }
+        }, error: function(error) {
+          console.log(error);
+        }
+      });
+    }*/

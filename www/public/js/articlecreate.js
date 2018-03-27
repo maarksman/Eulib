@@ -139,6 +139,12 @@ $.ajax({
             $('#returnmessage').text('Title with level, type and field already exists');
           } else {
             $('#returnmessage').text('Creation Successful!');
+            $('.newarticle').find('input:text').val('');
+            $('.newarticle').find('textarea').val('');
+            $('#linkmessage').empty();
+            $('.newarticle').hide();
+            $('.maximizebar').show();
+
           }
         },
 
@@ -157,6 +163,8 @@ $.ajax({
     var text = $('#content').val();
     var title = $('#addlink').val();
     let id = $("option[value='" + title + "']").attr('data-id');
+    console.log('id--: ' + id);
+    console.log("title: " + title);
     //ajax request for my_path
     $.ajax({
       url: '/getpathfromid',
