@@ -65,6 +65,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
             var path = row.path;
             var knowlid = row.id;
             isindatabase = true;
+            artLevel = row.level;
             title = row.title;
             curfield = row.field;
             searcn_name = row.search_name;
@@ -107,6 +108,8 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
                  }
                 //after loop, finsih nextdata processing, convert content equations
                 var jsonobj = {
+                  title: title,
+                  level: artLevel,
                   content: data,
                   path: path,
                   id: knowlid,
@@ -200,6 +203,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
           for (var i = 0; i < result.length; i++) {
             var row = result[i];
             if (row.level == '3') {
+              artLevel = row.level;
               path = row.path;
               title = row.title;
               knowlid = row.id;
@@ -234,6 +238,8 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
                     }
                   }
                   var jsonobj = {
+                    title: title,
+                    level: artLevel,
                     content: data,
                     'path': path,
                     'id': knowlid,
