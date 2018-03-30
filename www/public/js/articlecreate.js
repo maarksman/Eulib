@@ -17,6 +17,11 @@ function badtitle(titletext) {
   return true;
 }
 
+function isYoutube(link) {
+  var matches = link.match(/watch\?v=([a-zA-Z0-9\-_]+)/);
+  return matches;
+}
+
 $(document).ready(function(){
   console.log('articlecreate.js loaded');
 
