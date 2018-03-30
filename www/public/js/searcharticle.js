@@ -323,8 +323,8 @@ function redir($inputid){
                 <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                 </div>\
                 <div class =\"editbox\" style=\"display:none;\">  <textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
-                + `<button class="leftbutton button" data-id=""> < </button>
-                <button class="rightbutton button" data-id=""> > </button>`
+                + `<button class="leftbutton button" data-id="" title='More general'> < </button>
+                <button class="rightbutton button" data-id="" title='More technical'> > </button>`
                 + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
                 "<div class='knowlfooter border border-dark'>" +
                 "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
@@ -409,8 +409,8 @@ function redirall($datalist){
                   <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                   </div>\
                   <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
-                  + `<button class="leftbutton button" data-id=""> < </button>
-                  <button class="rightbutton button" data-id=""> > </button>`
+                  + `<button class="leftbutton button" data-id="" title='More general'> < </button>
+                  <button class="rightbutton button" data-id="" title='More technical'> > </button>`
                   + "<div class='knowlcontent1 border border-dark'>" + curknowl.content + "</div>" +
                   "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
                   "<span>footer will go here</span>" +
