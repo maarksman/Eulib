@@ -211,6 +211,31 @@ $.ajax({
     }); //end ajax
   });
 
+  $('#type').change(function() {
+    console.log("selected");
+    if ($('#type').find(':selected').val() == 'TextKnowl') {
+      $('#text-knowl-creation').show();
+      $('#image-knowl-creation').hide();
+      $('#video-knowl-creation').hide();
+      $('#link-knowl-creation').hide();
+    } else if ($('#type').find(':selected').val() == 'ImageKnowl') {
+      $('#text-knowl-creation').hide();
+      $('#image-knowl-creation').show();
+      $('#video-knowl-creation').hide();
+      $('#link-knowl-creation').hide();
+    } else if ($('#type').find(':selected').val() == 'Video') {
+      $('#text-knowl-creation').hide();
+      $('#image-knowl-creation').hide();
+      $('#video-knowl-creation').show();
+      $('#link-knowl-creation').hide();
+    } else if ($('#type').find(':selected').val() == 'Link') {
+      $('#text-knowl-creation').hide();
+      $('#image-knowl-creation').hide();
+      $('#video-knowl-creation').hide();
+      $('#link-knowl-creation').show();
+    }
+  });
+
   $('.maximizebar').hide();
   $('.newarticle').hide();
 
