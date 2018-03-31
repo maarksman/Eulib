@@ -458,6 +458,7 @@ function redirall($datalist){
   }
 
   function popupAlert() {
+    console.log("popupAlert called");
     $('#dialogbox').html('<h2>Watch this</h2>An alert box should have opened');
     $('#dialogbox').dialog('open');
   }
