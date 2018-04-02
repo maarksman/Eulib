@@ -4,6 +4,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable) => {
     //console.log("os.tmpdir() is: " ,os.tmpdir());
     form.keepExtensions = true;
     form.uploadDir = "./public/knowlcontent/knowlimages";
+    //note default image upload size should be width 218 px, heigh 148 px
     form.parse(req, (err, fields, files) => {
       //after form finish processing, proceed to create article
       let belongs_to = fields['field'];
@@ -13,7 +14,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable) => {
       let creator = req.session.username;
       let content = '<div>' + fields['content'] + '</div>';
       let search_name = `${title}(${belongs_to}) - ${type}`;
-      
+
 
       console.log('fields are: ', fields);
       console.log('files are: ', files);

@@ -22,6 +22,7 @@
     "node-mysql-importer": "0.0.10",
     "passport": "^0.4.0",
     "pug": "^2.0.0-rc.4",
+    "sharp": "^0.20.1",
     "socket.io": "^2.0.4"
   },
   "engines": {
