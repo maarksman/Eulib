@@ -17,6 +17,11 @@ function badtitle(titletext) {
   return true;
 }
 
+function isYoutube(link) {
+  var matches = link.match(/watch\?v=([a-zA-Z0-9\-_]+)/);
+  return matches;
+}
+
 $(document).ready(function(){
   console.log('articlecreate.js loaded');
 
@@ -142,9 +147,9 @@ $.ajax({
             $('.newarticle').find('input:text').val('');
             $('.newarticle').find('textarea').val('');
             $('#linkmessage').empty();
+            $('#returnmessage').empty();
             $('.newarticle').hide();
-            $('.maximizebar').show();
-
+            popupAlert();
           }
         },
 
@@ -206,6 +211,57 @@ $.ajax({
     }); //end ajax
   });
 
+  $('#preview').click(function() {
+    /*document.write(
+    '<div class="modal fade" id="myModal" role="dialog">'+
+      '<div class="modal-dialog">'+
+        '<div class="modal-content">'+
+          '<div class="modal-header">'+
+            '<button type="button" class="close" data-dismiss="modal">&times;</button>'+
+            '<h4 class="modal-title">Modal Header</h4>'+
+          '</div>'+
+          '<div class="modal-body">'+
+            '<p>Some text in the modal.</p>'+
+          '</div>'+
+          '<div class="modal-footer">'+
+            '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>');*/
+    console.log("preview pressed");
+    $('.modal-body').empty();
+    var content = $('#content').val()
+    content = content.replace(/\\n/g, "");
+    $('.modal-body').html(content);
+    $('#myModal').modal();
+  });
+
+  $('#type').change(function() {
+    console.log("selected");
+    if ($('#type').find(':selected').val() == 'TextKnowl') {
+      $('#text-knowl-creation').show();
+      $('#image-knowl-creation').hide();
+      $('#video-knowl-creation').hide();
+      $('#link-knowl-creation').hide();
+    } else if ($('#type').find(':selected').val() == 'ImageKnowl') {
+      $('#text-knowl-creation').hide();
+      $('#image-knowl-creation').show();
+      $('#video-knowl-creation').hide();
+      $('#link-knowl-creation').hide();
+    } else if ($('#type').find(':selected').val() == 'Video') {
+      $('#text-knowl-creation').hide();
+      $('#image-knowl-creation').hide();
+      $('#video-knowl-creation').show();
+      $('#link-knowl-creation').hide();
+    } else if ($('#type').find(':selected').val() == 'Link') {
+      $('#text-knowl-creation').hide();
+      $('#image-knowl-creation').hide();
+      $('#video-knowl-creation').hide();
+      $('#link-knowl-creation').show();
+    }
+  });
+
   $('.maximizebar').hide();
   $('.newarticle').hide();
 
@@ -217,6 +273,14 @@ $.ajax({
   $('.minimizebar').click(function(){
     $('.newarticle').hide();
     $('.maximizebar').show();
+  });
+
+  $('.closebar').click(function() {
+     $('.newarticle').find('input:text').val('');
+     $('.newarticle').find('textarea').val('');
+     $('#linkmessage').empty();
+     $('#returnmessage').empty();
+     $('.newarticle').hide();
   });
 
   $('.maximizebar').click(function(){

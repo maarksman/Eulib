@@ -13,16 +13,18 @@ html(lang='en')
     title Eulib
     // Bootstrap core CSS
     link(href='vendor/bootstrap/css/bootstrap.css', rel='stylesheet')
+    link(href='vendor/jquery/jquery-ui.css', rel='stylesheet')
+    link(href='https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css', rel='stylesheet')
     // <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
     // Custom styles for this template
     link(href='css/small-business.css', rel='stylesheet')
     link(href='css/searchbar.css', rel='stylesheet')
     link(href='//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700|Merriweather:400,700,900', rel='stylesheet')
     // article search
-    script(src='http://code.jquery.com/jquery-1.11.3.min.js')
+    script(src='http://code.jquery.com/jquery-1.11.1.min.js')
+    script(src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js')
     script(type='text/javascript', src='js/searcharticle.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML')
-
     script(type='text/javascript', src='js/articlecreate.js')
     script(src='js/signedin.js')
 
@@ -35,7 +37,7 @@ html(lang='en')
     // Navigation
     nav.navbar.navbar-expand-lg.navbar-dark.bg-gray.fixed-top
       .container
-        a.navbar-brand(href='/indexsignedin') Eulib
+        img.navbar-brand(href='/indexsignedin', src='images/logo.png')
         
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='.navbar-collapse', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
           span.navbar-toggler-icon
@@ -71,22 +73,42 @@ html(lang='en')
               a.nav-link(href='http://localhost:3000/signedin') #{name}'s Profile
             li.nav-item
               button#signout(type='button') Sign-out
+    // Modal
+    #myModal.modal(role='dialog')
+      .modal-dialog
+        // Modal content
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal') ×
+            h4.modal-title Knowl Preview
+          .modal-body
+            span Sample Text
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+
     .container
+      #dialogbox
       #articles-searched
         #entry-content.boxed(,='', align='center')
           | What would you like to know?
           p
       .newarticle
         .minimizebar 
-        lebel(for='name')
+        .closebar X
+        label(for='name')
           span.required Title: *
           input#title(type='text', name='title', class='#')
         label(for='type')
           span.required Type: *
-          select#type(name='type', tabindex='4')
+          select#type(name='type', class='typeBox' tabindex='4')
+            option(value='TextKnowl') Text Knowl
+            option(value='ImageKnowl') Image Knowl
+            option(value='Video') Youtube Video
+            option(value='Link') Link
             option(value='Article') Article
             option(value='Paper') Paper
             option(value='Poster') Poster
+
         div
           label(for='field')
             span.required Field: *
@@ -101,25 +123,68 @@ html(lang='en')
             option(value='4') 4
             option(value='5') 5
         br
-        input#file-select(type="file", name="image")
-        div
-          span Add knowl link: 
-          input#addlink(list='linkstoadd', name='titlelist')
-          br
-          datalist#linkstoadd
-          button#addknowlbutton Generate link  
-          br
-          br
-          span Highlight the text you want to link: 
-          br
-          span#linkmessage(style="padding-left:15px;color:red;")
-          br
-          br
-        label(for='content')
-          span.required Content: *
-          br
-          textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
-        button#submit(name='submit', value="Submit") Submit
+        
+        div#text-knowl-creation(style="display: '';")
+          div
+            span Add knowl link: 
+            input#addlink(list='linkstoadd', name='titlelist')
+            br
+            datalist#linkstoadd
+            button#addknowlbutton Generate link  
+            br
+            br
+            span Highlight the text you want to link: 
+            br
+            span#linkmessage(style="padding-left:15px;color:red;")
+            br
+            br
+          label(for='content')
+            span.required Content: *
+            br
+            textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
+          button#submit(name='submit', value="Submit") Submit
+          button#preview(name='preview') Preview
+
+        div#image-knowl-creation(style="display: none;")
+          input#file-select(type="file", name="image")
+          div
+            span Add knowl link: 
+            input#addlink(list='linkstoadd', name='titlelist')
+            br
+            datalist#linkstoadd
+            button#addknowlbutton Generate link  
+            br
+            br
+            span Highlight the text you want to link: 
+            br
+            span#linkmessage(style="padding-left:15px;color:red;")
+            br
+            br
+          label(for='content')
+            span.required Content: *
+            br
+            textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
+          button#submit(name='submit', value="Submit") Submit
+          button#preview(name='preview') Preview    
+
+        div#video-knowl-creation(style="display: none;")
+          div
+            span Add Video Link: 
+            input#videoLink
+            span#linkmessage(style="padding-left:15px;color:red;")
+            br
+            br
+          button#submit(name='submit', value="Submit") Submit
+
+        div#link-knowl-creation(style="display: none;")
+          div
+            span Add Web Link:
+            input#webLink
+            span#linkmessage(style="padding-left:15px;color:red;")
+            br
+            br
+          button#submit(name='submit', value="Submit") Submit
+
         span#returnmessage(style="padding-left:15px;color:red;") 
       .maximizebar
         span.maxicon
