@@ -105,9 +105,6 @@ html(lang='en')
             option(value='ImageKnowl') Image Knowl
             option(value='Video') Youtube Video
             option(value='Link') Link
-            option(value='Article') Article
-            option(value='Paper') Paper
-            option(value='Poster') Poster
 
         div
           label(for='field')
@@ -141,8 +138,7 @@ html(lang='en')
           label(for='content')
             span.required Content: *
             br
-            textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
-          button#submit(name='submit', value="Submit") Submit
+            textarea#textcontent(cols="60", rows="4", name='content', class='content', placeholder='Please write your article here.', tabindex='5', required='required')
           button#preview(name='preview') Preview
 
         div#image-knowl-creation(style="display: none;")
@@ -163,8 +159,7 @@ html(lang='en')
           label(for='content')
             span.required Content: *
             br
-            textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
-          button#submit(name='submit', value="Submit") Submit
+            textarea#imagecontent(cols="60", rows="4", name='content', class='content', placeholder='Please write your article here.', tabindex='5', required='required')
           button#preview(name='preview') Preview    
 
         div#video-knowl-creation(style="display: none;")
@@ -174,7 +169,6 @@ html(lang='en')
             span#linkmessage(style="padding-left:15px;color:red;")
             br
             br
-          button#submit(name='submit', value="Submit") Submit
 
         div#link-knowl-creation(style="display: none;")
           div
@@ -183,7 +177,8 @@ html(lang='en')
             span#linkmessage(style="padding-left:15px;color:red;")
             br
             br
-          button#submit(name='submit', value="Submit") Submit
+
+        button#submit(name='submit', value="Submit") Submit
 
         span#returnmessage(style="padding-left:15px;color:red;") 
       .maximizebar
