@@ -1,5 +1,11 @@
-module.exports = (app, urlencodedParser, db, fs, formidable) => {
+module.exports = (app, urlencodedParser, db, fs, formidable, sharp) => {
   app.post('/articlecreate', urlencodedParser, (req, res) => {
+
+    function formatcontentbytype(content, type) {
+      //put things here
+      return null;
+    }
+
     let form = new formidable.IncomingForm();
     //console.log("os.tmpdir() is: " ,os.tmpdir());
     form.keepExtensions = true;
@@ -12,9 +18,8 @@ module.exports = (app, urlencodedParser, db, fs, formidable) => {
       let type = fields['type'];
       let level = fields['level'];
       let creator = req.session.username;
-      let content = '<div>' + fields['content'] + '</div>';
       let search_name = `${title}(${belongs_to}) - ${type}`;
-
+      let hasimage = false;
 
       console.log('fields are: ', fields);
       console.log('files are: ', files);
@@ -38,6 +43,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable) => {
               // after doing query, write file with Id as Name and insert path into row
               let id = result.insertId;
               let filename = title + "_" + result.insertId + '.html';
+              let content = "<div>" + req['content'] + "<div>"
               let contentpath = 'public/knowlcontent/' + filename;
               let knowlpath = 'knowlcontent/' + filename;
               fs.writeFile(contentpath, content, function(err) {
