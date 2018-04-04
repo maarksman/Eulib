@@ -50,7 +50,7 @@ $.ajax({
   }
 });
 
-  $('#submit').on('click', function(e){
+  $('#submit').on('click', function(e) {
     function validfield(textin) {
       thefield = $("#fieldlist option[value='" + textin + "']").attr('value')[0];
       if (textin == thefield) {
@@ -67,8 +67,33 @@ $.ajax({
     var type_in = $('#type').val();
     var field_in = $('#field').val();
     var level_in = $('#level').val();
-    var content_in =$('#content').val();
+    var content_in;
 
+    console.log(typeof(type_in));
+
+    switch (type_in) {
+      case "TextKnowl":
+        console.log("case text");
+        content_in = $('#textcontent').val();
+          break;
+
+      case "ImageKnowl":
+        console.log("case image");
+        content_in = $('#imagecontent').val();
+          break;
+
+      case "Video":
+        console.log("case vid");
+        content_in = $('#videoLink').val();
+          break;
+
+      case "Link":
+        console.log("case link");
+        content_in = $('#webLink').val();
+          break;    
+    } 
+
+    console.log(content_in);
 
     //get file uploaded, check for valid size image before upload
 
@@ -78,20 +103,15 @@ $.ajax({
     //check for bad inputs to create form
     if (title_in.length == 0) {
       $('#returnmessage').text('Title field must not be blank');
-    }
-    else if (badtitle(title_in)) {
+    } else if (badtitle(title_in)) {
       $('#returnmessage').text('Title contains invalid characters');
-    }
-    else if (title_in.length > 30) {
+    } else if (title_in.length > 30) {
       $('#returnmessage').text('Title must contain 30 or less characters');
-    }
-    else if (content_in.length == 0) {
+    } else if (content_in.length == 0) {
       $('#returnmessage').text('Content cannot be blank');
-    }
-    else if (validfield(field_in)) {
+    } else if (validfield(field_in)) {
       $('#returnmessage').text('Must use valid field');
-    }
-    else {
+    } else {
       //update button text
       $("#submit").html('Submitting');
 
@@ -163,9 +183,9 @@ $.ajax({
   });
 
   $('#addknowlbutton').click(function() {
-    var selStart = $('#content').prop('selectionStart');
-    var selEnd = $('#content').prop('selectionEnd');
-    var text = $('#content').val();
+    var selStart = $('.content').prop('selectionStart');
+    var selEnd = $('.content').prop('selectionEnd');
+    var text = $('.content').val();
     var title = $('#addlink').val();
     let id = $("option[value='" + title + "']").attr('data-id');
     console.log('id--: ' + id);
@@ -189,11 +209,11 @@ $.ajax({
             '<a knowl= "' + path + '">Text to link here</a>';
           text = text + snippet;
           $('#linkmessage').text('Link added successfully');
-          $('#content').val(text);
+          $('.content').val(text);
         }
         else {
           //if highlighted
-          var selText = $('#content')
+          var selText = $('.content')
             .val()
             .substring(selStart, selEnd);
           let snippet =
@@ -202,7 +222,7 @@ $.ajax({
           var end = text.substring(selEnd, text.length);
           text = start + snippet + end;
           $('#linkmessage').text('Link added successfully');
-          $('#content').val(text);
+          $('.content').val(text);
         }
       },
       error: function(error) {
@@ -231,7 +251,7 @@ $.ajax({
     '</div>');*/
     console.log("preview pressed");
     $('.modal-body').empty();
-    var content = $('#content').val()
+    var content = $('.content').val()
     content = content.replace(/\\n/g, "");
     $('.modal-body').html(content);
     $('#myModal').modal();
