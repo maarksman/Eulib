@@ -101,14 +101,14 @@ html(lang='en')
         label(for='type')
           span.required Type: *
           select#type(name='type', class='typeBox' tabindex='4')
-            option(value='TextKnowl') Text Knowl
+            option(value='TextKnowl') TextKnowl
             option(value='Video') Video
-            option(value='Link') Link
-        div
-          label(for='field')
-            span.required Field: *
-            input#field(name='field', list="fieldlist")
-            datalist#fieldlist
+            option(value='LInk') Link
+        label(for='field')
+          span.required Field: *
+          input#field(name='field', list="fieldlist")
+          datalist#fieldlist
+        br
         label(for='level')
           span.required Level: *
           select#level(name="level")
@@ -120,6 +120,7 @@ html(lang='en')
         br
         
         div#text-knowl-creation(style="display: '';")
+          input#file-select(type="file", name="image")
           div
             span Add knowl link: 
             input#addlink(list='linkstoadd', name='titlelist')
@@ -136,7 +137,7 @@ html(lang='en')
           label(for='content')
             span.required Content: *
             br
-            textarea#content(cols="60", rows="4", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
+            textarea#content(cols="60", rows="3", name='content', class='#', placeholder='Please write your article here.', tabindex='5', required='required')
         div#video-knowl-creation(style="display: none;")
           div
             span Add Video Link: 
@@ -146,8 +147,6 @@ html(lang='en')
             span Add Web Link:
             input#webLink
         br
-        br
-        span#linkmessage(style="padding-left:15px;color:red;")
         button#submit(name='submit', value="Submit") Submit
         button#preview(name='preview') Preview          
         span#returnmessage(style="padding-left:15px;color:red;") 

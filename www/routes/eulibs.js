@@ -1,16 +1,39 @@
 module.exports = (app, urlencodedParser, db, fs, formidable, sharp) => {
   app.post('/articlecreate', urlencodedParser, (req, res) => {
 
-    function formatcontentbytype(content, type) {
-      //put things here
-      return null;
+    function contentbytype(content, type, maybeimage) {
+      //make sure if file not exist, maybimage = null
+      if (type == "Video") {
+        return `<div><iframe src='${content}' height='150' width='720'>
+        </iframe></div>`;
+      }
+      else if (maybeimage.path != null  && maybeimage.caption != null) {
+        return (`<div style="float:left;display:inline-block;width:65%;">
+          ${content}
+        </div>
+        <div class="knowlframe">
+          <figure>
+            <img src="${maybeimage.path}" alt="Loading" width="100%" height="140px">
+            <figcaption>
+              ${maybeimage.caption}
+            </figcaption>
+          </figure>
+        </div>`);
+      }
+      else {
+        return `<div>${content}</div>`;
+      }
     }
 
     let form = new formidable.IncomingForm();
-    //console.log("os.tmpdir() is: " ,os.tmpdir());
     form.keepExtensions = true;
     form.uploadDir = "./public/knowlcontent/knowlimages";
     //note default image upload size should be width 218 px, heigh 148 px
+
+    //image processing here
+
+    //get filename when file/field recieved from client, change later
+
     form.parse(req, (err, fields, files) => {
       //after form finish processing, proceed to create article
       let belongs_to = fields['field'];
@@ -19,7 +42,9 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp) => {
       let level = fields['level'];
       let creator = req.session.username;
       let search_name = `${title}(${belongs_to}) - ${type}`;
-      let hasimage = false;
+      //rename file to be specific to knowl
+      console.log('creater is', creator);
+
 
       console.log('fields are: ', fields);
       console.log('files are: ', files);
@@ -43,7 +68,19 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp) => {
               // after doing query, write file with Id as Name and insert path into row
               let id = result.insertId;
               let filename = title + "_" + result.insertId + '.html';
-              let content = "<div>" + req['content'] + "<div>"
+              let maybeimage = null;
+              //if image, process here
+              if (files.knowlimage != null) {
+                let caption = "I currently have no caption";
+                let imagename = title + "_" + result.insertId + "_image.png";
+                let imagepath = 'knowlcontent/knowlimages/' + imagename;
+                let fsimagepath = 'public/' + imagepath;
+                console.log(files.knowlimage.path);
+                fs.renameSync(files.knowlimage.path, fsimagepath);
+                maybeimage = {path: imagepath, 'caption': caption};
+                //resize image so client doesn't download large file
+              }
+              let content = contentbytype(fields['content'], type, maybeimage);
               let contentpath = 'public/knowlcontent/' + filename;
               let knowlpath = 'knowlcontent/' + filename;
               fs.writeFile(contentpath, content, function(err) {

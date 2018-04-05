@@ -74,12 +74,7 @@ $.ajax({
     switch (type_in) {
       case "TextKnowl":
         console.log("case text");
-        content_in = $('#textcontent').val();
-          break;
-
-      case "ImageKnowl":
-        console.log("case image");
-        content_in = $('#imagecontent').val();
+        content_in = $('#content').val();
           break;
 
       case "Video":
@@ -90,8 +85,8 @@ $.ajax({
       case "Link":
         console.log("case link");
         content_in = $('#webLink').val();
-          break;    
-    } 
+          break;
+    }
 
     console.log(content_in);
 
@@ -169,7 +164,7 @@ $.ajax({
             $('#linkmessage').empty();
             $('#returnmessage').empty();
             $('.newarticle').hide();
-            popupAlert();
+            alert("creation successful");
           }
         },
 
@@ -183,9 +178,9 @@ $.ajax({
   });
 
   $('#addknowlbutton').click(function() {
-    var selStart = $('.content').prop('selectionStart');
-    var selEnd = $('.content').prop('selectionEnd');
-    var text = $('.content').val();
+    var selStart = $('#content').prop('selectionStart');
+    var selEnd = $('#content').prop('selectionEnd');
+    var text = $('#content').val();
     var title = $('#addlink').val();
     let id = $("option[value='" + title + "']").attr('data-id');
     console.log('id--: ' + id);
@@ -209,11 +204,11 @@ $.ajax({
             '<a knowl= "' + path + '">Text to link here</a>';
           text = text + snippet;
           $('#linkmessage').text('Link added successfully');
-          $('.content').val(text);
+          $('#content').val(text);
         }
         else {
           //if highlighted
-          var selText = $('.content')
+          var selText = $('#content')
             .val()
             .substring(selStart, selEnd);
           let snippet =
@@ -222,7 +217,7 @@ $.ajax({
           var end = text.substring(selEnd, text.length);
           text = start + snippet + end;
           $('#linkmessage').text('Link added successfully');
-          $('.content').val(text);
+          $('#content').val(text);
         }
       },
       error: function(error) {
@@ -251,7 +246,7 @@ $.ajax({
     '</div>');*/
     console.log("preview pressed");
     $('.modal-body').empty();
-    var content = $('.content').val()
+    var content = $('#content').val()
     content = content.replace(/\\n/g, "");
     $('.modal-body').html(content);
     $('#myModal').modal();
@@ -261,22 +256,14 @@ $.ajax({
     console.log("selected");
     if ($('#type').find(':selected').val() == 'TextKnowl') {
       $('#text-knowl-creation').show();
-      $('#image-knowl-creation').hide();
-      $('#video-knowl-creation').hide();
-      $('#link-knowl-creation').hide();
-    } else if ($('#type').find(':selected').val() == 'ImageKnowl') {
-      $('#text-knowl-creation').hide();
-      $('#image-knowl-creation').show();
       $('#video-knowl-creation').hide();
       $('#link-knowl-creation').hide();
     } else if ($('#type').find(':selected').val() == 'Video') {
       $('#text-knowl-creation').hide();
-      $('#image-knowl-creation').hide();
       $('#video-knowl-creation').show();
       $('#link-knowl-creation').hide();
     } else if ($('#type').find(':selected').val() == 'Link') {
       $('#text-knowl-creation').hide();
-      $('#image-knowl-creation').hide();
       $('#video-knowl-creation').hide();
       $('#link-knowl-creation').show();
     }

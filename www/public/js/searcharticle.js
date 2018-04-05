@@ -1,16 +1,28 @@
-var textarea = $('#mEdit');
+function validchar(validstr, tocheck) {
+  for (i=0; i<tocheck.length; i++) {
+    if (!( validstr.includes(tocheck[i]) )) {
+      return false;
+    }
+  }
+  return true;
+}
+
+const lowerchars = "abcdefghijklmnopqrstuvwxyz";
+const allowedchars = lowerchars + "-() " + lowerchars.toUpperCase() + "0123456789";
+
+function badtitle(titletext) {
+  if (validchar(allowedchars, titletext)) {
+    return false;
+  }
+  return true;
+}
+
 var text;
 var title;
 var path;
 $(document).ready(function() {
   //load_js();
   console.log('searcharticlelive');
-  /*$("#dialogbox").dialog({
-    autoOpen:false,
-    modal:true,
-    title: "Use of Open event",
-    width:300,
-});*/
 
   //function for article left-right
   $(document).on('click', '.button', function(e){
@@ -313,10 +325,9 @@ function redir($inputid){
             else {
               var div = $(
                 "<div id='adding'" + " data-id=" + myObj.id + "> \
-                <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
                 <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
                 <button id='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
-                <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
+                <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
                 <div id='addLinkOptions' style='display: none'>\
                 <span>Add Knowl Link</span>\
                 <input id='editAddLink' list='editlinkstoadd' name='titlelist'>\
@@ -324,11 +335,11 @@ function redir($inputid){
                 <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                 </div>\
                 <div class =\"editbox\" style=\"display:none;\">  <textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
-                + `<button class="leftbutton button" data-id="" title='More general'> < </button>
-                <button class="rightbutton button" data-id="" title='More technical'> > </button>`
+                + `<button class="leftbutton button" data-id=""> < </button>
+                <button class="rightbutton button" data-id=""> > </button>`
                 + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
-                "<div class='knowlfooter border border-dark'>" +
-                "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
+                "<div class='knowlfooter'>" +
+                "<span>footer will go here</span>" +
                 "</div>"+
                 "</div>");
 
@@ -393,17 +404,12 @@ function redirall($datalist){
             for (i=0;i<myObj.numtorender;i++) {
               let curknowl = myObj.knowlinfo[i];
               if (curknowl.articlefound) {
-                var username = req.session.username;
-                console.log('username: ' + username);
-                console.log('session object is');
-                console.log(req.session);
                 var div = $(
                   "<div id='adding'" +
                   " data-id=" + curknowl.id + " data-level='3'" + "> \
-                <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
                   <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
                   <button id='editButton' class=\"editerB "+curknowl.id+  "\"type=\"button\"style='display: none;'>Edit</button>\
-                  <button onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
+                  <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
                   <div id='addLinkOptions' style='display: none'>\
                   <span>Add Knowl Link</span>\
                   <input id='editAddLink' list=editlinkstoadd name='titlelist'>\
@@ -411,10 +417,10 @@ function redirall($datalist){
                   <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                   </div>\
                   <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
-                  + `<button class="leftbutton button" data-id="" title='More general'> < </button>
-                  <button class="rightbutton button" data-id="" title='More technical'> > </button>`
-                  + "<div class='knowlcontent1 border border-dark'>" + curknowl.content + "</div>" +
-                  "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
+                  + `<button class="leftbutton button" data-id=""> < </button>
+                  <button class="rightbutton button" data-id=""> > </button>`
+                  + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
+                  "<div class='knowlfooter'>" +
                   "<span>footer will go here</span>" +
                   "</div>"+
                   "</div>");
@@ -455,12 +461,6 @@ function redirall($datalist){
 
   function clearAllKnowls() {
     $('#articles-searched div').empty();
-  }
-
-  function popupAlert() {
-    console.log("popupAlert called");
-    $('#dialogbox').html('<h2>Watch this</h2>An alert box should have opened');
-    $('#dialogbox').dialog('open');
   }
 
   /*function showedit() {

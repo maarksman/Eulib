@@ -38,7 +38,6 @@
       <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
     <script type = "text/javascript" src = "js/searcharticle.js"></script>
-    <script type="text/javascript" src = "js/articlecreate.js"></script>
     <script type = "text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML'></script>
   </head>
 
@@ -109,64 +108,7 @@
           <p>What would you like to know?</p>
         </div>
       </div>
-    </div>
-
-    <div class = "newarticle">
-      <div class = "minimizebar">&#128469;</div>
-      <label for="name">
-        <span class="required">Title: *</span>
-        <input type="text" id="title"  name="title" class="#">
-        <!--<input type="text" id="name" name="name" value="" placeholder="Your Name" required="required" tabindex="1" autofocus="autofocus" />-->
-      </label>
-      <label for="type">
-        <span class="required">Type: *</span>
-        <!--<input type="text" id="type" name="type" class="#">
-        <input type="email" id="email" name="email" value="" placeholder="Your Email" tabindex="2" required="required" />-->
-        <select id="type" name="type" tabindex="4">
-           <option value=""></option>
-           <option value="Definition">Article</option>
-           <option value="Theorem">Paper</option>
-           <option value="Proof">Poster</option>
-        </select>
-      </label>
-
-  <div>
-      <label for="field">
-      <span class="required">Field: *</span>
-      <!--<input type="text" id="field" name="field" class="#">-->
-      <select id="field" name="field" tabindex="4">
-           <option value=""></option>
-           <option value="Analysis">Analysis</option>
-           <option value="Algebra">Algebra</option>
-           <option value="Field Theory">Field Theory</option>
-        </select>
-      </label>
-  </div>
-
-
-      <label for="level">
-      <span class="required">Level: *</span>
-      <!--<input type="text" id="field" name="level" class="#">-->
-      <input list="level" name="level" id ="level">
-        <datalist id="browsers">
-          <option value="Entry_Level">
-          <option value="Medium">
-          <option value="Expert">
-          </datalist>
-      </label>
-
-      <div>
-          <label for="message">
-            <span class="required">Content: *</span> <br>
-            <textarea id="content" name="content" class="#" placeholder="Please write your article here." tabindex="5" required="required"></textarea>
-          </label>
-      </div>
-      <div>
-          <button name="submit" id="submit" >Submit</button>
-         <!-- <input type="submit" value="submit" id="submit" name="submit" class="submit btn btn-success">-->
-      </div>
-  </div>
-  <div class = "maximizebar"><span class = "maxicon">&#128470;<span></div>
+    </div>    
   <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
   </body>
