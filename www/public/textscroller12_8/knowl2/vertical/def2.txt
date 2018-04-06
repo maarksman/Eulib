@@ -1,1 +1,0 @@
-knowl2 vertical def2.txt
