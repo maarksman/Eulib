@@ -339,8 +339,8 @@ function redir($inputid){
                 + `<button class="leftbutton button" data-id=""> < </button>
                 <button class="rightbutton button" data-id=""> > </button>`
                 + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
-                "<div class='knowlfooter'>" +
-                "<span>footer will go here</span>" +
+                "<div class='knowlfooter border border-dark'>" +
+                "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
                 "</div>"+
                 "</div>");
 
@@ -421,9 +421,8 @@ function redirall($datalist){
                   <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
                   + `<button class="leftbutton button" data-id=""> < </button>
                   <button class="rightbutton button" data-id=""> > </button>`
-                  + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
-                  "<div class='knowlfooter'>" +
-                  "<span>footer will go here</span>" +
+                  + "<div class='knowlcontent1 border border-dark'>" + curknowl.content + "</div>" +
++                  "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
                   "</div>"+
                   "</div>");
 
