@@ -325,12 +325,13 @@ function redir($inputid){
             else {
               var div = $(
                 "<div id='adding'" + " data-id=" + myObj.id + "> \
-                <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-                <button id='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
-                <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-                <div id='addLinkOptions' style='display: none'>\
-                <span>Add Knowl Link</span>\
-                <input id='editAddLink' list='editlinkstoadd' name='titlelist'>\
+                 <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
+                 <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
+                 <button id='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
+                <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
+                 <div id='addLinkOptions' style='display: none'>\
+                 <span>Add Knowl Link</span>\
+                 <input id='editAddLink' list='editlinkstoadd' name='titlelist'>\
                 <br><datalist id='editlinkstoadd'></datalist>\
                 <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                 </div>\
@@ -405,14 +406,15 @@ function redirall($datalist){
               let curknowl = myObj.knowlinfo[i];
               if (curknowl.articlefound) {
                 var div = $(
-                  "<div id='adding'" +
-                  " data-id=" + curknowl.id + " data-level='3'" + "> \
-                  <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-                  <button id='editButton' class=\"editerB "+curknowl.id+  "\"type=\"button\"style='display: none;'>Edit</button>\
-                  <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-                  <div id='addLinkOptions' style='display: none'>\
-                  <span>Add Knowl Link</span>\
-                  <input id='editAddLink' list=editlinkstoadd name='titlelist'>\
+                   "<div id='adding'" +
+                   " data-id=" + curknowl.id + " data-level='3'" + "> \
+                <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
+                   <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
+                   <button id='editButton' class=\"editerB "+curknowl.id+  "\"type=\"button\"style='display: none;'>Edit</button>\
+                  <button onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
+                   <div id='addLinkOptions' style='display: none'>\
+                   <span>Add Knowl Link</span>\
+                   <input id='editAddLink' list=editlinkstoadd name='titlelist'>\
                   <br><datalist id='editlinkstoadd'></datalist>\
                   <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                   </div>\
