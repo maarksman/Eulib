@@ -1,18 +1,17 @@
-module.exports = (app, urlencodedParser, db, fs, formidable, sharp) => {
+module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideoid) => {
   app.post('/articlecreate', urlencodedParser, (req, res) => {
 
     function contentbytype(content, type, maybeimage) {
       //make sure if file not exist, maybimage = null
       if (type == "Video") {
-        return `<div><iframe src='${content}' height='150' width='720'>
+        let properid = youtubevideoid(content.trim());
+        return `<div><iframe src='https://www.youtube.com/embed/${properid}' height='150' width='720'>
         </iframe></div>`;
       }
       else if (maybeimage.path != null  && maybeimage.caption != null) {
-        return (`<div style="float:left;display:inline-block;width:65%;">
+        return (`<div>
           ${content}
-        </div>
-        <div class="knowlframe">
-          <figure>
+          <figure class="knowlframe">
             <img src="${maybeimage.path}" alt="Loading" width="100%" height="140px">
             <figcaption>
               ${maybeimage.caption}

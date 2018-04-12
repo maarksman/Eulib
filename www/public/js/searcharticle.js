@@ -135,7 +135,6 @@ $(document).ready(function() {
 
   $('#editAddLink').on("select", function() {
         console.log("edit add link pressed");
-
   });
 
   $(document).on('click','.editerB', function() {
@@ -178,8 +177,6 @@ $(document).ready(function() {
     });
 
   });
-
-
 
   $(document).on('click','#addLinkButton', function() {
     console.log("TESTING");
@@ -326,7 +323,6 @@ function redir($inputid){
               var div = $(
                 "<div id='adding'" + " data-id=" + myObj.id + "> \
                  <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
-                 <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
                  <button id='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
                 <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
                  <div id='addLinkOptions' style='display: none'>\
@@ -346,12 +342,6 @@ function redir($inputid){
 
             //$('#articles-searched').prepend(div.addClass("boxed"));
             $('#entry-content').prepend(div.addClass("boxedin"));
-            for (i=0;i<myObj.fields.length;i++) {
-              let fieldoption = $("<option value=\"" + myObj.fields[i].field + "\">" + myObj.fields[i].field  + "</option>");
-              console.log('added options: ', fieldoption);
-              $('select#addingfields').prepend(fieldoption);
-            }
-            $('#addingfields').removeAttr('id');
             if (!myObj.cangoleft) {
               $('#adding').children('.leftbutton').hide();
             } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
@@ -386,6 +376,8 @@ function redirall($datalist){
     //no search for no suggestions
     if ($datalist.children().length == 0) {
       alert("No suggestions to search");
+    } else if ($datalist.children().length == 1) {
+
     } else {
       $.ajax({
         url: '/multiarticleredir',
@@ -409,7 +401,6 @@ function redirall($datalist){
                    "<div id='adding'" +
                    " data-id=" + curknowl.id + " data-level='3'" + "> \
                 <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
-                   <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
                    <button id='editButton' class=\"editerB "+curknowl.id+  "\"type=\"button\"style='display: none;'>Edit</button>\
                   <button onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
                    <div id='addLinkOptions' style='display: none'>\
@@ -425,12 +416,6 @@ function redirall($datalist){
 +                  "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
                   "</div>"+
                   "</div>");
-
-                for (j=0;j<curknowl.fields.length;j++) {
-                  let fieldoption = $("<option value=\"" +curknowl.fields[j].field + "\">val1</option>")
-                  $('#addingfields').prepend(fieldoption)
-                }
-                $('#addingfields').removeAttr('id');
                 //$('#articles-searched').prepend(div.addClass("boxed"));
                 $('#entry-content').prepend(div.addClass("boxedin"));
                 if (!curknowl.cangoleft) {
