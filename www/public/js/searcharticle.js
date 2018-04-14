@@ -87,11 +87,11 @@ $(document).ready(function() {
         else {
           alert("No record of id on arrow button");
         }
-        $('div#changing').removeAttr('id');
+        $('#changing').removeAttr('id');
       },
       error: function(error) {
         console.log(error);
-        $('div#changing').removeAttr('id');
+        $('#changing').removeAttr('id');
       }
     });
   });
@@ -114,13 +114,13 @@ $(document).ready(function() {
   });
 
   $('#search_button').on("click",function(e){
+
     redir($('#search'));
   });
 
   $('#search_all').on("click",function(e){
     //get num suggestions
     redirall($('#articles'));
-    showedit();
   });
 
   $('.close').on('click',function(){
@@ -136,7 +136,7 @@ $(document).ready(function() {
   $('#editAddLink').on("select", function() {
         console.log("edit add link pressed");
   });
-
+//rewrite whole edit to restrict to single knowl
   $(document).on('click','.editerB', function() {
     //console.log("edit");
     //id is put into div covering entire article and into another div which holds the text area
@@ -178,7 +178,7 @@ $(document).ready(function() {
 
   });
 
-  $(document).on('click','#addLinkButton', function() {
+  $(document).on('click','.addLinkButton', function() {
     console.log("TESTING");
     var selStart = $('#editContent').prop('selectionStart');
     var selEnd = $('#editContent').prop('selectionEnd');
@@ -215,7 +215,7 @@ $(document).ready(function() {
         var start = text.substring(0, selStart);
         var end = text.substring(selEnd, text.length);
         text = start + snippet + end;
-        $('#editLinkMessage').text('Link added successfully');
+        $('.editLinkMessage').text('Link added successfully');
         $('#editContent').val(text);
       }
 
@@ -279,7 +279,7 @@ function search($inputid, $datalist){
 //renders article from searchbox to page
 function redir($inputid){
     //get id from jquery search selesctor
-    var my_search = ($inputid.val());
+    let my_search = ($inputid.val());
     let id = $("#articles option[value='" + my_search + "']").attr('data-id');
     // check for valid title, if not don't Submit
     if (badtitle(my_search) || my_search.length <1
@@ -323,12 +323,12 @@ function redir($inputid){
               var div = $(
                 "<div id='adding'" + " data-id=" + myObj.id + "> \
                  <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
-                 <button id='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
+                 <button class='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
                 <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
                  <div id='addLinkOptions' style='display: none'>\
                  <span>Add Knowl Link</span>\
-                 <input id='editAddLink' list='editlinkstoadd' name='titlelist'>\
-                <br><datalist id='editlinkstoadd'></datalist>\
+                 <input class='editAddLink' list='editlinkstoadd' name='titlelist'>\
+                <br><datalist class='editlinkstoadd'></datalist>\
                 <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                 </div>\
                 <div class =\"editbox\" style=\"display:none;\">  <textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
@@ -377,7 +377,12 @@ function redirall($datalist){
     if ($datalist.children().length == 0) {
       alert("No suggestions to search");
     } else if ($datalist.children().length == 1) {
-
+      //lazy fix- change search o suggestiong and clear after
+      let originaltext = $('#search');
+      let newtext = $datalist.children()[0].attr('value');
+      $('#search').val(newtext);
+      redir($('#search'));
+      $('#search').val(originaltext);
     } else {
       $.ajax({
         url: '/multiarticleredir',
@@ -400,20 +405,20 @@ function redirall($datalist){
                 var div = $(
                    "<div id='adding'" +
                    " data-id=" + curknowl.id + " data-level='3'" + "> \
-                <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
-                   <button id='editButton' class=\"editerB "+curknowl.id+  "\"type=\"button\"style='display: none;'>Edit</button>\
+                <div class='knowlheader border border-dark'><span class='knowltitle'>"+curknowl.title+" - Level "+ curknowl.level+"</span>\
+                   <button  class=\"editerB "+curknowl.id+  "editButton \"type=\"button\"style='display: none;'>Edit</button>\
                   <button onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
-                   <div id='addLinkOptions' style='display: none'>\
+                   <div class='addLinkOptions' style='display: none'>\
                    <span>Add Knowl Link</span>\
-                   <input id='editAddLink' list=editlinkstoadd name='titlelist'>\
-                  <br><datalist id='editlinkstoadd'></datalist>\
+                   <input class='editAddLink' list=editlinkstoadd name='titlelist'>\
+                  <br><datalist class='editlinkstoadd'></datalist>\
                   <button class=\" addLinkButton \" id='addLinkButton' style=\"\" type=\"button\">Add Link</button>\
                   </div>\
                   <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\" id='editContent'></textarea></div>"
                   + `<button class="leftbutton button" data-id=""> < </button>
                   <button class="rightbutton button" data-id=""> > </button>`
                   + "<div class='knowlcontent1 border border-dark'>" + curknowl.content + "</div>" +
-+                  "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
+                  "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
                   "</div>"+
                   "</div>");
                 //$('#articles-searched').prepend(div.addClass("boxed"));
@@ -442,30 +447,9 @@ function redirall($datalist){
   }
 
   function removeDiv(element){
-    $(element).closest("div").remove();
+    $(element).closest("div.boxedin").remove();
   }
 
   function clearAllKnowls() {
-    $('#articles-searched div').empty();
+    $('#entry-content').empty();
   }
-
-  /*function showedit() {
-    console.log("function called");
-      $.ajax({
-        url: '/indexshoweditsection',
-        data: {},
-        type: 'POST',
-        datatype: 'json',
-        success: function(data) {
-          console.log(data.type);
-          console.log("none" == data);
-            if ("in" == data) {
-              document.getElementById("editButton").style.display = "none";
-            } else if ("out" == data) {
-              document.getElementById("editButton").style.display = "";
-            }
-        }, error: function(error) {
-          console.log(error);
-        }
-      });
-    }*/

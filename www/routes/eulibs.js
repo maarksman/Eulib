@@ -8,7 +8,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
         return `<div><iframe src='https://www.youtube.com/embed/${properid}' height='150' width='720'>
         </iframe></div>`;
       }
-      else if (maybeimage.path != null  && maybeimage.caption != null) {
+      else if (maybeimage !== null && maybeimage.path !== undefined  && maybeimage.caption !== undefined) {
         return (`<div>
           ${content}
           <figure class="knowlframe">
@@ -22,6 +22,26 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
       else {
         return `<div>${content}</div>`;
       }
+    }
+
+    function addfieldifnotpresent(field) {
+      //custom text is allowed in the textarea
+      let checkfieldquery =
+        `SELECT field FROM field where field=?;`;
+      db.query(checkfieldquery, field, (err, maybefield) => {
+        if (err) throw err;
+        else {
+          if (maybefield.length == 0 && field.length > 1) {
+            toadd = field[0].toUpperCase() + field.substring(1);
+          db.query(`INSERT INTO field (field) VALUES ('${toadd}');`, (err, result) => {
+            if (err) throw err;
+            else {
+              console.log('New field: ' + toadd + "added!");
+            }
+          });
+         }
+       }
+      });
     }
 
     let form = new formidable.IncomingForm();
@@ -50,7 +70,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
 
       let checksql =
         `SELECT title FROM article where title ='${title}' AND
-        level=${level} AND type='${type}' AND belongs_to='${belongs_to}' `
+        level=${level} AND type='${type}' AND belongs_to='${belongs_to}' `;
       let knowl_exists = false;
       db.query(checksql, (err, result) => {
         if (err) throw err;
@@ -64,6 +84,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
               if (err) {
                 throw err;
               }
+              addfieldifnotpresent(belongs_to);
               // after doing query, write file with Id as Name and insert path into row
               let id = result.insertId;
               let filename = title + "_" + result.insertId + '.html';

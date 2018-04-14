@@ -1,4 +1,4 @@
-module.exports = (app, db) => {
+module.exports = (app, db, urlencodedParser) => {
   //connect with database; if not connected throw error
   db.connect(err => {
     if (err) {
@@ -52,7 +52,6 @@ module.exports = (app, db) => {
       addtype VARCHAR(30),
       level INT,
       belongs_to VARCHAR(30),
-    	FOREIGN KEY (belongs_to) REFERENCES field(field),
     	path VARCHAR(150) NOT NULL,
     	date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
       creator VARCHAR(50),
@@ -115,16 +114,21 @@ module.exports = (app, db) => {
     });
   });
 
-  app.get('/getfields', (req, res) => {
+  app.post('/getfields', urlencodedParser, (req, res) => {
+    let textpart = req.body['textpart'];
+    console.log('textpart is: ', textpart);
+    console.log(req.body);
     var sentJSON = { fields: [] };
-    let sql = 'SELECT field from field';
+    let sql = `SELECT * from field WHERE field LIKE '%` + textpart + `%'`;
     let query = db.query(sql, (err, result) => {
       if (err) throw err;
       else {
-        for (var i = 0; i < result.length; i++) {
+        for (var i = 0; i < Math.min(result.length, 10); i++) {
           sentJSON.fields.push(result[i].field);
+          console.log('did we run loop?');
         }
         let formattedsentJSON = JSON.stringify(sentJSON);
+        console.log('json to be sent', formattedsentJSON);
         res.send(formattedsentJSON);
       }
     });

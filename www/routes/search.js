@@ -1,6 +1,6 @@
 module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
   app.get('/eulibadded', (req, res) => {
-    //i'm calling it eulib from now on instead of a knowl.
+    //i'm calling it *redacted* from now on instead of a knowl.
     //Knowls will reign!! also naming things is for people who write them :P
     console.log('article added to queue');
     res.send('article added to queue');
@@ -81,9 +81,10 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
                 db.query("DELETE FROM article WHERE id = ?", id,  (err, deleting) => {
                   if (err) throw err;
                   console.log('Num of records deleted: ' + deleting.affectedRows);
+                  res.send(JSON.stringify({articlefound: false}));
                 });
-              }              
-              throw err;
+              }
+              console.log('error of: ', err, 'occured');
             }
             else {
               //after reading file, searchf or levels and fields
@@ -118,51 +119,10 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
                   cangoright: cangoright,
                   rightid: rightid,
                   leftid: leftid,
-                  'fields': fields
                 };
                 console.log("json to send: ", jsonobj);
                 var sendjson = JSON.stringify(jsonobj);
                 res.send(sendjson);
-
-                /*mathjax.typeset({
-                  math: data,
-                  format: "TeX",
-                  html: true
-                }, (postprocess) => {
-                    if (!postprocess.errors) {
-                      var jsonobj = {
-                        content: postprocess.html,
-                        path: path,
-                        id: knowlid,
-                        articlefound: isindatabase,
-                        cangoleft: cangoleft,
-                        cangoright: cangoright,
-                        rightid: rightid,
-                        leftid: leftid,
-                        'fields': fields
-                      };
-                      console.log("json to send: ", jsonobj);
-                      var sendjson = JSON.stringify(jsonobj);
-                      res.send(sendjson);
-                    }
-                    else { //if process failed
-                      console.log('latex processing failed', postprocess.errors );
-                      var jsonobj = {
-                        content: data,
-                        path: path,
-                        id: knowlid,
-                        articlefound: isindatabase,
-                        cangoleft: cangoleft,
-                        cangoright: cangoright,
-                        rightid: rightid,
-                        leftid: leftid,
-                        'fields': fields
-                      };
-                      console.log("json to send: ", jsonobj);
-                      var sendjson = JSON.stringify(jsonobj);
-                      res.send(sendjson);
-                    }
-                }); */
               } //end else of sql query
             });
           }
@@ -213,7 +173,17 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
           }
         if (isindatabase) {
           content = fs.readFile('public/' + path, 'utf8', (err, data) => {
-            if (err) {throw err;}
+            if (err) {
+              if (err.code === 'ENOENT') {
+                //if no file found, alert client and delete sql record
+                console.log('article file not found, deleteing entry from db');
+                db.query("DELETE FROM article WHERE id = ?", id,  (err, deleting) => {
+                  if (err) throw err;
+                  console.log('Num of records deleted: ' + deleting.affectedRows);
+                });
+              }
+              console.log('error of: ', err, 'occured');
+            }
             else {
               // 2nd Query for the arrows
               db.query("SELECT * FROM article WHERE title='" + title + "'", (err,wegot) => {
@@ -248,7 +218,6 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
                     'cangoright': cangoright,
                     rightid: rightid,
                     leftid: leftid,
-                    'fields':fieldlist
                   };
                   tosend.knowlinfo.push(jsonobj);
                   tosend.numtorender = tosend.numtorender + 1;

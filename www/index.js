@@ -38,7 +38,7 @@ mathjax.config({
 mathjax.start();
 
 require('./config/setuse')(app, bodyParser);
-require('./routes/database')(app, db);
+require('./routes/database')(app, db, urlencodedParser);
 require('./routes/search')(app, urlencodedParser, db, fs, asynceach, mathjax); // <-- do this to add a file. In the parenthes put all the requires that you'll be using in that collection of routes. Look at ./routes/search.js to know more.
 require('./routes/user')(app, urlencodedParser, db);
 require('./routes/navigation')(app, urlencodedParser, db, fs);

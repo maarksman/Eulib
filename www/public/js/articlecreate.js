@@ -25,30 +25,35 @@ function isYoutube(link) {
 $(document).ready(function(){
   console.log('articlecreate.js loaded');
 
+ $('#field').on('keyup', function(e) {
+   $('#fieldlist').html("");
+   let textpart = $('#field').val();
+   console.log('textpartis:', textpart);
+   $.ajax({
+     url: '/getfields',
+     data: {'textpart': textpart},
+     type: 'POST',
+     datatype: 'json',
+     success: function(data) {
+       console.log('data got back is:', data);
+       var parsedobj = JSON.parse(data);
+       var numFields = parsedobj.fields.length;
+       for(var i=0; i<numFields; i++) {
+         var option = $('<option>');
+         option.attr('value', parsedobj.fields[i]);
+         option.html(parsedobj.fields[i]);
+         $('#fieldlist').append(option);
+      }
 
-//adding fields from database
-$.ajax({
-  url: '/getfields',
-  data: {
-    //empty
-  },
-  type: 'GET',
-  datatype: 'json',
-  success: function(data) {
-    var parsedobj = JSON.parse(data);
-    var numFields = parsedobj.fields.length;
-    for(var i=0; i<numFields; i++) {
-      var option = $('<option>');
-      option.attr('value', parsedobj.fields[i]);
-      option.html(parsedobj.fields[i]);
-     $('#fieldlist').append(option);
-   }
+     },
+     error: function(req) {
+       console.log('Error occured' + req);
+     }
+   });
+ });
 
-  },
-  error: function(req) {
-    console.log('Error occured' + req);
-  }
-});
+  //adding fields from database
+
 
   $('#submit').on('click', function(e) {
     function validfield(textin) {
@@ -104,8 +109,8 @@ $.ajax({
       $('#returnmessage').text('Title must contain 30 or less characters');
     } else if (content_in.length == 0) {
       $('#returnmessage').text('Content cannot be blank');
-    } else if (validfield(field_in)) {
-      $('#returnmessage').text('Must use valid field');
+    } else if (badtitle(field_in.trim()) || field_in.trim().length == 0) {
+      $('#returnmessage').text('Field contains invalid characters or is blank');
     } else {
       //update button text
       $("#submit").html('Submitting');
