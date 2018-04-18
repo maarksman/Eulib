@@ -325,7 +325,7 @@ function redir($inputid){
                  <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
                  <button class='editButton' class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
                 <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
-                 <div id='addLinkOptions' style='display: none'>\
+                 <div id='addLinkOptions' class='addLinkOptions' style='display: none'>\
                  <span>Add Knowl Link</span>\
                  <input class='editAddLink' list='editlinkstoadd' name='titlelist'>\
                 <br><datalist class='editlinkstoadd'></datalist>\
@@ -408,7 +408,7 @@ function redirall($datalist){
                 <div class='knowlheader border border-dark'><span class='knowltitle'>"+curknowl.title+" - Level "+ curknowl.level+"</span>\
                    <button  class=\"editerB "+curknowl.id+  "editButton \"type=\"button\"style='display: none;'>Edit</button>\
                   <button onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
-                   <div class='addLinkOptions' style='display: none'>\
+                   <div id='addLinkOptions' class='addLinkOptions' style='display: none'>\
                    <span>Add Knowl Link</span>\
                    <input class='editAddLink' list=editlinkstoadd name='titlelist'>\
                   <br><datalist class='editlinkstoadd'></datalist>\
