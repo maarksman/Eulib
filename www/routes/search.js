@@ -54,6 +54,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
     let title ='';
     let fields = [];
     let curfield;
+    let type;
     let search_name;
     let query = db.query(sql, id, (err, result) => {
       if (err) throw err;
@@ -67,6 +68,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
             isindatabase = true;
             artLevel = row.level;
             title = row.title;
+            type = row.type;
             curfield = row.field;
             searcn_name = row.search_name;
           }
@@ -114,6 +116,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
                   content: data,
                   path: path,
                   id: knowlid,
+                  type: type,
                   articlefound: isindatabase,
                   cangoleft: cangoleft,
                   cangoright: cangoright,
@@ -150,6 +153,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
       let path;
       let knowlid;
       let field;
+      let type;
       let fieldlist = [];
       let title;
       let cangoleft = false;
@@ -167,6 +171,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
               path = row.path;
               title = row.title;
               knowlid = row.id;
+              type = row.type;
               field = row.belongs_to;
               isindatabase = true;
             }
@@ -213,6 +218,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
                     content: data,
                     'path': path,
                     'id': knowlid,
+                    'type': type,
                     articlefound: isindatabase,
                     'cangoleft': cangoleft,
                     'cangoright': cangoright,

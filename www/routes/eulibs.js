@@ -8,9 +8,9 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
         return `<div><iframe src='https://www.youtube.com/embed/${properid}' height='150' width='720'>
         </iframe></div>`;
       }
-      else if (maybeimage !== null && maybeimage.path !== undefined  && maybeimage.caption !== undefined) {
+      else if (maybeimage != null && maybeimage.path !== undefined  && maybeimage.caption !== undefined) {
         return (`<div>
-          ${content}
+          <p>${content}</p>
           <figure class="knowlframe">
             <img src="${maybeimage.path}" alt="Loading" width="100%" height="140px">
             <figcaption>
@@ -20,7 +20,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
         </div>`);
       }
       else {
-        return `<div>${content}</div>`;
+        return `<div><p>${content}</p></div>`;
       }
     }
 
@@ -128,6 +128,16 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
   //edit an article... knowl plugin box stays in edit page.. can still be removed
   //afterward so not a big issue
   app.post('/updatearticle', urlencodedParser, (req, res) => {
+    function processcontentbytype(content, type) {
+      if (type == "Video") {
+        let properid = youtubevideoid(content.trim());
+        return `<div><iframe src='https://www.youtube.com/embed/${properid}' height='150' width='720'>
+          </iframe></div>`;
+      } else {
+        return content;
+      }
+    }
+
     console.log("fired /updatearticle");
     if (req.session.username != null) {
       var content = req.body['content'];
@@ -144,7 +154,8 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
               //get path and other entries for console logging
               let path = wegot[0].path;
               let search_name = wegot[0].search_name;
-              fs.writeFile('public\\' + path, content, function(
+              let processedcontent = processcontentbytype(content, wegot[0].type);
+              fs.writeFile('public\\' + path, processedcontent, function(
                 err
               ) {
                 if (err) throw err;
@@ -195,7 +206,10 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
   app.post('/getpathfromid', urlencodedParser, (req, res) => {
     let id = req.body['id'];
     db.query("SELECT path FROM article WHERE id=" + id , (err, result) => {
-      if (err) res.send('undefined'); //send nothing if error
+      if (err) {
+        console.log('err of: ', err)
+        res.send('undefined');
+      } //send nothing if error
       else {
         let row = result[0];
 
