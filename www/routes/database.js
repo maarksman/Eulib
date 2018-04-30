@@ -84,10 +84,10 @@ module.exports = (app, db, urlencodedParser) => {
     ('Custom', NULL);
 
     INSERT INTO article (search_name, title, type, belongs_to, path, creator, level)
-    VALUES ('Automorphism(Analysis) - Definition ', 'Automorphism', 'Definition', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony', 3),
-     ('Field(Mathematics) - Definition', 'Field', 'Definition', 'Mathematics', 'knowlcontent/field.html', 'testuserpony', 3),
-     ('Field Extension(Field Theory) - Definition', 'Field Extension', 'Definition', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony', 3),
-     ('Galois Group(Algebra) - Definition', 'Galois Group', 'Definition', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony', 3)
+    VALUES ('Automorphism(Analysis) - TextKnowl ', 'Automorphism', 'TextKnowl', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony', 3),
+     ('Field(Mathematics) - TextKnowl', 'Field', 'TextKnowl', 'Mathematics', 'knowlcontent/field.html', 'testuserpony', 3),
+     ('Field Extension(Field Theory) - TextKnowl', 'Field Extension', 'TextKnowl', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony', 3),
+     ('Galois Group(Algebra) - TextKnowl', 'Galois Group', 'TextKnowl', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony', 3)
      `;
 
     db.query(createtablesquery, (err, result) => {

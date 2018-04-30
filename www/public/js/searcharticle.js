@@ -180,7 +180,7 @@ $(document).ready(function() {
       } else if ( ($('div#editing div.knowlcontent1 iframe').length != null) ) {
         let youtubelink = $('div#editing textarea.editContent').val().trim();
         if (isYoutubelink(youtubelink)) {
-          alert('Note new url does not udate video');
+          alert('Note new url does not update video');
           newcontent = youtubelink;
         } else {
           alert('invalid link!');
@@ -381,7 +381,7 @@ $(document).ready(function() {
                 var div = $(
                   "<div id='adding'" + " data-id=" + myObj.id + "> \
                    <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
-                   <button class=\"editerB editButton editmode "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
+                   <button class=\"editerB editButton editmode "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+";'>Edit</button>\
                   <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
                    <div class='addLinkOptions editmode' style='display: none'>\
                    <span class='editmode'>Add Knowl Link</span>\
@@ -421,6 +421,10 @@ $(document).ready(function() {
               }
               //on clientside, process teX equations after submit
               MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
+              //if not signedin (no creation form) then remove edit button
+              if ($('.newarticle').length == 0) {
+                $('.editerB').hide();
+              }
               //remove the marker of nowl we just added
               $('#adding').removeAttr('id');
             }
@@ -463,7 +467,7 @@ $(document).ready(function() {
           datatype: 'json',
           success: function(data) {
             //console.log('received json of: ' + data);
-            myObj = JSON.parse(data);
+            let myObj = JSON.parse(data);
             console.log("data from server is: ");
             console.log(data);
             //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
@@ -480,7 +484,7 @@ $(document).ready(function() {
                   var div = $(
                     "<div id='adding'" + " data-id=" + curknowl.id + "> \
                      <div class='knowlheader border border-dark'><span class='knowltitle'>"+curknowl.title+" - Level "+curknowl.level+"</span>\
-                     <button class=\"editerB editButton editmode "+curknowl.id+  " knowl-button " + "\"type=\"button\" style='display:"+style+";'>Edit</button>\
+                     <button class=\"editerB editButton editmode "+curknowl.id+  " knowl-button " + "\"type=\"button\" style='display:"+";'>Edit</button>\
                     <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
                      <div class='addLinkOptions editmode' style='display: none'>\
                      <span class='editmode'>Add Knowl Link</span>\
@@ -512,13 +516,17 @@ $(document).ready(function() {
                     let edittext = $('div#adding iframe').attr('src');
                     $('div#adding textarea.editContent').html(edittext)
                   } else {
-                    let edittext = $('div#adding div.knowlcontent1 div');
+                    let edittext = $('div#adding div.knowlcontent1 div').html();
                     $('div#adding textarea.editContent').html(edittext);
                   }
 
                   //on clientside, process teX equations after submit
                   MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
                   //remove the marker of nowl we just added
+                  //if not signedin (no creation form) then remove edit button
+                  if ($('.newarticle').length == 0) {
+                    $('.editerB').hide();
+                  }
                   $('#adding').removeAttr('id');
                 }
               }

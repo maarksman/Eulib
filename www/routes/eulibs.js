@@ -5,7 +5,7 @@ module.exports = (app, urlencodedParser, db, fs, formidable, sharp, youtubevideo
       //make sure if file not exist, maybimage = null
       if (type == "Video") {
         let properid = youtubevideoid(content.trim());
-        return `<div><iframe src='https://www.youtube.com/embed/${properid}' height='150' width='720'>
+        return `<div><iframe src='https://www.youtube.com/embed/${properid}' height='220' width='720'>
         </iframe></div>`;
       }
       else if (maybeimage != null && maybeimage.path !== undefined  && maybeimage.caption !== undefined) {
