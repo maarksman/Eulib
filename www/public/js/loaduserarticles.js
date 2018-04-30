@@ -21,10 +21,11 @@ function loaduserarticles(){
         for (var i in lines) {
           console.log(i)
           var obj = JSON.parse(lines[i]);
+          var id = obj.id;
           var title = obj.title;
           var field = obj.belongs_to;
           var last_rev = obj.last_edited;
-          var markup = "<tr><td>"
+          var markup = "<tr><td>" + id + "</td><td>"
           +title+"</td><td>"
           + field
           + "</td><td>"
@@ -44,10 +45,11 @@ function loaduserarticles(){
 //delete article from database and html file, reload articles to update.
 function deletearticle(element){
   //gets first parent row which is the one that holds button. finds the first data cell which holds title
-  var title = $(element).closest("tr").find("td:eq(0)").text();
+  var id = $(element).closest("tr").find("td:eq(0)").text();
+  console.log("ID is: ", id);
   $.ajax({
     url:"/deletearticle",
-    data:{title:title},
+    data:{id:id},
     type:'POST',
     datatype:'html',
     success: function(data){

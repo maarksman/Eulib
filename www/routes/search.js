@@ -1,6 +1,6 @@
-module.exports = (app, urlencodedParser, db, fs, asynceach) => {
+module.exports = (app, urlencodedParser, db, fs, asynceach, mathjax) => {
   app.get('/eulibadded', (req, res) => {
-    //i'm calling it eulib from now on instead of a knowl.
+    //i'm calling it *redacted* from now on instead of a knowl.
     //Knowls will reign!! also naming things is for people who write them :P
     console.log('article added to queue');
     res.send('article added to queue');
@@ -11,7 +11,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
     var search = req.body['search-text'];
     let tosend = '';
     let sql =
-      "SELECT * FROM article WHERE title LIKE '%" + search + "%' AND level=3";
+      "SELECT * FROM article WHERE search_name LIKE '%" + search + "%' AND level=3";
     // console.log('sent in /searcharticle: '+ search);
     //console.log('querying: ' + sql);
     let query = db.query(sql, (err, result) => {
@@ -25,7 +25,7 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
           let field = row.field;
           var title = row.title;
           var type = row.type;
-          let display = title;
+          let display = row.search_name;
           // + "-" + type;
           let dlistelement =
             "<option data-id='" + id + "' value='" + display + "'>";
@@ -54,6 +54,8 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
     let title ='';
     let fields = [];
     let curfield;
+    let type;
+    let search_name;
     let query = db.query(sql, id, (err, result) => {
       if (err) throw err;
       else {
@@ -64,18 +66,34 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
             var path = row.path;
             var knowlid = row.id;
             isindatabase = true;
+            artLevel = row.level;
             title = row.title;
+            type = row.type;
             curfield = row.field;
+            searcn_name = row.search_name;
           }
         }
         //after loop, next data processing
         if (isindatabase) {
           content = fs.readFile('public/' + path, 'utf8', (err, data)=> {
-            if (err) throw err;
+            if (err) {
+              if (err.code === 'ENOENT') {
+                //if no file found, alert client and delete sql record
+                console.log('article file not found, deleteing entry from db');
+                db.query("DELETE FROM article WHERE id = ?", id,  (err, deleting) => {
+                  if (err) throw err;
+                  console.log('Num of records deleted: ' + deleting.affectedRows);
+                  res.send(JSON.stringify({articlefound: false}));
+                });
+              }
+              console.log('error of: ', err, 'occured');
+            }
             else {
               //after reading file, searchf or levels and fields
               let gettitle = db.query("SELECT * FROM article WHERE title=?", title, (err, wegot) => {
-                if (err) throw err;
+                if (err) {
+                  throw err;
+                }
                 else {
                   for (j=0;j<wegot.length;j++) {
                     if (wegot[j].level == '2') {
@@ -86,26 +104,29 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
                       cangoright = true;
                       rightid = wegot[j].id;
                     }
-                    if (wegot[j].field != curfield) {
-                      fields.push(egot[j].field);
+                    if (wegot[j].belongs_to != curfield && wegot[j].level=="3") {
+                      let fielddata = {'id': wegot[j].id, 'field':wegot[j].belongs_to};
+                      fields.push(fielddata);
                     }
                  }
-                //after loop, finsih nextdata processing
+                //after loop, finsih nextdata processing, convert content equations
                 var jsonobj = {
+                  title: title,
+                  level: artLevel,
                   content: data,
                   path: path,
                   id: knowlid,
+                  type: type,
                   articlefound: isindatabase,
                   cangoleft: cangoleft,
                   cangoright: cangoright,
                   rightid: rightid,
                   leftid: leftid,
-                  'fields': fields
                 };
                 console.log("json to send: ", jsonobj);
                 var sendjson = JSON.stringify(jsonobj);
                 res.send(sendjson);
-              }
+              } //end else of sql query
             });
           }
         });
@@ -122,18 +143,6 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
   app.post('/multiarticleredir', urlencodedParser, (req, res) => {
     // same as search article redir -> just loop over enough times
 
-    function sendifdone(sendindex, thejson) {
-      if (thejson.length == sendindex){
-        let knowlobjects = {'knowlinfo': thejson,
-                            'numtorender': thejson.length
-                            };
-
-        console.log('WE ARE SENDING this back to the client:');
-        console.log(knowlobjects);
-        let tosend = JSON.stringify(knowlobjects);
-        res.send(tosend);
-      }
-    }
     const idlist = req.body['idlist[]'];
     const lastidindex = idlist.length;
     let tosend = {knowlinfo:[], numtorender:0};
@@ -143,6 +152,9 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
       let isindatabase = false;
       let path;
       let knowlid;
+      let field;
+      let type;
+      let fieldlist = [];
       let title;
       let cangoleft = false;
       let cangoright = false;
@@ -155,15 +167,28 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
           for (var i = 0; i < result.length; i++) {
             var row = result[i];
             if (row.level == '3') {
+              artLevel = row.level;
               path = row.path;
               title = row.title;
               knowlid = row.id;
+              type = row.type;
+              field = row.belongs_to;
               isindatabase = true;
             }
           }
         if (isindatabase) {
           content = fs.readFile('public/' + path, 'utf8', (err, data) => {
-            if (err) {throw err;}
+            if (err) {
+              if (err.code === 'ENOENT') {
+                //if no file found, alert client and delete sql record
+                console.log('article file not found, deleteing entry from db');
+                db.query("DELETE FROM article WHERE id = ?", id,  (err, deleting) => {
+                  if (err) throw err;
+                  console.log('Num of records deleted: ' + deleting.affectedRows);
+                });
+              }
+              console.log('error of: ', err, 'occured');
+            }
             else {
               // 2nd Query for the arrows
               db.query("SELECT * FROM article WHERE title='" + title + "'", (err,wegot) => {
@@ -182,16 +207,23 @@ module.exports = (app, urlencodedParser, db, fs, asynceach) => {
                       cangoright = true;
                       rightid = wegot[j].id;
                     }
+                    if (wegot[j].belongs_to != field) {
+                      let fielddata = {'id': wegot[j].id, 'field':wegot[j].belongs_to}
+                      fieldlist.push(fielddata);
+                    }
                   }
                   var jsonobj = {
+                    title: title,
+                    level: artLevel,
                     content: data,
                     'path': path,
                     'id': knowlid,
+                    'type': type,
                     articlefound: isindatabase,
                     'cangoleft': cangoleft,
                     'cangoright': cangoright,
                     rightid: rightid,
-                    leftid: leftid
+                    leftid: leftid,
                   };
                   tosend.knowlinfo.push(jsonobj);
                   tosend.numtorender = tosend.numtorender + 1;

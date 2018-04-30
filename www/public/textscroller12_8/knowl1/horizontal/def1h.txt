@@ -1,1 +1,0 @@
-knowl1 horizontal def1h.txt

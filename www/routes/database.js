@@ -1,4 +1,4 @@
-module.exports = (app, db) => {
+module.exports = (app, db, urlencodedParser) => {
   //connect with database; if not connected throw error
   db.connect(err => {
     if (err) {
@@ -9,7 +9,6 @@ module.exports = (app, db) => {
   //create db
   app.get('/createdb2', (req, res) => {
     let createtablesquery = ` drop table if exists article;
-    drop table if exists user;
     drop table if exists users;
     drop table if exists field;
     drop table if exists user;
@@ -46,13 +45,13 @@ module.exports = (app, db) => {
 
     create table article(
     	id INT PRIMARY KEY AUTO_INCREMENT,
+      search_name VARCHAR (50) NOT NULL,
     	title VARCHAR(30) NOT NULL,
     	type VARCHAR(30) NOT NULL,
       subtype VARCHAR(30),
       addtype VARCHAR(30),
       level INT,
       belongs_to VARCHAR(30),
-    	FOREIGN KEY (belongs_to) REFERENCES field(field),
     	path VARCHAR(150) NOT NULL,
     	date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
       creator VARCHAR(50),
@@ -70,7 +69,7 @@ module.exports = (app, db) => {
     );
 
     INSERT INTO users (username, password, email) VALUES ('testuserpony', 'password', 'testuser1@eu.lib'),
-    ('testuser2', 'password', 'Algebra@malgebra.com');
+    ('testuserpony2', 'password', 'Algebra@malgebra.com');
 
     INSERT INTO field VALUES ('Mathematics', NULL),
     ('Algebra', 'Mathematics'),
@@ -84,11 +83,11 @@ module.exports = (app, db) => {
     ('Unspecified', NULL),
     ('Custom', NULL);
 
-    INSERT INTO article ( title, type, belongs_to, path, creator, level)
-    VALUES ( 'Automorphism', 'Definition', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony', 3),
-     ( 'Field', 'Definition', 'Mathematics', 'knowlcontent/field.html', 'testuserpony', 3),
-     ( 'Field Extension', 'Definition', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony', 3),
-     ( 'Galois Group', 'Definition', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony', 3)
+    INSERT INTO article (search_name, title, type, belongs_to, path, creator, level)
+    VALUES ('Automorphism(Analysis) - TextKnowl ', 'Automorphism', 'TextKnowl', 'Analysis', 'knowlcontent/automorphism.html', 'testuserpony', 3),
+     ('Field(Mathematics) - TextKnowl', 'Field', 'TextKnowl', 'Mathematics', 'knowlcontent/field.html', 'testuserpony', 3),
+     ('Field Extension(Field Theory) - TextKnowl', 'Field Extension', 'TextKnowl', 'Field Theory', 'knowlcontent/fieldextension.html', 'testuserpony', 3),
+     ('Galois Group(Algebra) - TextKnowl', 'Galois Group', 'TextKnowl', 'Algebra', 'knowlcontent/galoisgroup.html', 'testuserpony', 3)
      `;
 
     db.query(createtablesquery, (err, result) => {
@@ -115,16 +114,21 @@ module.exports = (app, db) => {
     });
   });
 
-  app.get('/getfields', (req, res) => {
+  app.post('/getfields', urlencodedParser, (req, res) => {
+    let textpart = req.body['textpart'];
+    console.log('textpart is: ', textpart);
+    console.log(req.body);
     var sentJSON = { fields: [] };
-    let sql = 'SELECT field from field';
+    let sql = `SELECT * from field WHERE field LIKE '%` + textpart + `%'`;
     let query = db.query(sql, (err, result) => {
       if (err) throw err;
       else {
-        for (var i = 0; i < result.length; i++) {
+        for (var i = 0; i < Math.min(result.length, 10); i++) {
           sentJSON.fields.push(result[i].field);
+          console.log('did we run loop?');
         }
         let formattedsentJSON = JSON.stringify(sentJSON);
+        console.log('json to be sent', formattedsentJSON);
         res.send(formattedsentJSON);
       }
     });

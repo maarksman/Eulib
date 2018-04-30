@@ -1,4 +1,29 @@
-var textarea = $('#mEdit');
+function validchar(validstr, tocheck) {
+  for (i=0; i<tocheck.length; i++) {
+    if (!( validstr.includes(tocheck[i]) )) {
+      return false;
+    }
+  }
+  return true;
+}
+
+const lowerchars = "abcdefghijklmnopqrstuvwxyz";
+const allowedchars = lowerchars + "-() " + lowerchars.toUpperCase() + "0123456789";
+
+function badtitle(titletext) {
+  if (validchar(allowedchars, titletext)) {
+    return false;
+  }
+  return true;
+}
+
+function isYoutubelink(link) {
+  var matches = link.match(/watch\?v=([a-zA-Z0-9\-_]+)/);
+  return matches;
+}
+
+//needed to get the datalist in edit to work
+var globaleditcounter = 0;
 var text;
 var title;
 var path;
@@ -69,11 +94,11 @@ $(document).ready(function() {
         else {
           alert("No record of id on arrow button");
         }
-        $('div#changing').removeAttr('id');
+        $('#changing').removeAttr('id');
       },
       error: function(error) {
         console.log(error);
-        $('div#changing').removeAttr('id');
+        $('#changing').removeAttr('id');
       }
     });
   });
@@ -82,10 +107,21 @@ $(document).ready(function() {
   $('#search').on('keyup', function(e){
     //clear original datalist
     $('#articles').html("");
-    search($('#search'), $('#articles')) ;
+    //get current search value
+    let cursearch = $('#search').val()
+    //use "badtitle' function from articlecreate file to check chars"
+    if (badtitle(cursearch) || cursearch.length > 50) {
+      $('#search').css("border", "solid 2px");
+      $('#search').css('border-color', 'red');
+    } else {
+      $('#search').css("border", "none");
+      $('#search').css('border-color', 'white');
+      search($('#search'), $('#articles')) ;
+    }
   });
 
   $('#search_button').on("click",function(e){
+
     redir($('#search'));
   });
 
@@ -104,62 +140,179 @@ $(document).ready(function() {
     search($('#addlink'), $('#linkstoadd'));
   });
 
-  $(document).on('click','.editerB', function() {
-    //console.log("edit");
-    //id is put into div covering entire article and into another div which holds the text area
-    //grab the id from outer div
-    textid= $(this).attr("class").split(" ")[1];
-    //grab the div containing the textarea based on the id
-    //<div><textarea></ta></div>
-    textarea=$(this).closest("div").children("#"+textid);
-    //grabs the parent of editerB and finds the last div which is the text of the article
-    text=$(this).closest("div").children("div:last");
+  $('#editing .editAddLink').on("select", function() {
+        console.log("edit add link pressed");
+  });
 
-    title = $(this).closest("div").attr("data-title");
-    path = $(this).closest("div").attr("data-path");
-    if($(textarea).css("display")=="none"){
-      //console.log("show");
-      $(textarea).css("display","block");
-      $(textarea).children("textarea").val(text.html());
-      $(text).css("display","none");
-      $(this).text("Save");
-    }else{
-      //console.log("hide+save");
-      $(textarea).css("display","none");
-      $(text).css("display","block");
-      saveArticle(title,textarea.children("textarea").val(),path);
-      $(this).text("Edit");
+  //editsearchbar links
+  $('input.editAddLink').on('keyup', function(e){
+    console.log('did we change editbar?');
+    //clear original datalist
+    $('#editlinks').html("");
+    //get current search value
+    let cursearch = $('#editlinks').val()
+    //use "badtitle' function from articlecreate file to check chars"
+    if (badtitle(cursearch) || cursearch.length > 50) {
+      $('div#editing input.editAddLink').css("border", "solid 2px");
+      $('div#editing input.editAddLink').css('border-color', 'red');
+    } else {
+      $('div#editing input.editAddLink').css("border", "none");
+      $('div#editing input.editAddLink').css('border-color', 'white');
+      search($('div#editing input.editAddLink'), $('#editlinks')) ;
     }
   });
-});
-function saveArticle($inputtitle,$inputcontent, $inputpath){
-  var my_search = ($inputtitle);
-  var my_content = ($inputcontent);
-  var my_path = ($inputpath);
-  //console.log(my_search);
-  //console.log(my_content);
-  $.ajax({
-    url: '/updatearticle',
-    data: {'search-text': my_search, "content":my_content, "path":my_path},
-    type: 'POST',
-    datatype: 'html',
-    success: function(data) {
-      alert(data);
+
+//rewrite whole edit to restrict to single knowl
+  $(document).on('click','.editerB', function() {
+
+
+    let editingknowlclicked = (this.closest('#editing') != null);
+    if ($('#editing').length > 0) {
+      if (editingknowlclicked) {
+      console.log('clicked edit of current knowl');
+      //change content based on frontend elements
+      let newcontent;
+      if ($('div#editing div.knowlcontent1 p').length) {
+        let editedhtml = $('div#editing textarea.editContent').val();
+        $('div#editing div.knowlcontent1 p').html(editedhtml);
+        newcontent = $('div#editing div.knowlcontent1').html();
+
+      } else if ( ($('div#editing div.knowlcontent1 iframe').length != null) ) {
+        let youtubelink = $('div#editing textarea.editContent').val().trim();
+        if (isYoutubelink(youtubelink)) {
+          alert('Note new url does not update video');
+          newcontent = youtubelink;
+        } else {
+          alert('invalid link!');
+          newcontent = $('div#editing div.knowlcontent1 iframe').attr('src');
+        }
+
+      } else {
+        newcontent = $('div#editing textarea.editContent').val();
+        $('div#editing div.knowlcontent1').html(newcontent);
+      }
+      let editingid = $('div#editing').attr('data-id');
+      //if type is video, content is link ONLY, not frame. link needsformatting
+      saveArticle(editingid, newcontent);
+      MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#editing .knowlcontent1').get(0)]);
+
+      $('#editing').children().show();
+      $('#editing').children('.editmode').hide();
+      //show buttons that have links
+      $('#editing button.button').hide();
+      $('#editing button.showbutton').show();
+      $('#editing button.editerB').html("Edit");
+      $('#editing').removeAttr('id');
+      //$('#editlinks').removeAttr('id');
+      } else {
+        alert('Edit already in progress');
+      }
+    } else {
+      //mark knowl for editing and input + datalist for adding
+      $(this).closest('[data-id]').attr('id', 'editing');
+      //$('div#editing datalist').attr('id', 'editlinks');
+      //$('div#editing input.editAddLink').attr('list', 'editlinks');
+      //marked knowl under edit, show all elements for editing and hide the rest
+      $('#editing').children().hide();
+      $('#editing').children('.knowlheader,.editmode').show();
+      $('#editing button.editerB').html("Save");
+      //remove knowls if added
+      $('div#editing div.knowl-output').remove();
+      //mark the buttons if present
+      $("div#editing button:visible").addClass('showbutton');
+      let texttoedit = $('div#editing p').html();
+      console.log('texttoedit is:', texttoedit);
+
+      //$('div#editing textarea').val(texttoedit);
+
+    }
+
+  });
+
+  $(document).on('click','div#editing button.addLinkButton', function() {
+    console.log("TESTING");
+    var selStart = $('#editing textarea.editContent').prop('selectionStart');
+    var selEnd = $('#editing textarea.editContent').prop('selectionEnd');
+    var text = $('#editing textarea.editContent').val();
+    var title = $('#editing input.editAddLink').val();
+    let id = $("div#editing option[value='" + title + "']").attr('data-id');
+    //console.log("id: " + id);
+    //console.log("title: " + title);
+    //ajax request for my_path
+    $.ajax({
+      url: '/getpathfromid',
+      data: {'id': id},
+      type: 'POST',
+      datatype: 'text',
+      success: function(data) {
+      //console.log('received json of: ' + data);
+      let path = data;
+      //CHECK FOR INVALID LINK IN input
+      if (path == 'undefined' || path == undefined) {
+        alert('invalid edit path');
+        $('#editing .editLinkMessage').text("Link invalid/path data not gotten");
+      } else if (selStart === selEnd) {
+        //if no highlight add to end
+        let snippet = '<a knowl= "' + path + '">Text to link here</a>';
+        text = text + snippet;
+        $('#editing .editLinkMessage').text('Link added successfully');
+        $('#editing .editContent').val(text);
+      } else {
+        //if highlighted
+        var selText = $('#editing .editContent')
+        .val()
+        .substring(selStart, selEnd);
+        let snippet =
+        '<a knowl= "' + path + '">' + selText + '</a>';
+        var start = text.substring(0, selStart);
+        var end = text.substring(selEnd, text.length);
+        text = start + snippet + end;
+        $('#editing .editLinkMessage').text('Link added successfully');
+        $('#editing .editContent').val(text);
+      }
+
+
     },
     error: function(error) {
       console.log(error);
     }
   });
-}
-function search($inputid, $datalist){
-  //clear original datalist
+  });
+});
 
-    //TODO sql search for articles including text
+  function saveArticle($inputid, $inputcontent){
+    // if knowl if a youtube vid, content is link only, else content is html
+    var id = ($inputid);
+    var my_content = ($inputcontent);
+    console.log("got id and content as:", id, my_content);
+    //console.log(my_search);
+    //console.log(my_content);
+    $.ajax({
+      url: '/updatearticle',
+      data: {'id': id, 'content': my_content},
+      type: 'POST',
+      datatype: 'html',
+      success: function(data) {
+        alert(data);
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  }
+
+  function search($inputid, $datalist){
+    console.log("searching");
+    //clear original datalist
+
     var my_search = ($inputid.val());
 
-    //console.log('starting ajax now');
-    //console.log("searching for: "+my_search);
-     $.ajax({
+    //check input and submit only on valid search
+
+
+      //TODO sql search for articles including text
+
+      $.ajax({
        url: '/searcharticle',
        data: {'search-text': my_search},
        type: 'POST',
@@ -167,130 +320,254 @@ function search($inputid, $datalist){
        success: function(data) {
          $datalist.html(data);
 
-         //clear original datalist of children
-         //parse data of title and infotyp
-         // apppedchild to datalist
-       },
-       error: function(error) {
-         console.log(error);
-       }
-     });
-}
+           //clear original datalist of children
+           //parse data of title and infotyp
+           // apppedchild to datalist
+         },
+         error: function(error) {
+           console.log(error);
+         }
+       });
+    }
 
-//renders article from searchbox to page
-function redir($inputid){
-    //get id from jquery search selesctor
-    var my_search = ($inputid.val());
-    //option[value='"+ my_search + "']"
-    let id = $("#articles option[value='" + my_search + "']").attr('data-id');
+  //renders article from searchbox to page
+  function redir($inputid){
+      //get id from jquery search selesctor
+      let my_search = ($inputid.val());
+      let id = $("#articles option[value='" + my_search + "']").attr('data-id');
+      // check for valid title, if not don't Submit
+      if (badtitle(my_search) || my_search.length <1
+        || my_search.length > 50 || id == undefined
+        )
+      {
+        alert("Invalid search!!");
+      } else {
+        var style;
         $.ajax({
-        url: '/searcharticleredir',
-        data: {'id': id},
-        type: 'POST',
-        datatype: 'json',
-        success: function(data) {
-          //console.log('received json of: ' + data);
-          myObj = JSON.parse(data);
-          console.log(data);
-          //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
-          if (!myObj.articlefound) {
-            alert('"'+ my_search + '" not in database, please try again');
+          url: '/indexshoweditsection',
+          data: {},
+          type: 'POST',
+          datatype: 'json',
+          success: function(data) {
+            console.log(data.type);
+            console.log("none" == data);
+              if ("in" == data) {
+                style = "";
+              } else if ("out" == data) {
+                style = "none";
+              }
+          }, error: function(error) {
+            console.log(error);
           }
-          else {
-          var div = $(
-          "<div id='adding'" +
-          " data-id=" + myObj.id + "> \
-          <select id=\"addingfields\"> <option value=\"value1 placeholder\">val1</option><option value=\"val2\">val2</option></select> \
-          <button class=\"editerB "+myObj.id+  " knowl-button " + "\"type=\"button\">Edit</button>\
-          <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-          <div class ="+myObj.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-          + `<button class="leftbutton button" data-id=""> < </button>
-          <button class="rightbutton button" data-id=""> > </button>`
-          + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
-          "</div>");
-
-          //$('#articles-searched').prepend(div.addClass("boxed"));
-          for (i=0;i<myObj.fields.length;i++) {
-            let fieldoption = $("<option value=\"" +myObj.fields[i] + "\">val1</option>")
-            $('#addingfields').prepend(fieldoption)
-          }
-          $('#entry-content').prepend(div.addClass("boxedin"));
-          if (!myObj.cangoleft) {
-            $('#adding').children('.leftbutton').hide();
-          } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
-          if (!myObj.cangoright) {
-            $('#adding').children('.rightbutton').hide();
-          } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
-          //remove the marker of nowl we just added
-          $('#adding').removeAttr('id');
-          }
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    });
-}
-
-//return all search suggestions
-function redirall($datalist){
-    /*var my_search = ($inputid.val());
-    let alistoption = $("#articles option[value='"+ my_search + "']");
-    */
-    //get list of ids to send
-    let idlist = [];
-    $datalist.children().each(function(index) {idlist.push($(this).attr('data-id'))});
-    console.log('idlist is: ');
-    console.log(idlist);
-
+        });
         $.ajax({
-        url: '/multiarticleredir',
-        data: {'idlist': idlist},
-        type: 'POST',
-        datatype: 'json',
-        success: function(data) {
-          //console.log('received json of: ' + data);
-          myObj = JSON.parse(data);
-          console.log("data from server is: ");
-          console.log(data);
-          //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
-          if (myObj.numtorender == 0) {
-            alert("Articles not in database, please try again");
-          }
-          else {
-            for (i=0;i<myObj.numtorender;i++) {
-              let curknowl = myObj.knowlinfo[i];
-              if (curknowl.articlefound) {
+          url: '/searcharticleredir',
+          data: {'id': id},
+          type: 'POST',
+          datatype: 'json',
+          success: function(data) {
+              //console.log('received json of: ' + data);
+              myObj = JSON.parse(data);
+              console.log(data);
+              //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
+              if (!myObj.articlefound) {
+                alert('"'+ my_search + '" not in database, please try again');
+              }
+              else {
+                //generate unique id for editing
+                let editnum = globaleditcounter.toString();
+                globaleditcounter = globaleditcounter + 1;
+                //add unique id to datalist
                 var div = $(
-                "<div id='adding'" +
-                " data-id=" + curknowl.id + " data-level='3'" + "> \
-                <button class=\"editerB "+curknowl.id+  "\"type=\"button\">Edit</button>\
-                <button onclick=\"removeDiv(this)\" type=\"button\">X</button>\
-                <div class ="+curknowl.id+" style=\"display:none;\"><textarea style=\"width:100%;height:220px;\"></textarea></div>"
-                + `<button class="leftbutton button" data-id=""> < </button>
-                <button class="rightbutton button" data-id=""> > </button>`
-                + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
-                "</div>");
+                  "<div id='adding'" + " data-id=" + myObj.id + "> \
+                   <div class='knowlheader border border-dark'><span class='knowltitle'>"+myObj.title+" - Level "+myObj.level+"</span>\
+                   <button class=\"editerB editButton editmode "+myObj.id+  " knowl-button " + "\"type=\"button\" style='display:"+";'>Edit</button>\
+                  <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
+                   <div class='addLinkOptions editmode' style='display: none'>\
+                   <span class='editmode'>Add Knowl Link</span>\
+                   <input onkeyup='editsuggest(this)' class='editAddLink editmode' list='editlist" + editnum + "' name='titlelist' data-editid=" + editnum + ">\
+                  <br><datalist class='editlinkstoadd editmode' id='editlist" + editnum + "'></datalist>\
+                  <button class=\" addLinkButton editmode \" style=\"\" type=\"button\">Add Link</button>\
+                  </div>\
+                  <div class =\"editbox editmode\" style=\"display:none;\">  <textarea style=\"width:100%;height:220px;\" class='editContent editmode'></textarea></div>"
+                  + `<button class="leftbutton button" data-id=""> < </button>
+                  <button class="rightbutton button" data-id=""> > </button>`
+                  + "<div class='knowlcontent1'>" + myObj.content + "</div>" +
+                  "<div class='knowlfooter border border-dark'>" +
+                  "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
+                  "</div>"+
+                  "</div>");
 
-                //$('#articles-searched').prepend(div.addClass("boxed"));
-                $('#entry-content').prepend(div.addClass("boxedin"));
-                if (!curknowl.cangoleft) {
-                  $('#adding').children('.leftbutton').hide();
-                } else {$('#adding').children('.leftbutton').attr('data-id', curknowl.leftid);}
-                if (!curknowl.cangoright) {
-                  $('#adding').children('.rightbutton').hide();
-                } else {$('#adding').children('.rightbutton').attr('data-id', curknowl.rightid);}
-                //remove the marker of nowl we just added
-                $('#adding').removeAttr('id');
+              //$('#articles-searched').prepend(div.addClass("boxed"));
+              $('#entry-content').prepend(div.addClass("boxedin"));
+              if (!myObj.cangoleft) {
+                $('#adding').children('.leftbutton').hide();
+              } else {$('#adding').children('.leftbutton').attr('data-id', myObj.leftid);}
+              if (!myObj.cangoright) {
+                $('#adding').children('.rightbutton').hide();
+              } else {$('#adding').children('.rightbutton').attr('data-id', myObj.rightid);}
+              if (myObj.type == "TextKnowl") {
+                let edittext = $('div#adding div.knowlcontent1 p').html();
+                $('div#adding textarea.editContent').html(edittext);
+                console.log('Textknowl edittext is: ', edittext);
+              } else if (myObj.type == "Video") {
+                let edittext = $('div#adding iframe').attr('src');
+                $('div#adding textarea.editContent').html(edittext);
+                console.log('video edittext is: ', edittext);
+              } else {
+                let edittext = $('div#adding div.knowlcontent1 div').html();
+                $('div#adding textarea.editContent').html(edittext);
+                console.log('last edittext is: ', edittext);
+              }
+              //on clientside, process teX equations after submit
+              MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
+              //if not signedin (no creation form) then remove edit button
+              if ($('.newarticle').length == 0) {
+                $('.editerB').hide();
+              }
+              //remove the marker of nowl we just added
+              $('#adding').removeAttr('id');
+            }
+          },
+          error: function(error) {
+            console.log(error);
+          }
+        });
+      }
+    }
+
+  //return all search suggestions
+  function redirall($datalist){
+      /*var my_search = ($inputid.val());
+      let alistoption = $("#articles option[value='"+ my_search + "']");
+      */
+      //get list of ids to send
+      let idlist = [];
+      $datalist.children().each(function(index) {idlist.push($(this).attr('data-id'))});
+      console.log('idlist is: ');
+      console.log(idlist);
+      //no search for no suggestions
+      if ($datalist.children().length == 0) {
+        alert("No suggestions to search");
+      } else if ($datalist.children().length == 1) {
+        //lazy fix- change search o suggestiong and clear after
+        alert('Use single search button for one suggestion');
+        /*
+        let originaltext = $('#search');
+        let newtext = $search().attr('value');
+        $('#search').val(newtext);
+        redir($('#search'));
+        $('#search').val(originaltext);
+        */
+      } else {
+        $.ajax({
+          url: '/multiarticleredir',
+          data: {'idlist': idlist},
+          type: 'POST',
+          datatype: 'json',
+          success: function(data) {
+            //console.log('received json of: ' + data);
+            let myObj = JSON.parse(data);
+            console.log("data from server is: ");
+            console.log(data);
+            //<button onclick=\"bookmarkDiv(this)\" type=\"button\">Bookmark</button>\
+            if (myObj.numtorender == 0) {
+              alert("Articles not in database, please try again");
+            }
+            else {
+              for (i=0;i<myObj.numtorender;i++) {
+                let curknowl = myObj.knowlinfo[i];
+                if (curknowl.articlefound) {
+                  let editnum = globaleditcounter.toString();
+                  globaleditcounter = globaleditcounter + 1;
+                  //add unique id to datalist
+                  var div = $(
+                    "<div id='adding'" + " data-id=" + curknowl.id + "> \
+                     <div class='knowlheader border border-dark'><span class='knowltitle'>"+curknowl.title+" - Level "+curknowl.level+"</span>\
+                     <button class=\"editerB editButton editmode "+curknowl.id+  " knowl-button " + "\"type=\"button\" style='display:"+";'>Edit</button>\
+                    <button class=\" knowl-button \"  onclick=\"removeDiv(this)\" type=\"button\">X</button></div>\
+                     <div class='addLinkOptions editmode' style='display: none'>\
+                     <span class='editmode'>Add Knowl Link</span>\
+                     <input onkeyup='editsuggest(this)' class='editAddLink editmode' list='editlist" + editnum + "' name='titlelist' data-editid=" + editnum + ">\
+                    <br><datalist class='editlinkstoadd editmode' id='editlist" + editnum + "'></datalist>\
+                    <button class=\" addLinkButton editmode \" style=\"\" type=\"button\">Add Link</button>\
+                    </div>\
+                    <div class =\"editbox editmode\" style=\"display:none;\">  <textarea style=\"width:100%;height:220px;\" class='editContent editmode'></textarea></div>"
+                    + `<button class="leftbutton button" data-id=""> < </button>
+                    <button class="rightbutton button" data-id=""> > </button>`
+                    + "<div class='knowlcontent1'>" + curknowl.content + "</div>" +
+                    "<div class='knowlfooter border border-dark'>" +
+                    "<a href=''>link 1 </a>" +  "<a href=''>link 2 </a>" +  "<a href=''>link 3</a>" +
+                    "</div>"+
+                    "</div>");
+                  //$('#articles-searched').prepend(div.addClass("boxed"));
+                  $('#entry-content').prepend(div.addClass("boxedin"));
+                  if (!curknowl.cangoleft) {
+                    $('#adding').children('.leftbutton').hide();
+                  } else {$('#adding').children('.leftbutton').attr('data-id', curknowl.leftid);}
+                  if (!curknowl.cangoright) {
+                    $('#adding').children('.rightbutton').hide();
+                  } else {$('#adding').children('.rightbutton').attr('data-id', curknowl.rightid);}
+                  //put relevent text in edit box
+                  if (curknowl.type == "TextKnowl") {
+                    let edittext = $('div#adding div.knowlcontent1 p').html();
+                    $('div#adding textarea.editContent').html(edittext);
+                  } else if (curknowl.type == "Video") {
+                    let edittext = $('div#adding iframe').attr('src');
+                    $('div#adding textarea.editContent').html(edittext)
+                  } else {
+                    let edittext = $('div#adding div.knowlcontent1 div').html();
+                    $('div#adding textarea.editContent').html(edittext);
+                  }
+
+                  //on clientside, process teX equations after submit
+                  MathJax.Hub.Queue(['Typeset', MathJax.Hub, $('#adding .knowlcontent1').get(0)]);
+                  //remove the marker of nowl we just added
+                  //if not signedin (no creation form) then remove edit button
+                  if ($('.newarticle').length == 0) {
+                    $('.editerB').hide();
+                  }
+                  $('#adding').removeAttr('id');
+                }
               }
             }
+          },
+          error: function(error) {
+            console.log(error);
           }
-      },
-      error: function(error) {
-        console.log(error);
+        });
       }
-    });
-}
 
-function removeDiv(element){
-  $(element).closest("div").remove();
-}
+    }
+
+    //global function for edit datalist processing
+
+  function editsuggest(element) {
+    //attribute is on the input
+    let editid = $(element).attr('data-editid');
+    let editlistid = "editlist" + editid;
+    let editlistselector = '#' + editlistid;
+    //get the links
+    console.log('did we change editbar?');
+    //clear original datalist
+    $(editlistselector).html("");
+    //get current search value
+    let cursearch = $(element).val()
+    //use "badtitle' function from articlecreate file to check chars"
+    if (badtitle(cursearch) || cursearch.length > 50) {
+      $('div#editing input.editAddLink').css("border", "solid 2px");
+      $('div#editing input.editAddLink').css('border-color', 'red');
+    } else {
+      $('div#editing input.editAddLink').css("border", "none");
+      $('div#editing input.editAddLink').css('border-color', 'white');
+      search($(element), $(editlistselector)) ;
+    }
+  }
+
+  function removeDiv(element){
+    $(element).closest("div.boxedin").remove();
+  }
+
+  function clearAllKnowls() {
+    $('#entry-content').empty();
+  }

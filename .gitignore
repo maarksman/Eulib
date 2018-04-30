@@ -1,2 +1,4 @@
 www/cgi-bin/register.db
 *.db
+/node_modules
+www/node_modules
